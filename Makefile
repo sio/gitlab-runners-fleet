@@ -1,9 +1,23 @@
+PULUMI_STATE_DIRECTORY=pulumi/state
+PULUMI_BACKEND_URL=file://$(realpath $(PULUMI_STATE_DIRECTORY))
+export PULUMI_BACKEND_URL
+
+
 GIT?=git
 PULUMI?=pulumi
 
 
 include makefiles/*.mk
 include Makefile.venv
+
+
+$(PULUMI_STATE_DIRECTORY):
+	mkdir -p "$@"
+
+
+state-backend: $(PULUMI_STATE_DIRECTORY)
+	$(PULUMI) login
+
 
 
 .PHONY: pull
