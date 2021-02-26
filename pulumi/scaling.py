@@ -3,7 +3,7 @@ Scaling algorithm for GitLab runners fleet
 '''
 
 
-from collections.abc import Sequence
+from typing import Sequence
 
 from data import InstanceParams
 
