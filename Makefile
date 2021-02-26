@@ -22,12 +22,12 @@ include Makefile.venv
 
 
 .PHONY: up destroy
-up destroy: venv check-software state-backend stack
+up destroy: venv check-software stack
 	$(PULUMI) $(PULUMI_ARGS) $@
 
 
 .PHONY: stack
-stack:
+stack: state-backend
 	-$(PULUMI) stack init --non-interactive $(PULUMI_STACK)
 
 
