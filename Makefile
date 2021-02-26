@@ -14,16 +14,19 @@ export PULUMI_BACKEND_URL
 
 VENVDIR=$(PULUMI_PROJECT)/venv
 REQUIREMENTS_TXT=$(PULUMI_PROJECT)/requirements.txt
+.DEFAULT_GOAL=up
 
 
 include makefiles/*.mk
 include Makefile.venv
 
 
-up: venv check-software state-backend stack
+.PHONY: up destroy
+up destroy: venv check-software state-backend stack
 	$(PULUMI) $(PULUMI_ARGS) $@
 
 
+.PHONY: stack
 stack:
 	-$(PULUMI) stack init --non-interactive $(PULUMI_STACK)
 
@@ -32,6 +35,7 @@ $(PULUMI_STATE_DIRECTORY):
 	mkdir -p "$@"
 
 
+.PHONY: state-backend
 state-backend: $(PULUMI_STATE_DIRECTORY)
 	$(PULUMI) login
 
