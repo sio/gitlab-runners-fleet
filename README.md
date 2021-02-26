@@ -11,3 +11,9 @@ I've decided not to use GitLab's suggested `docker-machine` approach because:
 - I want to be able to choose from a wider set of Cloud providers than
   `docker-machine` supports. Coding new bindings for `docker-machine` seems
   to be a pointless endeavor.
+
+
+## Requirements for management node
+
+- [Pulumi](https://www.pulumi.com/docs/get-started/install/)
+- Python3 (with venv module)
