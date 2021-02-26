@@ -1,5 +1,5 @@
 ifdef NON_INTERACTIVE
-PULUMI_ARGS+=--yes --non-interactive
+PULUMI_ARGS+=--skip-preview --yes --non-interactive
 endif
 
 GIT?=git
@@ -20,7 +20,7 @@ include makefiles/*.mk
 include Makefile.venv
 
 
-up: venv state-backend stack
+up: venv check-software state-backend stack
 	$(PULUMI) $(PULUMI_ARGS) $@
 
 
@@ -48,4 +48,4 @@ endif
 check-software:
 	$(PULUMI) version
 	$(PY) --version
-	$(PY) -c 'import venv; import ensurepip'  # check for python3-venv package
+	@$(PY) -c 'import venv; import ensurepip'  # check for python3-venv package
