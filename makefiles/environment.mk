@@ -1,4 +1,5 @@
 REQUIRED_ENVIRONMENT_VARIABLES= \
+	PULUMI_CONFIG_PASSPHRASE
 
 define require-env
 ifndef $(1)

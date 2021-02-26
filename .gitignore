@@ -5,3 +5,4 @@ Makefile.venv
 
 pulumi/venv
 pulumi/state
+pulumi/Pulumi.*.y?ml
