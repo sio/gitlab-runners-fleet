@@ -17,3 +17,11 @@ I've decided not to use GitLab's suggested `docker-machine` approach because:
 
 - [Pulumi](https://www.pulumi.com/docs/get-started/install/)
 - Python3 (with venv module)
+
+## Some useful links
+
+- [Data science on demand: spinning up a Wallaroo cluster is easy
+  with
+  Pulumi](https://www.pulumi.com/blog/data-science-on-demand-spinning-up-a-wallaroo-cluster-is-easy-with-pulumi/) -
+  ([configuration](https://github.com/WallarooLabs/wallaroo_blog_examples/tree/master/provisioned-classifier/pulumi),
+  [Makefile](https://github.com/WallarooLabs/wallaroo_blog_examples/blob/master/provisioned-classifier/Makefile))
