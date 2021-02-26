@@ -2,4 +2,6 @@
 *.pyc
 
 Makefile.venv
-.venv
+
+pulumi/venv
+pulumi/state

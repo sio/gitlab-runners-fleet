@@ -1,0 +1,6 @@
+name: gitlab-runners-fleet
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Auto scaling fleet of GitLab CI runners
