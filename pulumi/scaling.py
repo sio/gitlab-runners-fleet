@@ -5,7 +5,7 @@ Scaling algorithm for GitLab runners fleet
 
 from collections.abc import Sequence
 
-from .instance import InstanceParams
+from data import InstanceParams
 
 
 def require_instances(current: Sequence[InstanceParams]) -> Sequence[InstanceParams]:
