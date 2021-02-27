@@ -1,5 +1,5 @@
 '''
-Instance definition for a single GitLab runner
+Instance definition for a single GitLab CI runner
 '''
 
 
@@ -14,7 +14,7 @@ from scaling import (
 
 
 def create(params: InstanceParams):
-    '''Create GitLab runner cloud instance'''
+    '''Create GitLab CI runner cloud instance'''
     server = hcloud.Server(
         resource_name=params.name,
         server_type='cx11',
