@@ -11,6 +11,7 @@ I've decided not to use GitLab's suggested `docker-machine` approach because:
 - I want to be able to choose from a wider set of Cloud providers than
   `docker-machine` supports. Coding new bindings for `docker-machine` seems
   to be a pointless endeavor.
+- I wanted a project to try Pulumi out
 
 
 ## Requirements for management node
