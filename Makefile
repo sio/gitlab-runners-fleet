@@ -40,6 +40,16 @@ state-backend: $(PULUMI_STATE_DIRECTORY)
 	$(PULUMI) login
 
 
+export RUNNER_SSH_KEY:=$(abspath $(RUNNER_SSH_KEY))
+$(RUNNER_SSH_KEY):
+	mkdir -p "$(dir $@)"
+	ssh-keygen -q -t ed25519 -a 10 -f "$(RUNNER_SSH_KEY)" -C ci-runner-key -N ""
+
+
+.PHONY: show
+show:
+	$(PULUMI) stack
+
 
 .PHONY: pull
 pull:
