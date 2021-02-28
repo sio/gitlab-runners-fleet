@@ -27,7 +27,7 @@ def get_pending_jobs() -> int:
           namespace(fullPath: $namespace) {
             projects {
               nodes {
-                waiting: pipelines(status: WAITING_FOR_RESOURCE) {
+                waiting: pipelines(status: WAITING_FOR_RESOURCE) {  # TODO: Add RUNNING here?
                   ...JobDetails
                 }
                 pending: pipelines(status: PENDING) {

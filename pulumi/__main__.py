@@ -9,7 +9,7 @@ from instance import create, create_key
 
 
 create_key()
-server = create(InstanceParams('test-instance'))
+server = create(InstanceParams('test-instance'))  # TODO: add dependency on key object?
 server = create(InstanceParams('second-instance'))
 
 #stack = pulumi.StackReference(pulumi.get_stack())
@@ -25,3 +25,6 @@ export = dict(
 )
 
 pulumi.export('instance_params', export)
+
+config = pulumi.Config()  # TODO: add Makefile step to transfer state from output to config (outside of Pulumi)
+config.get('instance_params')  # TODO: something like 'pulumi stack output NAME --json|pulumi config set NAME $(cat /dev/stdin)'
