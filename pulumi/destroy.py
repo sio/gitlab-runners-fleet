@@ -13,8 +13,9 @@ def cleanup(instance: InstanceParams, identity_file: str):
     '''
     ssh = [
         'ssh',
-        '-i',
-        identity_file,
+        '-i', identity_file,
+        '-o', 'UserKnownHostsFile=/dev/null',
+        '-o', 'StrictHostKeyChecking=no',
         instance.ssh,
     ]
     subprocess.run(ssh + instance.cleanup, check=True)

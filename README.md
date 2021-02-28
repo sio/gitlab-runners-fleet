@@ -18,6 +18,7 @@ I've decided not to use GitLab's suggested `docker-machine` approach because:
 
 - [Pulumi](https://www.pulumi.com/docs/get-started/install/)
 - Python3 (with venv module)
+- SSH client (for executing cleanup actions)
 
 ## Some useful links
 

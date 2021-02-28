@@ -11,6 +11,8 @@ PULUMI:=$(PULUMI) -C $(PULUMI_PROJECT)
 PULUMI_STATE_DIRECTORY=$(PULUMI_PROJECT)/state
 PULUMI_BACKEND_URL=file://$(realpath $(PULUMI_STATE_DIRECTORY))
 export PULUMI_BACKEND_URL
+PULUMI_SNAPSHOT_OBJECT=snapshot
+export PULUMI_SNAPSHOT_OBJECT
 
 VENVDIR=$(PULUMI_PROJECT)/venv
 REQUIREMENTS_TXT=$(PULUMI_PROJECT)/requirements.txt
@@ -24,11 +26,14 @@ include Makefile.venv
 .PHONY: up destroy
 up destroy: venv check-software stack
 	$(PULUMI) $(PULUMI_ARGS) $@
+	$(PULUMI) config set $(PULUMI_SNAPSHOT_OBJECT) "$$($(PULUMI) stack output $(PULUMI_SNAPSHOT_OBJECT) --json)"
 
 
 .PHONY: stack
 stack: state-backend
 	-$(PULUMI) stack init --non-interactive $(PULUMI_STACK)
+	$(PULUMI) stack output $(PULUMI_SNAPSHOT_OBJECT) >/dev/null 2>/dev/null \
+	|| $(PULUMI) config set $(PULUMI_SNAPSHOT_OBJECT) '{}'
 
 
 $(PULUMI_STATE_DIRECTORY):
