@@ -17,6 +17,7 @@ I've decided not to use GitLab's suggested `docker-machine` approach because:
 ## Requirements for management node
 
 - [Pulumi](https://www.pulumi.com/docs/get-started/install/)
+- GNU Make
 - Python3 (with venv module)
 - SSH client (for executing cleanup actions)
 
