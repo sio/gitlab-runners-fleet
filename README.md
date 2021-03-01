@@ -40,6 +40,7 @@ further provisioned
 5. **Ansible** executed on the instance against itself is configuring all the
 required services
 
+
 ## Some useful links
 
 - [Data science on demand: spinning up a Wallaroo cluster is easy
@@ -48,3 +49,22 @@ required services
   ([configuration](https://github.com/WallarooLabs/wallaroo_blog_examples/tree/master/provisioned-classifier/pulumi),
   [Makefile](https://github.com/WallarooLabs/wallaroo_blog_examples/blob/master/provisioned-classifier/Makefile))
 - [Gitlab Runner autoscaling infrastructure on Hetzner Cloud with Terraform](https://www.stefanwienert.de/blog/2019/04/06/gitlab-runner-autoscaling-infrastructure-on-hetzner-cloud-with-terraform/)
+
+
+## License and copyright
+
+Copyright 2021 Vitaly Potyarkin
+
+```
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+```
