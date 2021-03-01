@@ -15,17 +15,17 @@ write_files:
     permissions: '0600'
     path: /etc/provision/Makefile
     content: |-
-      {{ indent(instance_file("Makefile"), 6) }}  # TODO
+      {{ instance_file("Makefile")|indent(6) }}  # TODO
   - owner: root:root
     permissions: '0600'
     path: /etc/provision/pubkey
     content: |-
-      {{ indent(pubkey, 6) }}  # TODO
+      {{ pubkey|indent(6) }}  # TODO
   - owner: root:root
     permissions: '0600'
     path: /etc/provision/gitlab_runner_token
     content: |-
-      {{ indent(gitlab_runner_token, 6) }}  # TODO
+      {{ gitlab_runner_token|indent(6) }}  # TODO
 
 runcmd:
   - [/usr/bin/make, -C, /etc/provision/]
