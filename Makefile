@@ -45,10 +45,10 @@ state-backend: $(PULUMI_STATE_DIRECTORY)
 	$(PULUMI) login
 
 
-export RUNNER_SSH_KEY:=$(abspath $(RUNNER_SSH_KEY))
-$(RUNNER_SSH_KEY):
+export GITLAB_RUNNER_SSHKEY:=$(abspath $(GITLAB_RUNNER_SSHKEY))
+$(GITLAB_RUNNER_SSHKEY):
 	mkdir -p "$(dir $@)"
-	ssh-keygen -q -t ed25519 -a 10 -f "$(RUNNER_SSH_KEY)" -C ci-runner-key -N ""
+	ssh-keygen -q -t ed25519 -a 10 -f "$(GITLAB_RUNNER_SSHKEY)" -C ci-runner-key -N ""
 
 
 .PHONY: show

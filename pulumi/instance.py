@@ -22,7 +22,7 @@ def create_key():
     '''Upload SSH key to Hetzner account'''
     key = hcloud.SshKey(
         resource_name='pulumi-key',
-        public_key=read_file(os.environ['RUNNER_SSH_KEY'] + '.pub'),
+        public_key=read_file(os.environ['GITLAB_RUNNER_SSHKEY'] + '.pub'),
         name=SSH_KEY_NAME,
     )
     return key
@@ -37,7 +37,7 @@ def create(params: InstanceParams):
         image='debian-10',
         ssh_keys=[SSH_KEY_NAME,],
         user_data=cloudinit.userdata(
-            pubkey=read_file(os.environ['RUNNER_SSH_KEY'] + '.pub'),
+            pubkey=read_file(os.environ['GITLAB_RUNNER_SSHKEY'] + '.pub'),
             gitlab_runner_token=os.environ['GITLAB_RUNNER_TOKEN'],
         ),
     )

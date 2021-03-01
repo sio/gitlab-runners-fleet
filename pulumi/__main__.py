@@ -16,7 +16,7 @@ if snapshot:
     if params:
         cleanup(
             InstanceParams(**params),
-            identity_file=os.environ['RUNNER_SSH_KEY']
+            identity_file=os.environ['GITLAB_RUNNER_SSHKEY']
         )
 
 
