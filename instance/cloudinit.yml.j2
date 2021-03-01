@@ -1,0 +1,42 @@
+#cloud-config
+
+package_upgrade: true
+package_update: true
+packages:
+  - coreutils
+  - curl
+  - git
+  - make
+  - python3-venv
+  - sudo
+
+write_files:
+  - owner: root:root
+    permissions: '0600'
+    path: /etc/provision/Makefile
+    content: |-
+      {{ indent(instance_file("Makefile"), 6) }}  # TODO
+  - owner: root:root
+    permissions: '0600'
+    path: /etc/provision/pubkey
+    content: |-
+      {{ indent(pubkey, 6) }}  # TODO
+  - owner: root:root
+    permissions: '0600'
+    path: /etc/provision/gitlab_runner_token
+    content: |-
+      {{ indent(gitlab_runner_token, 6) }}  # TODO
+
+runcmd:
+  - [/usr/bin/make, -C, /etc/provision/]
+
+power_state:
+  delay: now
+  mode: reboot
+  message: cloud-init initialization complete
+  condition: true
+
+swap:
+  filename: /var/swap.img
+  size: auto
+  maxsize: 4294967296  # bytes

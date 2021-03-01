@@ -1,0 +1,27 @@
+---
+# Ansible playbook to initialize GitLab runner on localhost
+
+- hosts: localhost
+  collections:
+    - potyarkin.homelab
+  become: yes
+  roles:
+    - role: server
+      server_remote_user: op
+      server_keys_public:
+        - /etc/provision/pubkey
+
+    - role: upgrade
+
+    - role: packages
+      packages_install:
+        - docker.io
+
+    - role: gitlab_runner
+      gitlab_runner_token: '{{ lookup("file", "/etc/provision/gitlab_runner_token") }}'
+      gitlab_runner_tags:
+        - private-runner
+      gitlab_runner_executor: docker
+      gitlab_runner_extra_registration_params:
+        name: 'private-runner-{{ ansible_hostname }}'
+        run-untagged: ''
