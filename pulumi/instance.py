@@ -8,6 +8,7 @@ from dataclasses import dataclass
 
 import pulumi_hcloud as hcloud
 
+import cloudinit
 from data import InstanceParams
 from scaling import (
     require_instances,
@@ -35,6 +36,10 @@ def create(params: InstanceParams):
         server_type='cx11',
         image='debian-10',
         ssh_keys=[SSH_KEY_NAME,],
+        user_data=cloudinit.userdata(
+            pubkey=read_file(os.environ['RUNNER_SSH_KEY'] + '.pub'),
+            gitlab_runner_token=os.environ['GITLAB_RUNNER_TOKEN'],
+        ),
     )
     return server
 

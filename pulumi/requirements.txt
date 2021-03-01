@@ -3,3 +3,4 @@ pulumi-hcloud
 
 cirrus-run
 coolname
+Jinja2
