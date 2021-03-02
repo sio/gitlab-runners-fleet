@@ -7,7 +7,6 @@ PULUMI?=pulumi
 
 PULUMI_PROJECT=pulumi
 PULUMI_STACK=main
-PULUMI:=$(PULUMI) -C $(PULUMI_PROJECT)
 PULUMI_STATE_DIRECTORY=$(PULUMI_PROJECT)/state
 PULUMI_BACKEND_URL=file://$(realpath $(PULUMI_STATE_DIRECTORY))
 export PULUMI_BACKEND_URL
@@ -27,6 +26,7 @@ include makefiles/*.mk
 include Makefile.venv
 
 
+PULUMI:=$(PULUMI) -C $(PULUMI_PROJECT)
 .PHONY: up destroy
 up destroy: venv check-software stack
 	$(PULUMI) $(PULUMI_ARGS) $@
