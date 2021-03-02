@@ -4,3 +4,4 @@ pulumi-hcloud
 cirrus-run
 coolname
 Jinja2
+requests
