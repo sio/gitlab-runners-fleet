@@ -35,3 +35,4 @@
         name: gitlab-runner
         groups: docker
         append: yes
+      notify: restart gitlab runner
