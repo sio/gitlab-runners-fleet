@@ -26,3 +26,4 @@
         name: 'private-runner-{{ ansible_hostname }}'
         run-untagged: ''
         docker-privileged: 'true'
+        docker-image: 'ruby:2.5'
