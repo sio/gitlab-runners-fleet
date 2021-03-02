@@ -4,6 +4,7 @@
 Makefile.venv
 
 pulumi/Pulumi.*.y?ml
+pulumi/bin
 pulumi/keys
 pulumi/state
 pulumi/venv
