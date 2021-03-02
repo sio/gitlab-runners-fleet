@@ -23,4 +23,4 @@ $(FILES):
 .PHONY: runner
 runner: venv $(FILES)
 	$(VENV)/ansible-galaxy install -r requirements.yml
-	$(VENV)/ansible-playbook playbook.yml
+	$(VENV)/ansible-playbook playbook.yml --extra-vars "ansible_python_interpreter=/usr/bin/python3"
