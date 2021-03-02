@@ -15,6 +15,8 @@ PULUMI_SNAPSHOT_OBJECT?=snapshot
 export PULUMI_SNAPSHOT_OBJECT
 HCLOUD_USERDATA_TEMPLATE?=$(abspath instance/cloudinit.yml.j2)
 export HCLOUD_USERDATA_TEMPLATE
+GITLAB_RUNNER_SSHKEY?=$(abspath $(PULUMI_PROJECT)/keys/runner)
+export GITLAB_RUNNER_SSHKEY
 
 VENVDIR=$(PULUMI_PROJECT)/venv
 REQUIREMENTS_TXT=$(PULUMI_PROJECT)/requirements.txt
@@ -47,7 +49,6 @@ state-backend: $(PULUMI_STATE_DIRECTORY)
 	$(PULUMI) login
 
 
-export GITLAB_RUNNER_SSHKEY:=$(abspath $(GITLAB_RUNNER_SSHKEY))
 $(GITLAB_RUNNER_SSHKEY):
 	mkdir -p "$(dir $@)"
 	ssh-keygen -q -t ed25519 -a 10 -f "$(GITLAB_RUNNER_SSHKEY)" -C ci-runner-key -N ""
