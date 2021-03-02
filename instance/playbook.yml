@@ -36,6 +36,15 @@
         groups: docker
         append: yes
       notify: restart gitlab runner
+
+    - name: enable metrics endpoint for gitlab-runner
+      lineinfile:
+        path: /etc/gitlab-runner-custom/config.toml
+        line: listen_address = localhost:9252
+        regexp: '^listen_address'
+        insertbefore: BOF
+      notify: restart gitlab runner
+
     - name: enable passwordless sudo for operator
       copy:
         content: |
