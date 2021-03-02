@@ -25,3 +25,4 @@ class InstanceStatus(Enum):
     IDLE = auto()
     PROVISIONING = auto()
     ERROR = auto()
+    NOT_EXISTS = auto()
