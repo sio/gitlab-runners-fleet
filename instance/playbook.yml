@@ -28,3 +28,10 @@
         locked: 'false'
         docker-privileged: 'true'
         docker-image: 'ruby:2.5'
+
+  tasks:
+    - name: grant gitlab-runner access to docker socket
+      user:
+        name: gitlab-runner
+        groups: docker
+        append: yes
