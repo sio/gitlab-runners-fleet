@@ -9,7 +9,7 @@ Restart=always
 RestartSec=30
 ExecStart=/usr/local/bin/metrics
 User=nobody
-Group=nobody
+Group=nogroup
 NoNewPrivileges=true
 
 
