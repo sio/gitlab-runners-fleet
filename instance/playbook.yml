@@ -46,6 +46,25 @@
         insertbefore: BOF
       notify: restart gitlab runner
 
+    - name: install metrics server for WAN
+      copy:
+        src: metrics.py
+        dest: /usr/local/bin/metrics
+        mode: '0755'
+
+    - name: enable metrics server for WAN
+      copy:
+        src: metrics.service
+        dest: /etc/systemd/system/metrics.service
+        mode: '0644'
+
+    - name: start metrics server for WAN
+      systemd:
+        name: metrics.service
+        state: started
+        enabled: yes
+        daemon_reload: yes
+
     - name: enable passwordless sudo for operator
       copy:
         content: |

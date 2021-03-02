@@ -1,0 +1,17 @@
+[Unit]
+Description=Broadcast selected GitLab runner metrics on WAN
+After=network.target
+
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=30
+ExecStart=/usr/local/bin/metrics
+User=nobody
+Group=nobody
+NoNewPrivileges=true
+
+
+[Install]
+WantedBy=multi-user.target

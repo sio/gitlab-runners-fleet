@@ -15,7 +15,7 @@ Makefile.venv:
 		&& mv Makefile.fetched Makefile.venv
 
 
-FILES=playbook.yml requirements.yml requirements.txt
+FILES=playbook.yml requirements.yml requirements.txt metrics.py metrics.service
 $(FILES):
 	curl -o $@ -L "https://github.com/sio/gitlab-runners-fleet/raw/master/instance/$@"
 
