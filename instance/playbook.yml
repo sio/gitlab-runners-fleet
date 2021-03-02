@@ -25,5 +25,6 @@
       gitlab_runner_extra_registration_params:
         name: 'private-runner-{{ ansible_hostname }}'
         run-untagged: ''
+        locked: 'false'
         docker-privileged: 'true'
         docker-image: 'ruby:2.5'
