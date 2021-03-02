@@ -29,7 +29,7 @@ write_files:
       {{ gitlab_runner_token|indent(6) }}
 
 runcmd:
-  - [/usr/bin/make, -C, /etc/provision/]
+  - /usr/bin/make -C /etc/provision/ >> /etc/provision/log
 
 power_state:
   delay: now
