@@ -65,6 +65,12 @@
         enabled: yes
         daemon_reload: yes
 
+    - name: open metrics port on WAN
+      ufw:
+        rule: allow
+        port: '8080'
+        proto: tcp
+
     - name: enable passwordless sudo for operator
       copy:
         content: |
