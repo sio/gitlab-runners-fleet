@@ -20,8 +20,8 @@ if snapshot:
         )
 
 
-create_key()
-server = create(InstanceParams('test-instance'))  # TODO: add dependency on key object?
+key = create_key()
+server = create(InstanceParams('test-instance'), depends_on=[key,])
 
 
 export = dict(

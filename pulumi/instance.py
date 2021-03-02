@@ -6,6 +6,7 @@ Instance definition for a single GitLab CI runner
 import os
 from dataclasses import dataclass
 
+from pulumi import ResourceOptions
 import pulumi_hcloud as hcloud
 
 import cloudinit
@@ -28,8 +29,10 @@ def create_key():
     return key
 
 
-def create(params: InstanceParams):
+def create(params: InstanceParams, depends_on=None):
     '''Create GitLab CI runner cloud instance'''
+    if not depends_on:
+        depends_on = []
     server = hcloud.Server(
         resource_name=params.name,
         name=params.name,
@@ -40,6 +43,7 @@ def create(params: InstanceParams):
             pubkey=read_file(os.environ['GITLAB_RUNNER_SSHKEY'] + '.pub'),
             gitlab_runner_token=os.environ['GITLAB_RUNNER_TOKEN'],
         ),
+        opts=ResourceOptions(depends_on=depends_on),
     )
     return server
 
