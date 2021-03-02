@@ -17,7 +17,7 @@ Makefile.venv:
 
 FILES=playbook.yml requirements.yml requirements.txt
 $(FILES):
-	curl -o $@ -L "https://github.com/sio/gitlab-runners-fleet/raw/master/$@"
+	curl -o $@ -L "https://github.com/sio/gitlab-runners-fleet/raw/master/instance/$@"
 
 
 .PHONY: runner
