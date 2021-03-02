@@ -28,7 +28,7 @@ include Makefile.venv
 
 PULUMI:=$(PULUMI) -C $(PULUMI_PROJECT)
 .PHONY: up destroy
-up destroy: venv check-software stack
+up destroy: venv check-software stack $(GITLAB_RUNNER_SSHKEY)
 	$(PULUMI) $(PULUMI_ARGS) $@
 	$(PULUMI) config set $(PULUMI_SNAPSHOT_OBJECT) "$$($(PULUMI) stack output $(PULUMI_SNAPSHOT_OBJECT) --json)"
 
