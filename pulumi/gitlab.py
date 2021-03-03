@@ -31,7 +31,10 @@ def get_pending_jobs() -> int:
           namespace(fullPath: $namespace) {
             projects {
               nodes {
-                waiting: pipelines(status: WAITING_FOR_RESOURCE) {  # TODO: Add RUNNING here?
+                running: pipelines(status: RUNNING) {
+                  ...JobDetails
+                }
+                waiting: pipelines(status: WAITING_FOR_RESOURCE) {
                   ...JobDetails
                 }
                 pending: pipelines(status: PENDING) {
@@ -56,7 +59,7 @@ def get_pending_jobs() -> int:
     '''
     pending_jobs = 0
     for project in api(jobs_query, params=dict(namespace=get_namespace()))['namespace']['projects']['nodes']:
-        for pipeline in chain(project['waiting']['nodes'], project['pending']['nodes']):
+        for pipeline in chain.from_iterable(status['nodes'] for status in project.values()):
             for job in pipeline['jobs']['nodes']:
                 if job['detailedStatus']['text'] == 'pending':
                     pending_jobs += 1
