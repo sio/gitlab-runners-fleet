@@ -18,4 +18,5 @@ def cleanup(instance: InstanceParams, identity_file: str):
         '-o', 'StrictHostKeyChecking=no',
         instance.ssh,
     ]
-    subprocess.run(ssh + instance.cleanup, check=True)
+    ssh.extend(instance.cleanup)
+    subprocess.run(ssh, check=True)
