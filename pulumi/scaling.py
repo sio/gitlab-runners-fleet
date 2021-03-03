@@ -58,7 +58,7 @@ def calculate_actions():
         len(actions['KEEP'][InstanceStatus.READY])
     )
     jobs_required = gitlab.get_pending_jobs()
-    instances_required = max(0, int(math.ceil((jobs_capacity - jobs_required)/JOBS_PER_INSTANCE)))
+    instances_required = max(0, int(math.ceil((jobs_required - jobs_capacity)/JOBS_PER_INSTANCE)))
 
     if not instances_required:
         return actions
