@@ -61,3 +61,22 @@ def get_pending_jobs() -> int:
                 if job['detailedStatus']['text'] == 'pending':
                     pending_jobs += 1
     return pending_jobs
+
+
+def get_project_ids():
+    '''List project IDs associated with current namespace'''
+    projects_query = '''
+        query GetProjectIDs($namespace: ID!) {
+            namespace(fullPath: $namespace) {
+                projects {
+                    nodes{
+                        id
+                    }
+                }
+            }
+        }
+    '''
+    for project in api(projects_query, params=dict(namespace=get_namespace()))['namespace']['projects']['nodes']:
+        gid = project['id']
+        iid = int(gid.split('/')[-1])
+        yield iid
