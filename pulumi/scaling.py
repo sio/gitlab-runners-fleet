@@ -71,7 +71,9 @@ def calculate_actions():
         new_name = ''
         while not new_name or new_name in names_taken:
             new_name = 'ci-' + coolname.generate_slug(2)
-        actions['CREATE'][InstanceStatus.NOT_EXISTS].add(InstanceParams(name=new_name))
+        actions['CREATE'][InstanceStatus.NOT_EXISTS].add(
+            InstanceParams(name=new_name, created_at=int(datetime.utcnow().timestamp()))
+        )
     return actions
 
 

@@ -35,7 +35,6 @@ def create(params: InstanceParams, depends_on=None):
         depends_on = []
     server = hcloud.Server(
         resource_name=params.name,
-        name=params.name,
         server_type='cx11',
         image='debian-10',
         ssh_keys=[SSH_KEY_NAME,],

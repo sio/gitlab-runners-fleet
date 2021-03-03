@@ -1,22 +1,34 @@
-"""A Python Pulumi program"""
+'''Auto scaling fleet of GitLab CI runners'''
 
 import os
 import pulumi
+from itertools import chain
 
-from data import InstanceParams
+import scaling
 from destroy import cleanup
 from instance import create, create_key
 
 
 key = create_key()
-server = create(InstanceParams('test-instance'), depends_on=[key,])
+actions = scaling.calculate_actions()
 
+for status, instances in actions['DELETE'].items():
+    for instance in instances:
+        try:
+            cleanup(instance, identity_file=os.environ['GITLAB_RUNNER_SSHKEY'])
+        except Exception:
+            pass
 
-export = dict(
-    name=server.name,
-    cleanup=['/bin/touch', '/tmp/cleanup-worked'],
-    metrics=server.ipv4_address.apply(lambda ip: f'http://{ip}:8080/metrics'),
-    ssh=server.ipv4_address.apply(lambda ip: f'op@{ip}'),
-)
-
+export = []
+for status, instances in chain(actions['KEEP'].items(), actions['CREATE'].items()):
+    for instance in instances:
+        server = create(instance, depends_on=[key,])
+        export.append(dict(
+            name=instance.name,
+            cleanup=['/bin/touch', '/tmp/cleanup-worked'],
+            ssh=server.ipv4_address.apply(lambda ip: f'op@{ip}'),
+            metrics=server.ipv4_address.apply(lambda ip: f'http://{ip}:8080/metrics'),
+            created_at=instance.created_at,
+            idle_since=instance.idle_since,
+        ))
 pulumi.export(os.environ['PULUMI_SNAPSHOT_OBJECT'], export)
