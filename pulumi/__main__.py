@@ -12,6 +12,9 @@ from instance import create, create_key
 key = create_key()
 actions = scaling.calculate_actions()
 
+from pprint import pformat
+pulumi.export('debug', pformat(actions, width=1))
+
 for status, instances in actions['DELETE'].items():
     for instance in instances:
         try:
