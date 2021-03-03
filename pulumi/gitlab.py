@@ -13,6 +13,9 @@ class GitLabAPI(GraphqlAPI):
     DEFAULT_URL = 'https://gitlab.com/api/graphql'
     USER_AGENT = 'CI runners fleet manager <https://github.com/sio/gitlab-runners-fleet>'
 
+    def post(self, *a, **ka):
+        return self._requests.post(*a, **ka)
+
 
 api = GitLabAPI(os.environ['GITLAB_API_TOKEN'])
 
