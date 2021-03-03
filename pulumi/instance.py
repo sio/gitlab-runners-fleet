@@ -37,7 +37,7 @@ def create(params: InstanceParams, depends_on=None):
         ssh_keys=[SSH_KEY_NAME,],
         user_data=cloudinit.userdata(
             pubkey=read_file(os.environ['GITLAB_RUNNER_SSHKEY'] + '.pub'),
-            gitlab_runner_token=os.environ['GITLAB_RUNNER_TOKEN'],  # TODO: share runners across all projects of current user
+            gitlab_runner_token=os.environ['GITLAB_RUNNER_TOKEN'],
         ),
         opts=ResourceOptions(depends_on=depends_on),
     )
