@@ -9,10 +9,10 @@ import os
 import pulumi
 import requests
 from dataclasses import replace
-from datetime import datetime
 from typing import Sequence
 
 import gitlab
+import timestamp
 from data import InstanceParams, InstanceStatus
 
 
@@ -28,7 +28,7 @@ MAX_IDLE_MINUTES = MIN_BILLABLE_MINUTES - MAX_RERUN_DELAY - EST_PROVISIONING_MIN
 
 def get_status(instance: InstanceParams) -> InstanceStatus:
     '''Detect instance status'''
-    now = datetime.utcnow().timestamp()
+    now = timestamp.now()
     try:
         response = requests.get(instance.metrics)
         response.raise_for_status()
@@ -73,7 +73,7 @@ def calculate_actions():
         while not new_name or new_name in names_taken:
             new_name = 'ci-' + coolname.generate_slug(2)
         actions['CREATE'][InstanceStatus.NOT_EXISTS].add(
-            InstanceParams(name=new_name, created_at=int(datetime.utcnow().timestamp()))
+            InstanceParams(name=new_name, created_at=timestamp.now())
         )
     return actions
 
@@ -103,7 +103,7 @@ def calculate_actions_keep_delete():
         instance = InstanceParams(**params)
         status = get_status(instance)
         if status == InstanceStatus.READY and not instance.idle_since:
-            instance = replace(instance, idle_since=int(datetime.utcnow().timestamp()))
+            instance = replace(instance, idle_since=timestamp.now())
         if status == InstanceStatus.BUSY and instance.idle_since:
             instance = replace(instance, idle_since=0)
         if status in actions['KEEP']:
