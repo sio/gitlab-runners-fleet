@@ -5,6 +5,7 @@ Scaling algorithm for GitLab runners fleet
 import coolname
 import json
 import math
+import os
 import pulumi
 import requests
 from dataclasses import replace
@@ -102,7 +103,7 @@ def calculate_actions_keep_delete():
         instance = InstanceParams(**params)
         status = get_status(instance)
         if status == InstanceStatus.READY and not instance.idle_since:
-            instance = replace(instance, idle_since=int(datetime.utcnow().timestamp())
+            instance = replace(instance, idle_since=int(datetime.utcnow().timestamp()))
         if status == InstanceStatus.BUSY and instance.idle_since:
             instance = replace(instance, idle_since=0)
         if status in actions['KEEP']:

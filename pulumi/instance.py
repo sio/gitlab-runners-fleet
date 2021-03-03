@@ -11,9 +11,6 @@ import pulumi_hcloud as hcloud
 
 import cloudinit
 from data import InstanceParams
-from scaling import (
-    require_instances,
-)
 
 
 SSH_KEY_NAME = 'Pulumi SSH key for gitlab-runners-fleet'
