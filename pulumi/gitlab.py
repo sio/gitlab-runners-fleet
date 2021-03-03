@@ -14,14 +14,18 @@ class GitLabAPI(GraphqlAPI):
     USER_AGENT = 'CI runners fleet manager <https://github.com/sio/gitlab-runners-fleet>'
 
 
-def get_pending_jobs() -> int:
-    '''Return number of GitLab CI jobs currently waiting for a runner'''
-    token = os.environ['GITLAB_API_TOKEN']
-    api = GitLabAPI(token)
+api = GitLabAPI(os.environ['GITLAB_API_TOKEN'])
 
+
+def get_namespace() -> str:
+    '''Return GitLab namespace for CI runners'''
     username_query = '{currentUser {username}}'
     username = api(username_query)['currentUser']['username']
+    return username
 
+
+def get_pending_jobs() -> int:
+    '''Return number of GitLab CI jobs currently waiting for a runner'''
     jobs_query = '''
         query GetPendingJobs($namespace: ID!){
           namespace(fullPath: $namespace) {
@@ -51,7 +55,7 @@ def get_pending_jobs() -> int:
         }
     '''
     pending_jobs = 0
-    for project in api(jobs_query, params=dict(namespace=username))['namespace']['projects']['nodes']:
+    for project in api(jobs_query, params=dict(namespace=get_namespace()))['namespace']['projects']['nodes']:
         for pipeline in chain(project['waiting']['nodes'], project['pending']['nodes']):
             for job in pipeline['jobs']['nodes']:
                 if job['detailedStatus']['text'] == 'pending':
