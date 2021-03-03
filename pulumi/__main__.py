@@ -14,6 +14,7 @@ actions = scaling.calculate_actions()
 
 for status, instances in actions['DELETE'].items():
     for instance in instances:
+        pulumi.log.info(f'Deleting instance {instance.name}: {status}')
         try:
             cleanup(instance, identity_file=os.environ['GITLAB_RUNNER_SSHKEY'])
         except Exception:
