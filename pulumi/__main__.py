@@ -25,7 +25,7 @@ for status, instances in chain(actions['KEEP'].items(), actions['CREATE'].items(
         server = create(instance, depends_on=[key,])
         export.append(dict(
             name=instance.name,
-            cleanup=['/bin/touch', '/tmp/cleanup-worked'],
+            cleanup=['/bin/touch', '/tmp/cleanup-worked'],  # TODO: unregister runners
             ssh=server.ipv4_address.apply(lambda ip: f'op@{ip}'),
             metrics=server.ipv4_address.apply(lambda ip: f'http://{ip}:8080/metrics'),
             created_at=instance.created_at,

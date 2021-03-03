@@ -81,5 +81,4 @@
         backup: yes
 
 
-  # TODO: HTTP endpoint for querying runner status
   # TODO: Docker cleanup (see https://docs.gitlab.com/runner/executors/docker.html#the-builds-and-cache-storage )
