@@ -1,3 +1,14 @@
-# TODO: write systemd service file
-# TODO: write systemd timer file
-# TODO: write systemd environment template
+[Unit]
+Description=Scaling actions for GitLab CI runners fleet
+After=network.target
+
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/make
+WorkingDirectory=/etc/gitlab-runners-fleet/
+EnvironmentFile=/etc/gitlab-runners-fleet.env
+User=ci-runners-manager
+Group=nogroup
+NoNewPrivileges=yes
+PrivateTmp=yes

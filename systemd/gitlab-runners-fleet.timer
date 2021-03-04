@@ -1,0 +1,11 @@
+[Unit]
+Description=Timer for scaling actions for GitLab CI runners fleet
+
+
+[Timer]
+OnUnitActiveSec=3min
+RandomizedDelaySec=30s
+
+
+[Install]
+WantedBy=timers.target
