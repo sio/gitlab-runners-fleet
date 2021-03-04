@@ -28,7 +28,7 @@ include Makefile.venv
 
 PULUMI:=$(PULUMI) -C $(PULUMI_PROJECT)
 .PHONY: up destroy
-up destroy: venv check-software stack assign $(GITLAB_RUNNER_SSHKEY)
+up destroy: pull venv check-software stack assign $(GITLAB_RUNNER_SSHKEY)
 	$(PULUMI) $(PULUMI_ARGS) $@
 	$(PULUMI) config set $(PULUMI_SNAPSHOT_OBJECT) "$$($(PULUMI) stack output $(PULUMI_SNAPSHOT_OBJECT) --json)"
 
@@ -67,7 +67,7 @@ show:
 .PHONY: pull
 pull:
 ifndef GIT_PULL_DISABLE
-	$(GIT) pull --ff-only
+	-$(GIT) pull --ff-only
 endif
 
 
