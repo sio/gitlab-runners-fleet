@@ -8,6 +8,7 @@ Type=simple
 ExecStart=/usr/bin/make
 WorkingDirectory=/etc/gitlab-runners-fleet/
 EnvironmentFile=/etc/gitlab-runners-fleet.env
+Environment=NON_INTERACTIVE=yes
 User=ci-runners-manager
 Group=nogroup
 NoNewPrivileges=yes
