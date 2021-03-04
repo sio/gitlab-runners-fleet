@@ -60,6 +60,9 @@ def calculate_actions():
     jobs_required = gitlab.get_pending_jobs()
     instances_required = max(0, int(math.ceil((jobs_required - jobs_capacity)/JOBS_PER_INSTANCE)))
 
+    # TODO: set max servers added at a time
+    # TODO: set max servers total
+
     if not instances_required:
         return actions
 
