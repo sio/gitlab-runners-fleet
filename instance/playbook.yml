@@ -71,10 +71,10 @@
         port: '8080'
         proto: tcp
 
-    - name: enable passwordless sudo for operator
+    - name: configure sudo for operator
       copy:
         content: |
-          op ALL=(ALL) NOPASSWD:ALL
+          op ALL=(gitlab-runner) NOPASSWD: /etc/gitlab-runner-custom/unregister.sh
         dest: /etc/sudoers.d/op
         validate: visudo -cf %s
         mode: '0440'
