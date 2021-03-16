@@ -20,6 +20,10 @@ JOBS_PER_INSTANCE = 2  # This is used to calculate the number of required instan
                        # The value should be less than or equal to the maximum number of
                        # concurrent jobs allowed per instance
 
+MAX_TOTAL_INSTANCES = 10  # How many instances may exist at once
+MAX_GROW_INSTANCES = 2    # How many instances may be added at once
+
+# Idle timeout length calculations
 EST_PROVISIONING_MINUTES = 10
 MIN_BILLABLE_MINUTES = 60
 MAX_RERUN_DELAY = 10
@@ -60,18 +64,25 @@ def calculate_actions():
     jobs_required = gitlab.get_pending_jobs()
     instances_required = max(0, int(math.ceil((jobs_required - jobs_capacity)/JOBS_PER_INSTANCE)))
 
-    # TODO: set max servers added at a time
-    # TODO: set max servers total
-
     if not instances_required:
         return actions
 
     names_taken = set()
-    for action in actions.values():
-        for instances in action.values():
+    count_instances = 0
+    for action, status_set in actions.items():
+        for instances in status_set.values():
             for instance in instances:
                 names_taken.add(instance.name)
-    for _ in range(instances_required):
+                if action != 'DELETE':
+                    count_instances += 1
+
+    instances_to_add = min(
+        instances_required,
+        MAX_GROW_INSTANCES,
+        MAX_TOTAL_INSTANCES - count_instances,
+    )
+
+    for _ in range(instances_to_add):
         new_name = ''
         while not new_name or new_name in names_taken:
             new_name = 'ci-' + coolname.generate_slug(2)
