@@ -21,7 +21,7 @@ class InstanceParams:
     def __post_init__(self):
         '''Make object truly immutable'''
         if not isinstance(self.cleanup, tuple):
-            object.__setattr__(self, 'cleanup', tuple(self.cleanup))
+            object.__setattr__(self, 'cleanup', tuple(self.cleanup or ()))
 
 
 class InstanceStatus(Enum):
