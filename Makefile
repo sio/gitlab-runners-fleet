@@ -62,6 +62,7 @@ $(GITLAB_RUNNER_SSHKEY):
 .PHONY: show
 show:
 	$(PULUMI) stack
+	$(PULUMI) config get $(PULUMI_SNAPSHOT_OBJECT)
 
 
 .PHONY: pull
