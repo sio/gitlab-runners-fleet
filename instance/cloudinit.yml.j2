@@ -31,14 +31,3 @@ write_files:
 runcmd:
   - /usr/bin/make -C /etc/provision/ >> /etc/provision/log
   - touch /etc/provision/completed
-
-power_state:
-  delay: now
-  mode: reboot
-  message: cloud-init initialization complete
-  condition: true
-
-swap:
-  filename: /var/swap.img
-  size: auto
-  maxsize: 4294967296  # bytes
