@@ -18,6 +18,11 @@ I've decided not to use GitLab's suggested `docker-machine` approach because:
 
 Work in progress. Not working yet and may break things.
 
+```
+# TODO: dind connection refused: https://gitlab.com/sio/ci-with-molecule-git/-/jobs/1105519117
+# TODO: new runners do not pick up old pending jobs unless kicked via webui
+```
+
 
 ## Requirements for management node
 
