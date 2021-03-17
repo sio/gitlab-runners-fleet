@@ -34,4 +34,4 @@ for status, instances in chain(actions['KEEP'].items(), actions['CREATE'].items(
             created_at=instance.created_at,
             idle_since=instance.idle_since,
         ))
-pulumi.export(os.environ['PULUMI_SNAPSHOT_OBJECT'], export)
+pulumi.export(os.environ['PULUMI_SNAPSHOT_OBJECT'], sorted(export, key=lambda i: i['name']))
