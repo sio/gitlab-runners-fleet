@@ -5,7 +5,7 @@ ifdef PULUMI_AUTO_INSTALL
 
 ifneq (ok,$(shell $(PULUMI) version >/dev/null 2>&1 && echo ok))
 PULUMI=$(PULUMI_PROJECT)/bin/pulumi
-PULUMI_DOWNLOAD_VERSION?=2.21.2
+PULUMI_DOWNLOAD_VERSION?=2.22.0
 endif
 
 check-software: management-node-packages $(PULUMI)
