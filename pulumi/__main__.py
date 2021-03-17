@@ -26,7 +26,9 @@ for status, instances in chain(actions['KEEP'].items(), actions['CREATE'].items(
         server = create(instance, depends_on=[key,])
         export.append(dict(
             name=instance.name,
-            cleanup=('sudo', '-u', 'gitlab-runner', '/etc/gitlab-runner-custom/unregister.sh'),
+            cleanup=instance.cleanup or (
+                'sudo', '-u', 'gitlab-runner', '/etc/gitlab-runner-custom/unregister.sh'
+            ),
             ssh=server.ipv4_address.apply(lambda ip: f'op@{ip}'),
             metrics=server.ipv4_address.apply(lambda ip: f'http://{ip}:8080/metrics'),
             created_at=instance.created_at,
