@@ -32,6 +32,7 @@ MAX_IDLE_MINUTES = MIN_BILLABLE_MINUTES - MAX_RERUN_DELAY - EST_PROVISIONING_MIN
 
 def get_status(instance: InstanceParams) -> InstanceStatus:
     '''Detect instance status'''
+    pulumi.log.debug(f'Query instance status: {instance.name}')
     now = timestamp.now()
     try:
         response = requests.get(instance.metrics)
