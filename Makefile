@@ -2,8 +2,10 @@ PULUMI?=pulumi
 .DEFAULT_GOAL=up
 
 
-include makefiles/*.mk
+SETUP_PY=setup.cfg
 include Makefile.venv
+
+include makefiles/*.mk
 
 
 .PHONY: up destroy
