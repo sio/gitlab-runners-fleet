@@ -18,7 +18,7 @@ $(PULUMI):
 
 .PHONY: debian-packages
 debian-packages: $(dir $(PULUMI))/.debian-packages-are-installed
-$(dir $(PULUMI))/.debian-packages-are-installed
+$(dir $(PULUMI))/.debian-packages-are-installed:
 	apt-get -y install make python3-venv openssh-client curl
 	mkdir -p $(dir $@)
 	touch $@
