@@ -8,6 +8,12 @@ include Makefile.venv
 include makefiles/*.mk
 
 
+# Add pulumi binary to path if it's not there yet
+ifneq (./.,$(dir $(PULUMI)))
+PATH:=$(dir $(PULUMI)):$(PATH)
+endif
+
+
 .PHONY: up destroy
 up destroy: | venv check-software
 	$(VENV)/fleet-manager $@
@@ -19,3 +25,8 @@ check-software:
 	$(PY) --version
 	@$(PY) -c 'import venv; import ensurepip'  # check for python3-venv package
 	ssh -V
+
+
+.PHONY: clean
+clean:
+	git clean -idx
