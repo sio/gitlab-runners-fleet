@@ -28,7 +28,7 @@ class InstanceStatus(Enum):
 status = InstanceStatus
 
 
-@dataclass
+@dataclass(eq=False)
 class CloudInstance(ABC):
     '''Abstract class for a cloud compute instance'''
 
@@ -81,14 +81,14 @@ class CloudProvider(ABC):
             self.scaling = scaling_config
         self._names_seen = set()
 
-    def new(instance_name: Optional[str] = None) -> CloudInstance:
+    def new(self, instance_name: Optional[str] = None) -> CloudInstance:
         '''Return new cloud instance object'''
         if instance_name is None:
             instance_name = self._new_name()
         self._check_name(instance_name)
         self._names_seen.add(instance_name)
 
-        instance = self._instance_cls(cloud=self, name=name)
+        instance = self._instance_cls(cloud=self, name=instance_name)
         self.instances.add(instance)
         return instance
 
@@ -134,9 +134,9 @@ class CloudProvider(ABC):
 
         scaling = self.scaling
         jobs_pending = gitlab.get_pending_jobs()
-        jobs_capacity = scaling.jobs_per_instance * len(
-                i for i in self.instances if i.status in {status.PROVISIONING, status.READY}
-            )
+        jobs_capacity = scaling.jobs_per_instance * len([
+                None for i in self.instances if i.status in {status.PROVISIONING, status.READY}
+            ])
         instances_required = max(
                 0,
                 int(math.ceil(
@@ -155,7 +155,7 @@ class CloudProvider(ABC):
             self.new()
 
     @abstractmethod
-    def setup():
+    def setup(self):
         '''
         Ensure that cloud provider is ready for creating instances:
             - Create required SSH keys

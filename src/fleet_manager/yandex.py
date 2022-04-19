@@ -55,7 +55,7 @@ class YandexCloud(CloudProvider):
 
     _instance_cls = YandexInstance
 
-    def setup():
+    def setup(self):
         '''
         Ensure that cloud provider is ready for creating instances:
             - Create required SSH keys
