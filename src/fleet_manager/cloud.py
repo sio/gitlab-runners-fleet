@@ -14,6 +14,7 @@ from enum import Enum, auto
 import coolname
 
 from . import gitlab, timestamp
+from .scaling import ScalingConfig
 
 
 class InstanceStatus(Enum):
