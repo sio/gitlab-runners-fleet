@@ -3,6 +3,7 @@
 /dist/
 
 /bin/
+/pulumi-stack/
 
 Makefile.venv
 .venv

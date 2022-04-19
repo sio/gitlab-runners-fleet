@@ -15,7 +15,7 @@ endif
 
 
 .PHONY: up destroy
-up destroy: | venv check-software
+up destroy: | venv check-software state-backend
 	$(VENV)/fleet-manager $@
 
 
@@ -30,3 +30,14 @@ check-software:
 .PHONY: clean
 clean:
 	git clean -idx
+
+
+PULUMI_STATE_DIRECTORY=pulumi-stack
+export PULUMI_BACKEND_URL=file://$(realpath $(PULUMI_STATE_DIRECTORY))
+
+$(PULUMI_STATE_DIRECTORY):
+	mkdir -p "$@"
+
+.PHONY: state-backend
+state-backend: $(PULUMI_STATE_DIRECTORY)
+	$(PULUMI) login
