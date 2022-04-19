@@ -1,26 +1,17 @@
 # Initialize GitLab runner instance on localhost
 
 
-.DEFAULT_GOAL=runner
-REQUIREMENTS_TXT=requirements.txt
+.PHONY: runner
+runner: venv
+	$(VENV)/ansible-galaxy install -r requirements.yml
+	$(VENV)/ansible-playbook playbook.yml --extra-vars "ansible_python_interpreter=/usr/bin/python3"
 
 
 include Makefile.venv
 Makefile.venv:
 	curl \
 		-o Makefile.fetched \
-		-L "https://github.com/sio/Makefile.venv/raw/v2020.08.14/Makefile.venv"
-	echo "5afbcf51a82f629cd65ff23185acde90ebe4dec889ef80bbdc12562fbd0b2611 *Makefile.fetched" \
+		-L "https://github.com/sio/Makefile.venv/raw/v2022.04.13/Makefile.venv"
+	echo "bb2e61acbc3a8ea83011a43e0b010b331eddec5ac24d4edce2b7b427362460c9 *Makefile.fetched" \
 		| sha256sum --check - \
 		&& mv Makefile.fetched Makefile.venv
-
-
-FILES=playbook.yml requirements.yml requirements.txt metrics.py metrics.service
-$(FILES):
-	curl -o $@ -L "https://github.com/sio/gitlab-runners-fleet/raw/master/instance/$@"
-
-
-.PHONY: runner
-runner: venv $(FILES)
-	$(VENV)/ansible-galaxy install -r requirements.yml
-	$(VENV)/ansible-playbook playbook.yml --extra-vars "ansible_python_interpreter=/usr/bin/python3"
