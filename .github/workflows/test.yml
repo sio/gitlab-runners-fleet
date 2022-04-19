@@ -1,0 +1,21 @@
+name: test
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  schedule:
+    - cron: '38 9 12 * *'
+
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+    env:
+      PIP_CACHE_DIR: cache/pip
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: cache
+          key: cache-v1-${{ hashFiles('setup.cfg') }}
+      - run: make test
