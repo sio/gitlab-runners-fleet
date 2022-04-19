@@ -1,6 +1,7 @@
 *.pyc
 *.egg-info/
 /dist/
+/.tox/
 
 /bin/
 /pulumi-stack/

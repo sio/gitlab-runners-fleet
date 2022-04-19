@@ -1,0 +1,5 @@
+[general]
+provider = "NonExistentProvider"
+
+[YandexCloud]
+memory_gb = 8

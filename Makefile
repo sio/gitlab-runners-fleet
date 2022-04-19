@@ -19,6 +19,11 @@ up destroy: | venv check-software state-backend
 	$(VENV)/fleet-manager $@
 
 
+.PHONY: test
+test: $(VENV)/tox
+	$(VENV)/tox $(TOX_ARGS)
+
+
 .PHONY: check-software
 check-software:
 	$(PULUMI) version
@@ -35,8 +40,10 @@ clean:
 PULUMI_STATE_DIRECTORY=pulumi-stack
 export PULUMI_BACKEND_URL=file://$(realpath $(PULUMI_STATE_DIRECTORY))
 
+
 $(PULUMI_STATE_DIRECTORY):
 	mkdir -p "$@"
+
 
 .PHONY: state-backend
 state-backend: $(PULUMI_STATE_DIRECTORY)

@@ -1,0 +1,35 @@
+[general]
+provider = "YandexCloud"
+log_level = "WARNING"
+
+
+[scaling]
+jobs_per_instance = 2
+min_total_instances = 0
+max_total_instances = 10
+max_grow_instances = 2
+est_provisioning_minutes = 10
+min_billable_minutes = 10
+max_rerun_delay = 10
+max_idle_minutes = -1  # auto
+
+
+[gitlab]
+graphql_url = "https://gitlab.com/api/graphql"
+rest_api_url = 'https://gitlab.com/api/v4'
+
+
+[pulumi]
+stack = "stackname"
+project = "projectname"
+plugins = [
+    ["yandex", "v0.13.0"],
+]
+
+[YandexCloud]
+preemptible_instances = true
+availability_zone = "ru-central1-a"
+image_family = "debian-11"
+vcpu_count = 2
+memory_gb = 4
+disk_size_gb = 15
