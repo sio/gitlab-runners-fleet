@@ -3,7 +3,6 @@ Working with instance configuration
 '''
 
 import atexit
-from functools import cache
 from pathlib import Path
 from pkg_resources import (
         cleanup_resources,
@@ -11,6 +10,12 @@ from pkg_resources import (
         resource_filename,
         resource_isdir,
 )
+
+try:
+    from functools import cache
+except ImportError:
+    from functools import lru_cache
+    cache = lru_cache(maxsize=None)
 
 import jinja2
 
