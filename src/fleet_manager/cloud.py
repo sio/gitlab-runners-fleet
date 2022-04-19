@@ -141,11 +141,14 @@ class CloudProvider(ABC):
                     (jobs_pending - jobs_capacity) / scaling.jobs_per_instance
                 ))
             )
-        instances_to_add = min(
+        instances_to_add = max(
+            scaling.min_total_instances - len(self.instances),
+            min(
                 instances_required,
                 scaling.max_grow_instances,
                 scaling.max_total_instances - len(self.instances),
-            )
+            ),
+        )
         for _ in range(instances_to_add):
             self.new()
 

@@ -10,6 +10,7 @@ from typing import Optional
 @dataclass
 class ScalingConfig:
     jobs_per_instance: int = 2
+    min_total_instances: int = 0
     max_total_instances: int = 10
     max_grow_instances: int = 2
     est_provisioning_minutes: int = 10
