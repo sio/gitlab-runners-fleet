@@ -20,7 +20,6 @@ class YandexInstance(CloudInstance):
         yandex.ComputeInstance(
             resource_name = self.name,
             hostname = self.name,
-            name = self.name,
             scheduling_policy = yandex.ComputeInstanceSchedulingPolicyArgs(
                 preemptible = True,
             ),
@@ -30,11 +29,21 @@ class YandexInstance(CloudInstance):
                     gitlab_runner_token = 'gitlab_runner_token', # TODO
                 ),
             },
+            zone = 'ru-central1-a',  # TODO: allow configuration
             resources = yandex.ComputeInstanceResourcesArgs(
-                cores = 2,
+                cores = 2,  # TODO: allow configuration
                 memory = 4,
             ),
-            zone = 'ru-central1-a',  # TODO: allow configuration
+            boot_disk=yandex.ComputeInstanceBootDiskArgs(
+                auto_delete=True,
+                initialize_params=yandex.ComputeInstanceBootDiskInitializeParamsArgs(
+                    size=15,  # TODO: allow configuration
+                    image_id=yandex.get_compute_image(family='debian-11').image_id,  # TODO: allow configuration
+                ),
+            ),
+            network_interfaces=[yandex.ComputeInstanceNetworkInterfaceArgs(
+                subnet_id=self.cloud.subnet.id,
+            )],
         )
         super().create()
 
@@ -53,6 +62,7 @@ class YandexInstance(CloudInstance):
 class YandexCloud(CloudProvider):
     '''Yandex Cloud'''
 
+    PLUGIN = ('yandex', 'v0.13.0')
     _instance_cls = YandexInstance
 
     def setup(self):
@@ -63,3 +73,10 @@ class YandexCloud(CloudProvider):
             - Configure cloud NAT/firewall
             - etc.
         '''
+        self.vpc = yandex.VpcNetwork(f'{__package__}:{self.__class__.__name__}:network')
+        self.subnet = yandex.VpcSubnet(
+                f'{__package__}:{self.__class__.__name__}:subnet',
+                network_id = self.vpc.id,
+                zone='ru-central1-a', # TODO: allow configuration
+                v4_cidr_blocks=['10.0.0.0/24'],
+        )
