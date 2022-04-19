@@ -3,6 +3,9 @@ Abstract base classes for uniform interaction with different cloud providers
 '''
 
 
+from __future__ import annotations  # https://stackoverflow.com/a/52699243
+from typing import Optional
+
 import math
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
@@ -11,9 +14,6 @@ from enum import Enum, auto
 import coolname
 
 from . import gitlab, timestamp
-
-from __future__ import annotations  # https://stackoverflow.com/a/52699243
-from typing import Optional
 
 
 class InstanceStatus(Enum):
