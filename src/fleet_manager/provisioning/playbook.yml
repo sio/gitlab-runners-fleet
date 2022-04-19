@@ -1,0 +1,84 @@
+---
+# Ansible playbook to initialize GitLab runner on localhost
+
+- hosts: localhost
+  collections:
+    - potyarkin.homelab
+  become: yes
+  roles:
+    - role: server
+      server_remote_user: op
+      server_keys_public:
+        - /etc/provision/pubkey
+
+    - role: upgrade
+
+    - role: packages
+      packages_install:
+        - docker.io
+
+    - role: gitlab_runner
+      gitlab_runner_token: '{{ lookup("file", "/etc/provision/gitlab_runner_token") }}'
+      gitlab_runner_tags:
+        - private-runner
+      gitlab_runner_executor: docker
+      gitlab_runner_concurrent_jobs: 3
+      gitlab_runner_extra_registration_params:
+        name: 'private-runner-{{ ansible_hostname }}'
+        run-untagged: ''
+        locked: 'false'
+        docker-privileged: 'true'
+        docker-image: 'ruby:2.5'
+
+  tasks:
+    - name: grant gitlab-runner access to docker socket
+      user:
+        name: gitlab-runner
+        groups: docker
+        append: yes
+      notify: restart gitlab runner
+
+    - name: enable metrics endpoint for gitlab-runner
+      lineinfile:
+        path: /etc/gitlab-runner-custom/config.toml
+        line: listen_address = "localhost:9252"
+        regexp: '^listen_address'
+        insertbefore: BOF
+      notify: restart gitlab runner
+
+    - name: install metrics server for WAN
+      copy:
+        src: metrics.py
+        dest: /usr/local/bin/metrics
+        mode: '0755'
+
+    - name: enable metrics server for WAN
+      copy:
+        src: metrics.service
+        dest: /etc/systemd/system/metrics.service
+        mode: '0644'
+
+    - name: start metrics server for WAN
+      systemd:
+        name: metrics.service
+        state: started
+        enabled: yes
+        daemon_reload: yes
+
+    - name: open metrics port on WAN
+      ufw:
+        rule: allow
+        port: '8080'
+        proto: tcp
+
+    - name: configure sudo for operator
+      copy:
+        content: |
+          op ALL=(gitlab-runner) NOPASSWD: /etc/gitlab-runner-custom/unregister.sh
+        dest: /etc/sudoers.d/op
+        validate: visudo -cf %s
+        mode: '0440'
+        backup: yes
+
+
+  # TODO: Docker cleanup (see https://docs.gitlab.com/runner/executors/docker.html#the-builds-and-cache-storage )
