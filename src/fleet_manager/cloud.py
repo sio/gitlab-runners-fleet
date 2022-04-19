@@ -109,6 +109,7 @@ class CloudProvider(ABC):
 
     def pulumi(self):
         '''Inline program for Pulumi Automation API'''
+        self.scale()
         if not self.instances:
             return
         self.setup()
