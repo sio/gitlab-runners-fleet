@@ -19,6 +19,8 @@ except ImportError:
 
 import jinja2
 
+from .logging import log
+
 
 def resolve_path(path):
     '''
@@ -60,11 +62,10 @@ def static_file(j2, name):
 @cache
 def jinja_environment(template_directory):
     '''Create Jinja2 environment for the template directory'''
+    log.debug('Creating new Jinja2 environment for %s', template_directory)
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_directory))
-    env.filters.update(dict(
-        static_file = static_file,
-    ))
     env.globals.update(dict(
+        static_file = static_file,
         template_directory = str(template_directory),
     ))
     return env
