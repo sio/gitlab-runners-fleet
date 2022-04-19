@@ -23,7 +23,11 @@ api = GitLabAPI(os.environ['GITLAB_API_TOKEN'])
 def get_namespace() -> str:
     '''Return GitLab namespace for CI runners'''
     username_query = '{currentUser {username}}'
-    username = api(username_query)['currentUser']['username']
+    reply = api(username_query)
+    try:
+        username = reply['currentUser']['username']
+    except (KeyError, TypeError):
+        raise RuntimeError(f"GitLab couldn't match provided API token to any user account")
     return username
 
 
