@@ -188,13 +188,26 @@ class CloudProvider(ABC):
 
     def restore(self, stack):
         '''
-        Restore saved instances from persistent storage (Pulumi stack)
+        Restore instance list from persistent storage (Pulumi stack)
         '''
         if self.instances:
             raise RuntimeError('can not restore over existing instances')
+        self._restore_from_stack_output(stack)
+        if not self.instances:  # stack output may be lost on crash
+            self._restore_from_deployment(stack)
+
+    def _restore_from_deployment(self, stack):
+        '''Restore instance list from current deployment'''
+        log.warning(
+            'Restoring instance list from deployment is not implemented for %s',
+            self.__class__.__name__,
+        )
+
+    def _restore_from_stack_output(self, stack):
+        '''Restore instance list from previous stack output'''
         export = stack.outputs().get(self.__class__.__name__)
         if export is None:
-            log.debug('Nothing to restore for %s', self.__class__.__name__)
+            log.debug('No saved instances in stack output for %s', self.__class__.__name__)
             return
         log.debug('Fetching stack output: %s', export)
         for name, params in export.value.items():

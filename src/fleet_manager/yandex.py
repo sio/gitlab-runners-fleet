@@ -6,7 +6,9 @@ from dataclasses import dataclass
 
 import pulumi_yandex as yandex
 
+from . import timestamp
 from .cloud import CloudProvider, CloudInstance, status
+from .logging import log
 from .provision import template
 
 
@@ -85,3 +87,22 @@ class YandexCloud(CloudProvider):
                 zone=self.config.availability_zone,
                 v4_cidr_blocks=['10.0.0.0/24'],
         )
+
+    def _restore_from_deployment(self, stack):
+        resources = stack.export_stack().deployment['resources']
+        for resource in resources:
+            if resource['type'] != 'yandex:index/computeInstance:ComputeInstance':
+                continue
+            if resource['outputs']['status'] != 'running':
+                continue
+            params = dict(
+                name=resource['outputs']['hostname'],
+                created_at=timestamp.from_string(resource['outputs']['createdAt']),
+            )
+            instance = self._instance_cls(cloud=self, **params)
+            self.instances.add(instance)
+            log.debug(
+                'restored %i instances currently deployed: %s',
+                len(self.instances),
+                [i.name for i in self.instances]
+            )
