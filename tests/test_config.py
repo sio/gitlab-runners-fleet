@@ -29,4 +29,4 @@ def test_configuration_merging():
     assert config.YandexCloud.preemptible_instances == True
     assert config.pulumi.stack == 'stackname'
     assert config.YandexCloud.memory_gb == 8
-    assert config.general.provider == 'NonExistentProvider'
+    assert config.main.cloud == 'NonExistentProvider'

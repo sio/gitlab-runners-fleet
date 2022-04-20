@@ -1,6 +1,6 @@
-[general]
-provider = "YandexCloud"
-log_level = "WARNING"
+[main]
+cloud = "fleet_manager.yandex:YandexCloud"
+log_level = "warning"
 
 
 [scaling]
