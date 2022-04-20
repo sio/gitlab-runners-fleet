@@ -9,7 +9,7 @@ min_total_instances = 0
 max_total_instances = 10
 max_grow_instances = 2
 est_provisioning_minutes = 10
-min_billable_minutes = 10
+min_billable_minutes = 60
 max_rerun_delay = 10
 max_idle_minutes = -1  # auto
 
