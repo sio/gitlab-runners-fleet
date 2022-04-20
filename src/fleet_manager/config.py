@@ -41,7 +41,7 @@ class Configuration:
         return getattr(self._root, attr)
 
 
-class AttributeDictReader:
+class AttributeDictReader(Mapping):
 
     def __init__(self, dictionary):
         self._dictionary = dictionary
@@ -55,3 +55,12 @@ class AttributeDictReader:
             return self.__class__(value)
         else:
             return value
+
+    def __getitem__(self, key):
+        return self._dictionary[key]
+
+    def __iter__(self):
+        return iter(self._dictionary)
+
+    def __len__(self):
+        return len(self._dictionary)
