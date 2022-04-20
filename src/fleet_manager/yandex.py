@@ -89,7 +89,7 @@ class YandexCloud(CloudProvider):
         )
 
     def _restore_from_deployment(self, stack):
-        resources = stack.export_stack().deployment['resources']
+        resources = stack.export_stack().deployment.get('resources', [])
         for resource in resources:
             if resource['type'] != 'yandex:index/computeInstance:ComputeInstance':
                 continue
