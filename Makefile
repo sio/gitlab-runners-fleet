@@ -37,6 +37,11 @@ clean:
 	git clean -idx
 
 
+.PHONY: loc
+loc: $(VENV)/pygount
+	$(VENV)/pygount --format=summary .
+
+
 PULUMI_STATE_DIRECTORY=pulumi-stack
 export PULUMI_BACKEND_URL=file://$(realpath $(PULUMI_STATE_DIRECTORY))
 
