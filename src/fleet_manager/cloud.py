@@ -8,7 +8,7 @@ from typing import Optional
 
 import math
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from enum import Enum, auto
 
 import coolname
@@ -75,12 +75,18 @@ class CloudProvider(ABC):
     _instance_cls: CloudInstance
     _namelog_maxlen_multiplier = 50
 
-    def __init__(self, scaling_config=None):
+    def __init__(self, scaling=None, config=None):
         self.instances: set[CloudInstance] = set()
+        if config is None:
+            config = dict()
+        self.config = config
         self.scaling = ScalingConfig()
-        if scaling_config is not None:
-            self.scaling = scaling_config
+        if scaling is not None:
+            self.scaling = scaling
         self._names_seen = set()
+
+    def __repr__(self):
+        return f'<{self.__class__.__name__} scaling={asdict(self.scaling)} config={dict(self.config)}>'
 
     def new(self, instance_name: Optional[str] = None) -> CloudInstance:
         '''Return new cloud instance object'''

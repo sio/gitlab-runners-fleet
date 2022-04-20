@@ -29,7 +29,10 @@ def cloud_provider(config):
         raise ValueError(f'invalid cloud provider class path: {class_path}')
     module = import_module(module_path)
     cloud_class = getattr(module, class_name)
-    return cloud_class(ScalingConfig(**config.scaling))
+    return cloud_class(
+        scaling=ScalingConfig(**config.scaling),
+        config=getattr(config, class_name, None),
+    )
 
 
 def dummy_cli():
