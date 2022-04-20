@@ -102,7 +102,7 @@ class YandexCloud(CloudProvider):
             instance = self._instance_cls(cloud=self, **params)
             self.instances.add(instance)
             log.debug(
-                'restored %i instances currently deployed: %s',
+                'Restored %i instances currently deployed: %s',
                 len(self.instances),
                 [i.name for i in self.instances]
             )

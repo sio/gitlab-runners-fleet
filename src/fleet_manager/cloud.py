@@ -209,7 +209,7 @@ class CloudProvider(ABC):
         if export is None:
             log.debug('No saved instances in stack output for %s', self.__class__.__name__)
             return
-        log.debug('Fetching stack output: %s', export)
+        log.debug('Restoring instances from stack output: %s', export)
         for name, params in export.value.items():
             instance = self._instance_cls(name=name, cloud=self, **params)
             self.instances.add(instance)
