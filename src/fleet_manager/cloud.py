@@ -71,7 +71,6 @@ class CloudInstance(ABC):
 class CloudProvider(ABC):
     '''Abstract class for cloud provider'''
 
-    PLUGIN: tuple[str]
     _instance_cls: CloudInstance
     _namelog_maxlen_multiplier = 50
 

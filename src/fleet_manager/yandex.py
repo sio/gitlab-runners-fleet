@@ -17,28 +17,29 @@ class YandexInstance(CloudInstance):
 
     def create(self):
         '''Create cloud instance corresponding to this object'''
+        config = self.cloud.config
         yandex.ComputeInstance(
             resource_name = self.name,
             hostname = self.name,
             scheduling_policy = yandex.ComputeInstanceSchedulingPolicyArgs(
-                preemptible = True,
+                preemptible = config.preemptible_instances,
             ),
             metadata = {
-                'user-data': template('provisioning/cloudinit.yml.j2').render(
+                'user-data': template(config.cloudinit_template).render(
                     pubkey = 'publickey', # TODO
                     gitlab_runner_token = 'gitlab_runner_token', # TODO
                 ),
             },
-            zone = 'ru-central1-a',  # TODO: allow configuration
+            zone = config.availability_zone,
             resources = yandex.ComputeInstanceResourcesArgs(
-                cores = 2,  # TODO: allow configuration
-                memory = 4,
+                cores = config.vcpu_count,
+                memory = config.memory_gb,
             ),
             boot_disk=yandex.ComputeInstanceBootDiskArgs(
                 auto_delete=True,
                 initialize_params=yandex.ComputeInstanceBootDiskInitializeParamsArgs(
-                    size=15,  # TODO: allow configuration
-                    image_id=yandex.get_compute_image(family='debian-11').image_id,  # TODO: allow configuration
+                    size=config.disk_size_gb,
+                    image_id=yandex.get_compute_image(family=config.image_family).image_id,
                 ),
             ),
             network_interfaces=[yandex.ComputeInstanceNetworkInterfaceArgs(
@@ -62,7 +63,6 @@ class YandexInstance(CloudInstance):
 class YandexCloud(CloudProvider):
     '''Yandex Cloud'''
 
-    PLUGIN = ('yandex', 'v0.13.0')
     _instance_cls = YandexInstance
 
     def setup(self):
@@ -77,6 +77,6 @@ class YandexCloud(CloudProvider):
         self.subnet = yandex.VpcSubnet(
                 f'{__package__}:{self.__class__.__name__}:subnet',
                 network_id = self.vpc.id,
-                zone='ru-central1-a', # TODO: allow configuration
+                zone=self.config.availability_zone,
                 v4_cidr_blocks=['10.0.0.0/24'],
         )
