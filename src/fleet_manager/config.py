@@ -35,7 +35,7 @@ class Configuration:
             if key not in custom:
                 merged[key] = defaults[key]
         self._data = merged
-        self._root = AttributeDictReader(self._data)
+        self._root = AttributeDictReader(self._data, filename=config_path or defaults)
 
     def __getattr__(self, attr):
         return getattr(self._root, attr)
@@ -43,16 +43,19 @@ class Configuration:
 
 class AttributeDictReader(Mapping):
 
-    def __init__(self, dictionary):
+    def __init__(self, dictionary, filename='', path=tuple()):
         self._dictionary = dictionary
+        self._path = path
+        self._filename = filename
 
     def __getattr__(self, attr):
+        path = self._path
         try:
             value = self._dictionary[attr]
         except KeyError:
-            raise AttributeError(f'no such attribute: {attr}')
+            raise AttributeError(f'no such attribute: {self._filename}:{".".join(path + (attr,))}')
         if isinstance(value, Mapping):
-            return self.__class__(value)
+            return self.__class__(value, filename=self._filename, path=path+(attr,))
         else:
             return value
 
