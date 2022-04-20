@@ -19,7 +19,7 @@ class ScalingConfig:
     max_idle_minutes: Optional[int] = None
 
     def __post_init__(self):
-        if self.max_idle_minutes is None:
+        if self.max_idle_minutes is None or self.max_idle_minutes < 0:
             self.max_idle_minutes = (self.min_billable_minutes
                                     -self.max_rerun_delay
                                     -self.est_provisioning_minutes)
