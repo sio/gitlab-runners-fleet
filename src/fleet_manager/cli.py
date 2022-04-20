@@ -6,6 +6,8 @@ import argparse
 from importlib import import_module
 from pathlib import Path
 
+from pulumi import automation as auto
+
 from . import logging
 from .config import Configuration
 from .logging import log
@@ -17,8 +19,18 @@ def main(*a, **ka):
     config = Configuration(args.config)
     logging.setup(config.main.log_level)
     cloud = cloud_provider(config)
-    print(cloud)
+    log.debug(f'Initialized cloud provider object:\n{cloud}')
 
+    stack = auto.create_or_select_stack(
+        stack_name = config.pulumi.stack,
+        project_name = config.pulumi.project,
+        program = cloud.pulumi,
+    )
+    for plugin in config.pulumi.plugins:
+        stack.workspace.install_plugin(*plugin)
+    refresh = stack.refresh() # on_output=print)
+    action = getattr(stack, args.action)
+    action(on_output=print)
 
 
 def cloud_provider(config):
@@ -33,21 +45,6 @@ def cloud_provider(config):
         scaling=ScalingConfig(**config.scaling),
         config=getattr(config, class_name, None),
     )
-
-
-def dummy_cli():
-    from pulumi import automation as auto
-    stack = auto.create_or_select_stack(
-        stack_name = 'dev',
-        project_name = 'gitlab_runners_rewrite',
-        program = cloud.pulumi,
-    )
-    stack.workspace.install_plugin(*cloud.PLUGIN)
-    refresh = stack.refresh() # on_output=print)
-    if sys.argv[1] == 'up':
-        up = stack.up(on_output=print)
-    elif sys.argv[1] == 'destroy':
-        stack.destroy(on_output=print)
 
 
 def parse_args(*a, **ka):
