@@ -2,14 +2,19 @@
 Yandex Cloud
 '''
 
+from dataclasses import dataclass
+
 import pulumi_yandex as yandex
 
 from .cloud import CloudProvider, CloudInstance, status
 from .provision import template
 
 
+@dataclass(eq=False)
 class YandexInstance(CloudInstance):
     '''Yandex Cloud VPS'''
+
+    ipv4_address: str = None
 
     def update_status(self):
         '''Write updated values to self.status, self.idle_since'''
@@ -18,7 +23,7 @@ class YandexInstance(CloudInstance):
     def create(self):
         '''Create cloud instance corresponding to this object'''
         config = self.cloud.config
-        yandex.ComputeInstance(
+        instance = yandex.ComputeInstance(
             resource_name = self.name,
             hostname = self.name,
             scheduling_policy = yandex.ComputeInstanceSchedulingPolicyArgs(
