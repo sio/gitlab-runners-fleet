@@ -19,5 +19,10 @@ def setup(level=None):
             level = logging.DEBUG
         else:
             level = logging.WARNING
+    if isinstance(level, str):
+        try:
+            level = getattr(logging, level.upper())
+        except AttributeError:
+            raise ValueError(f'invalid log level name: {level}')
     log.level = level
     log.debug('Starting logging: %s', log)
