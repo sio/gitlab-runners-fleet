@@ -44,7 +44,7 @@ def resolve_path(path):
 def template(path):
     '''Return Jinja2 template corresponding to provided path'''
     path = resolve_path(path)
-    if not path.exists:
+    if not path.exists():
         raise ValueError(f'template not found in path: {path}')
     j2 = jinja_environment(path.parent)
     return j2.get_template(path.name)
