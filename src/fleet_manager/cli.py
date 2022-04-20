@@ -29,6 +29,7 @@ def main(*a, **ka):
     for plugin in config.pulumi.plugins:
         stack.workspace.install_plugin(*plugin)
     refresh = stack.refresh() # on_output=print)
+    cloud.restore(stack)
     action = getattr(stack, args.action)
     action(on_output=print)
 

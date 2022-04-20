@@ -8,12 +8,14 @@ from typing import Optional
 
 import math
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, fields
 from enum import Enum, auto
 
 import coolname
+import pulumi
 
 from . import gitlab, timestamp
+from .logging import log
 from .scaling import ScalingConfig
 
 
@@ -49,8 +51,6 @@ class CloudInstance(ABC):
     @abstractmethod
     def create(self):
         '''Create cloud instance corresponding to this object'''
-        self.created_at = timestamp.now()
-        self.status = status.PROVISIONING
 
     @abstractmethod
     def cleanup(self):
@@ -95,6 +95,7 @@ class CloudProvider(ABC):
         self._names_seen.add(instance_name)
 
         instance = self._instance_cls(cloud=self, name=instance_name)
+        instance.created_at = timestamp.now()
         self.instances.add(instance)
         return instance
 
@@ -116,11 +117,11 @@ class CloudProvider(ABC):
     def pulumi(self):
         '''Inline program for Pulumi Automation API'''
         self.scale()
-        if not self.instances:
-            return
-        self.setup()
-        for instance in sorted(self.instances):
+        if self.instances:
+            self.setup()
+        for instance in self.instances:
             instance.create()
+        self.save()
 
     def scale(self):
         '''Calculate scaling actions for cloud instances'''
@@ -169,3 +170,33 @@ class CloudProvider(ABC):
             - Configure cloud NAT/firewall
             - etc.
         '''
+
+    def save(self):
+        '''
+        Save all instances to persistent storage (Pulumi stack)
+        '''
+        export = {}
+        for instance in self.instances:
+            data = {}
+            for field in fields(instance):
+                if field.name in {'cloud', 'name', 'status'}:
+                    continue
+                data[field.name] = getattr(instance, field.name)
+            export[instance.name] = data
+        log.debug('Saving stack output: %s', export)
+        pulumi.export(self.__class__.__name__, export)
+
+    def restore(self, stack):
+        '''
+        Restore saved instances from persistent storage (Pulumi stack)
+        '''
+        if self.instances:
+            raise RuntimeError('can not restore over existing instances')
+        export = stack.outputs().get(self.__class__.__name__)
+        if export is None:
+            log.debug('Nothing to restore for %s', self.__class__.__name__)
+            return
+        log.debug('Fetching stack output: %s', export)
+        for name, params in export.value.items():
+            instance = self._instance_cls(name=name, cloud=self, **params)
+            self.instances.add(instance)
