@@ -8,3 +8,5 @@
 
 Makefile.venv
 .venv
+
+/config.toml
