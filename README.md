@@ -1,3 +1,23 @@
+# PROJECT IS BEING REWRITTEN FROM SCRATCH
+
+This project is currently being rewritten, you can watch the progress in
+['rewrite' branch](https://github.com/sio/gitlab-runners-fleet/tree/rewrite).
+
+When I first started I had zero experience with Pulumi and I didn't know about
+Pulumi Automation API. I also didn't plan the application architecture ahead
+and the project just grew organically. Many suboptimal choices were made.
+Cloud provider was not easy to replace, and management node was too complex to
+deploy.
+
+Rewriten version will be using Pulumi Automation API to drop dependency on
+systemd timer and makefiles on management node and to provide a single Python
+daemon that can be distributed as a PyPI package or a Docker container. New
+version will make cloud providers modular and will allow outside plugins for
+new ones. Hetzner is not the default provider anymore (I can't use it from
+Russia in 2022), but I still consider it the best one.
+
+---
+
 # Auto scaling fleet of GitLab CI runners
 
 This repo contains infrastructure definition and management scripts for a
