@@ -12,6 +12,8 @@ progress of longer tasks.
 - Figure out NAT in Yandex Cloud: cloud router or maybe an extra instance in setup()?
 - Yandex: finish provider-specific abstract methods
 - Config values not referenced yet: [gitlab]
+- Figure out dind setup: https://gitlab.com/sio/ci-with-molecule-git/-/jobs/1105519117
+- Investigate: new runners do not pick up old pending jobs unless kicked via webui
 - Add provider: Selectel (supports nested virtualization)
 - Remove instances that have reached maximum allowed age
 - Add monitoring entrypoint
