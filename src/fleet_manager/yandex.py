@@ -32,10 +32,12 @@ class YandexInstance(CloudInstance):
                 preemptible = config.preemptible_instances,
             ),
             metadata = {
+                # https://cloud.yandex.com/en-ru/docs/compute/concepts/vm-metadata
                 'user-data': template(config.cloudinit_template).render(
                     pubkey = 'publickey', # TODO
                     gitlab_runner_token = 'gitlab_runner_token', # TODO
                 ),
+                'serial-port-enable': 1,
             },
             zone = config.availability_zone,
             resources = yandex.ComputeInstanceResourcesArgs(
