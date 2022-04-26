@@ -38,5 +38,4 @@ write_files:
 {% endfor %}
 
 runcmd:
-  - /usr/bin/make -C /etc/provision/ >> /etc/provision/log
-  - touch /etc/provision/completed
+  - /usr/bin/make -C /etc/provision/ >> /etc/provision/log && touch /etc/provision/completed
