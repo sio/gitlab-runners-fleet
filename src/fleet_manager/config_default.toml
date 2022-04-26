@@ -33,4 +33,4 @@ image_family = "debian-11"
 vcpu_count = 2
 memory_gb = 4
 disk_size_gb = 15
-cloudinit_template = "provisioning/cloudinit.yml.j2"
+cloudinit_template = "templates/cloudinit.yml.j2"
