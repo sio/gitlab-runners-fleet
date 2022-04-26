@@ -11,6 +11,11 @@ packages:
   - python3-venv
   - sudo
 
+users:
+  - name: root
+    lock_passwd: false
+    plain_text_passwd: devpswd1  # TODO: remove insecure password
+
 write_files:
   - owner: root:root
     permissions: '0600'
@@ -26,9 +31,9 @@ write_files:
         'Makefile',
         'metrics.py',
         'metrics.service',
-        'runner.yml',
         'requirements.txt',
         'requirements.yml',
+        'runner-playbook.yml',
 ) %}
   - owner: root:root
     permissions: '0600'

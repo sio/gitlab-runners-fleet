@@ -33,7 +33,7 @@ class YandexInstance(CloudInstance):
             ),
             metadata = {
                 # https://cloud.yandex.com/en-ru/docs/compute/concepts/vm-metadata
-                'user-data': template(config.cloudinit_template).render(
+                'user-data': template(config.cloudinit_runner).render(
                     pubkey = 'publickey', # TODO
                     gitlab_runner_token = 'gitlab_runner_token', # TODO
                 ),
@@ -82,12 +82,57 @@ class YandexCloud(CloudProvider):
             - Configure cloud NAT/firewall
             - etc.
         '''
+        config = self.config
         self.vpc = yandex.VpcNetwork(f'{__package__}:{self.__class__.__name__}:network')
         self.subnet = yandex.VpcSubnet(
                 f'{__package__}:{self.__class__.__name__}:subnet',
                 network_id = self.vpc.id,
-                zone=self.config.availability_zone,
+                zone=config.availability_zone,
                 v4_cidr_blocks=['10.0.0.0/24'],
+        )
+        self.nat = yandex.VpcSubnet(
+                f'{__package__}:{self.__class__.__name__}:nat',
+                network_id = self.vpc.id,
+                zone=config.availability_zone,
+                v4_cidr_blocks=['10.10.0.0/24'],
+        )
+        self.ipaddr = yandex.VpcAddress(
+                'addr',
+                external_ipv4_address=yandex.VpcAddressExternalIpv4AddressArgs(
+                    zone_id=config.availability_zone,
+                )
+        )
+        self.router = yandex.ComputeInstance(
+            resource_name = 'router',
+            hostname = 'router',
+            scheduling_policy = yandex.ComputeInstanceSchedulingPolicyArgs(
+                preemptible = config.preemptible_instances,
+            ),
+            metadata = {
+                # https://cloud.yandex.com/en-ru/docs/compute/concepts/vm-metadata
+                'user-data': template(config.cloudinit_router).render(
+                ),
+                'serial-port-enable': 1,
+            },
+            zone = config.availability_zone,
+            resources = yandex.ComputeInstanceResourcesArgs(
+                cores = 2,
+                memory = 2,
+            ),
+            boot_disk=yandex.ComputeInstanceBootDiskArgs(
+                auto_delete=True,
+                initialize_params=yandex.ComputeInstanceBootDiskInitializeParamsArgs(
+                    size=10,
+                    image_id=yandex.get_compute_image(family=config.image_family).image_id,
+                ),
+            ),
+            network_interfaces=[
+                yandex.ComputeInstanceNetworkInterfaceArgs(
+                    subnet_id=self.nat.id,
+                    nat=True,
+                    nat_ip_address=self.ipaddr.external_ipv4_address.address,
+                ),
+            ],
         )
 
     def _restore_from_deployment(self, stack):
@@ -96,6 +141,8 @@ class YandexCloud(CloudProvider):
             if resource['type'] != 'yandex:index/computeInstance:ComputeInstance':
                 continue
             if resource['outputs']['status'] != 'running':
+                continue
+            if resource['outputs']['hostname'] == 'router':
                 continue
             params = dict(
                 name=resource['outputs']['hostname'],

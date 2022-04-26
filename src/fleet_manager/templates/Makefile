@@ -4,7 +4,7 @@
 .PHONY: runner router
 runner router: venv
 	$(VENV)/ansible-galaxy install -r requirements.yml
-	$(VENV)/ansible-playbook $@.yml --extra-vars "ansible_python_interpreter=/usr/bin/python3"
+	$(VENV)/ansible-playbook $@-playbook.yml --extra-vars "ansible_python_interpreter=/usr/bin/python3"
 
 
 include Makefile.venv

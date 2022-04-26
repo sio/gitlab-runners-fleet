@@ -1,0 +1,35 @@
+#cloud-config
+
+package_upgrade: true
+package_update: true
+packages:
+  - coreutils
+  - curl
+  - git
+  - make
+  - python3-apt
+  - python3-venv
+  - sudo
+
+users:
+  - name: root
+    lock_passwd: false
+    plain_text_passwd: devpswd1  # TODO: remove insecure password
+
+write_files:
+{% for filename in (
+        'Makefile',
+        'requirements.txt',
+        'requirements.yml',
+        'router-firewall.nft',
+        'router-playbook.yml',
+) %}
+  - owner: root:root
+    permissions: '0600'
+    path: /etc/provision/{{ filename }}
+    content: |-
+      {{ static_file(filename)|indent(6) }}
+{% endfor %}
+
+runcmd:
+  - /usr/bin/make router -C /etc/provision/ >> /etc/provision/log && touch /etc/provision/completed
