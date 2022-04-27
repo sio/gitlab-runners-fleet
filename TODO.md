@@ -9,7 +9,8 @@ progress of longer tasks.
 ## High level tasks
 
 - Streamline cleanup procedure: use HTTP POST instead of invoking a command via SSH
-- Figure out NAT in Yandex Cloud: cloud router or maybe an extra instance in setup()?
+- Provide access to NATed instances: port forwarding / reverse proxy?
+- Execute instance cleanup when destroying deployment from manager app
 - Yandex: finish provider-specific abstract methods
 - Config values not referenced yet: [gitlab]
 - Figure out dind setup: https://gitlab.com/sio/ci-with-molecule-git/-/jobs/1105519117
