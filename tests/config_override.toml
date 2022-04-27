@@ -1,5 +1,6 @@
 [main]
 cloud = "NonExistentProvider"
+environment_test = "env:TEST_VARIABLE"
 
 [YandexCloud]
 memory_gb = 8
