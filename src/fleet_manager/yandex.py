@@ -9,7 +9,7 @@ import pulumi_yandex as yandex
 from . import timestamp
 from .cloud import CloudProvider, CloudInstance, status
 from .logging import log
-from .provision import template
+from .templating import template
 
 
 @dataclass(eq=False)
