@@ -52,9 +52,12 @@ def template(path):
 
 @jinja2.pass_environment
 def static_file(j2, name):
-    '''Jinja2 function to render contents of a static file from template directory'''
-    directory = Path(j2.globals['template_directory'])
-    filepath = directory / name
+    '''Jinja2 function to render contents of a static file'''
+    filepath = Path(name).expanduser()
+    if not filepath.is_absolute() or not filepath.exists():
+        directory = Path(j2.globals['template_directory'])
+        filepath = directory / name
+    log.debug('Fetching contents of a static file: %s', filepath)
     with filepath.open() as f:
         return f.read()
 
