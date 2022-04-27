@@ -11,12 +11,12 @@
     - role: server
       server_remote_user: op
       server_keys_public:
-        - /etc/provision/pubkey
+        - /etc/provision/public_key
 
     - role: nftables
       nftables_template_dir: /etc/provision/
       nftables_templates:
-        - router.nft
+        - router-firewall.nft
       nftables_open_tcp_ports:
         - ssh
       nftables_inner_subnet: 10.0.0.0/24  # TODO: pass value from YandexCloud

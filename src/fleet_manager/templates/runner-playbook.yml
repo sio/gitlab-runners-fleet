@@ -9,7 +9,7 @@
     - role: server
       server_remote_user: op
       server_keys_public:
-        - /etc/provision/pubkey
+        - /etc/provision/public_key
 
     - role: upgrade
 

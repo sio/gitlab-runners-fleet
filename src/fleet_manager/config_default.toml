@@ -35,3 +35,4 @@ memory_gb = 4
 disk_size_gb = 15
 cloudinit_runner = "templates/runner-cloudinit.yml.j2"
 cloudinit_router = "templates/router-cloudinit.yml.j2"
+public_key = "~/.ssh/id_rsa.pub"

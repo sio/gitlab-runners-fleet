@@ -17,6 +17,11 @@ users:
     plain_text_passwd: devpswd1  # TODO: remove insecure password
 
 write_files:
+  - owner: root:root
+    permissions: '0600'
+    path: /etc/provision/public_key
+    content: |-
+      {{ static_file(public_key)|indent(6) }}
 {% for filename in (
         'Makefile',
         'requirements.txt',

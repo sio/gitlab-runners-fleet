@@ -19,9 +19,9 @@ users:
 write_files:
   - owner: root:root
     permissions: '0600'
-    path: /etc/provision/pubkey
+    path: /etc/provision/public_key
     content: |-
-      {{ pubkey|indent(6) }}
+      {{ static_file(public_key)|indent(6) }}
   - owner: root:root
     permissions: '0600'
     path: /etc/provision/gitlab_runner_token
