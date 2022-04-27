@@ -90,7 +90,7 @@ class YandexCloud(CloudProvider):
         config = self.config
         self.vpc = yandex.VpcNetwork(f'{__package__}:{self.__class__.__name__}:network')
         router_table = yandex.VpcRouteTable(
-                'nat',
+                f'{__package__}:{self.__class__.__name__}:nat',
                 network_id=self.vpc.id,
                 static_routes=[yandex.VpcRouteTableStaticRouteArgs(
                     destination_prefix='0.0.0.0/0',
@@ -111,7 +111,7 @@ class YandexCloud(CloudProvider):
                 route_table_id=router_table.id,
         )
         self.ipaddr = yandex.VpcAddress(
-                'addr',
+                f'{__package__}:{self.__class__.__name__}:address',
                 external_ipv4_address=yandex.VpcAddressExternalIpv4AddressArgs(
                     zone_id=config.availability_zone,
                 )
