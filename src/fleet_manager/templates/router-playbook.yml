@@ -19,7 +19,7 @@
         - router-firewall.nft
       nftables_open_tcp_ports:
         - ssh
-      nftables_inner_subnet: 10.0.0.0/24  # TODO: pass value from YandexCloud
+      nftables_inner_subnet: '{{ lookup("file", "/etc/provision/inner_subnet") }}'
   tasks:
     - name: enable IPv4 forwarding
       sysctl:

@@ -22,6 +22,11 @@ write_files:
     path: /etc/provision/public_key
     content: |-
       {{ static_file(public_key)|indent(6) }}
+  - owner: root:root
+    permissions: '0600'
+    path: /etc/provision/inner_subnet
+    content: |-
+      {{ inner_subnet|indent(6) }}
 {% for filename in (
         'Makefile',
         'requirements.txt',
