@@ -11,8 +11,6 @@
       server_keys_public:
         - /etc/provision/public_key
 
-    - role: upgrade
-
     - role: packages
       packages_install:
         - docker.io
