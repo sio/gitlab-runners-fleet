@@ -89,12 +89,6 @@ class YandexCloud(CloudProvider):
         '''
         config = self.config
         self.vpc = yandex.VpcNetwork(f'{__package__}:{self.__class__.__name__}:network')
-        self.subnet = yandex.VpcSubnet(
-                f'{__package__}:{self.__class__.__name__}:subnet',
-                network_id = self.vpc.id,
-                zone=config.availability_zone,
-                v4_cidr_blocks=[INNER_CIDR],
-        )
         router_table = yandex.VpcRouteTable(
                 'nat',
                 network_id=self.vpc.id,
@@ -108,6 +102,12 @@ class YandexCloud(CloudProvider):
                 network_id = self.vpc.id,
                 zone=config.availability_zone,
                 v4_cidr_blocks=[ROUTER_CIDR],
+        )
+        self.subnet = yandex.VpcSubnet(
+                f'{__package__}:{self.__class__.__name__}:subnet',
+                network_id = self.vpc.id,
+                zone=config.availability_zone,
+                v4_cidr_blocks=[INNER_CIDR],
                 route_table_id=router_table.id,
         )
         self.ipaddr = yandex.VpcAddress(
