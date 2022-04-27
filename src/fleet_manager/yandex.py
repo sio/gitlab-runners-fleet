@@ -40,7 +40,7 @@ class YandexInstance(CloudInstance):
                 # https://cloud.yandex.com/en-ru/docs/compute/concepts/vm-metadata
                 'user-data': template(config.cloudinit_runner).render(
                     public_key = config.public_key,
-                    gitlab_runner_token = 'gitlab_runner_token', # TODO
+                    gitlab_runner_token = self.cloud.gitlab.runner_token,
                 ),
                 'serial-port-enable': 1,
             },

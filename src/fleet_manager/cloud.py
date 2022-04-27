@@ -74,14 +74,11 @@ class CloudProvider(ABC):
     _instance_cls: CloudInstance
     _namelog_maxlen_multiplier = 50
 
-    def __init__(self, scaling=None, config=None):
+    def __init__(self, config=None, gitlab=None, scaling=None):
+        self.config = config or dict()
+        self.gitlab = gitlab or dict()
+        self.scaling = scaling or ScalingConfig()
         self.instances: set[CloudInstance] = set()
-        if config is None:
-            config = dict()
-        self.config = config
-        self.scaling = ScalingConfig()
-        if scaling is not None:
-            self.scaling = scaling
         self._names_seen = set()
 
     def __repr__(self):

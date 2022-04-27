@@ -3,6 +3,7 @@ Configuration of fleet_manager app
 '''
 
 
+import os
 from collections.abc import Mapping
 
 import toml
@@ -35,13 +36,30 @@ class Configuration:
             if key not in custom:
                 merged[key] = defaults[key]
         self._data = merged
-        self._root = AttributeDictReader(self._data, filename=config_path or defaults)
+        self._root = ConfigurationTree(self._data, filename=config_path or defaults)
 
     def __getattr__(self, attr):
         return getattr(self._root, attr)
 
 
-class AttributeDictReader(Mapping):
+def environment(name):
+    '''Load configuration value from environment variable'''
+    value = os.environ.get(name)
+    if value is None:
+        raise RuntimeError(f'environment variable is not defined: {name}')
+    return value
+
+
+class ConfigurationTree(Mapping):
+    '''
+    Provides attribute access to configuration tree
+    and value preprocessing for supported prefixes
+    '''
+
+    PREFIX_SEPARATOR = ':'
+    PREFIX_LOADERS = {
+        'env': environment,
+    }
 
     def __init__(self, dictionary, filename='', path=tuple()):
         self._dictionary = dictionary
@@ -56,8 +74,13 @@ class AttributeDictReader(Mapping):
             raise AttributeError(f'no such attribute: {self._filename}:{".".join(path + (attr,))}')
         if isinstance(value, Mapping):
             return self.__class__(value, filename=self._filename, path=path+(attr,))
-        else:
-            return value
+        separator = self.PREFIX_SEPARATOR
+        loaders = self.PREFIX_LOADERS
+        if isinstance(value, str) and separator in value:
+            prefix, body = value.split(separator, 1)
+            if prefix in loaders:
+                return loaders[prefix](body)
+        return value
 
     def __getitem__(self, key):
         return self._dictionary[key]

@@ -43,8 +43,9 @@ def cloud_provider(config):
     module = import_module(module_path)
     cloud_class = getattr(module, class_name)
     return cloud_class(
-        scaling=ScalingConfig(**config.scaling),
         config=getattr(config, class_name, None),
+        gitlab=config.gitlab,
+        scaling=ScalingConfig(**config.scaling),
     )
 
 
