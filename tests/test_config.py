@@ -1,9 +1,9 @@
 import pytest
-from fleet_manager.config import AttributeDictReader, Configuration
+from fleet_manager.config import ConfigurationTree, Configuration
 
 
 def test_attribute_access():
-    tree = AttributeDictReader(dict(
+    tree = ConfigurationTree(dict(
         hello = 'world',
         foo = 'bar',
         alice = dict(
