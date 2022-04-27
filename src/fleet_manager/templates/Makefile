@@ -1,6 +1,11 @@
 # Initialize GitLab runner instance on localhost
 
 
+export ANSIBLE_STDOUT_CALLBACK?=yaml
+export PY_COLORS=1
+export ANSIBLE_FORCE_COLOR=1
+
+
 .PHONY: runner router
 runner router: venv
 	$(VENV)/ansible-galaxy install -r requirements.yml
