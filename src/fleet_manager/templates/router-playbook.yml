@@ -80,6 +80,7 @@
           [Service]
           Type=notify
           DynamicUser=yes
+          Environment=HOME=/tmp/caddy
           ExecStart={{ caddy_binary|quote }} run --environ --config {{ caddy_config|quote }}
           ExecReload={{ caddy_binary|quote }} reload --config {{ caddy_config|quote }}
           TimeoutStopSec=5s
