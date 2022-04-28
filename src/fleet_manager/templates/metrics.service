@@ -8,8 +8,7 @@ Type=simple
 Restart=always
 RestartSec=30
 ExecStart=/usr/local/bin/metrics
-User=nobody
-Group=nogroup
+DynamicUser=yes
 NoNewPrivileges=true
 
 

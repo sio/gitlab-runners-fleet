@@ -79,8 +79,7 @@
 
           [Service]
           Type=notify
-          User=nobody
-          Group=nogroup
+          DynamicUser=yes
           ExecStart={{ caddy_binary|quote }} run --environ --config {{ caddy_config|quote }}
           ExecReload={{ caddy_binary|quote }} reload --config {{ caddy_config|quote }}
           TimeoutStopSec=5s
