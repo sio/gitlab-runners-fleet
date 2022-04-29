@@ -1,5 +1,22 @@
 '''
-Yandex Cloud
+Yandex Cloud (https://yandex.cloud)
+
+This module contains provider specific Pulumi code to launch runner instances.
+Each runner (CloudInstance) provisions one compute instance from a clean Debian
+image.
+
+Extra billable resources (neccessary overhead):
+    - One public static IP address
+    - One compute instance for NAT router
+
+Pricing depends on:
+    - Number of resources assigned to VM (vCPU, RAM, storage)
+    - CPU generation (aka platform in Yandex docs):
+      https://cloud.yandex.com/en-ru/docs/compute/concepts/vm-platforms
+    - Guaranteed CPU utilization (5%/20%/100%)
+
+More information on prices:
+    https://cloud.yandex.com/en-ru/docs/compute/pricing#prices
 '''
 
 from dataclasses import dataclass
@@ -45,9 +62,11 @@ class YandexInstance(CloudInstance):
                 'serial-port-enable': 1,
             },
             zone = config.availability_zone,
+            platform_id = config.cpu_platform,
             resources = yandex.ComputeInstanceResourcesArgs(
                 cores = config.vcpu_count,
                 memory = config.memory_gb,
+                core_fraction = config.vcpu_performance_percent,
             ),
             boot_disk=yandex.ComputeInstanceBootDiskArgs(
                 auto_delete=True,
@@ -120,7 +139,7 @@ class YandexCloud(CloudProvider):
             resource_name = 'router',
             hostname = 'router',
             scheduling_policy = yandex.ComputeInstanceSchedulingPolicyArgs(
-                preemptible = config.preemptible_instances,
+                preemptible = False,
             ),
             metadata = {
                 # https://cloud.yandex.com/en-ru/docs/compute/concepts/vm-metadata
@@ -131,9 +150,12 @@ class YandexCloud(CloudProvider):
                 'serial-port-enable': 1,
             },
             zone = config.availability_zone,
+            platform_id = config.cpu_platform,
             resources = yandex.ComputeInstanceResourcesArgs(
+                # router config is intentionally not tied to instance config
                 cores = 2,
                 memory = 2,
+                core_fraction = 20,
             ),
             boot_disk=yandex.ComputeInstanceBootDiskArgs(
                 auto_delete=True,
