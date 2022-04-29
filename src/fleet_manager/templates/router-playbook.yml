@@ -5,17 +5,7 @@
   collections:
     - potyarkin.homelab
   become: yes
-  vars:
-    caddy_version: 2.5.0
-    caddy_binary: /opt/caddy/caddy
-    caddy_config: /etc/caddy/Caddyfile
-    firewall_auto_config: no
   roles:
-    - role: server
-      server_remote_user: op
-      server_keys_public:
-        - /etc/provision/public_key
-
     - role: nftables
       nftables_template_dir: /etc/provision/
       nftables_templates:
@@ -32,6 +22,21 @@
         state: present
         reload: yes
 
+- hosts: localhost
+  collections:
+    - potyarkin.homelab
+  become: yes
+  vars:
+    caddy_version: 2.5.0
+    caddy_binary: /opt/caddy/caddy
+    caddy_config: /etc/caddy/Caddyfile
+    firewall_auto_config: no
+  roles:
+    - role: server
+      server_remote_user: op
+      server_keys_public:
+        - /etc/provision/public_key
+  tasks:
     # HTTP reverse proxy (Caddy)
     #   nginx is too quirky with dynamic reverse proxy destinations:
     #   - requires static resolver IP
