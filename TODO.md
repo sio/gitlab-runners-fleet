@@ -8,7 +8,6 @@ progress of longer tasks.
 
 ## High level tasks
 
-- Provide access to NATed instances: port forwarding / reverse proxy?
 - Streamline cleanup procedure: use HTTP POST instead of invoking a command via SSH
 - Execute instance cleanup when destroying deployment from manager app
 - Yandex: finish provider-specific abstract methods
