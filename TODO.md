@@ -11,7 +11,6 @@ progress of longer tasks.
 - Streamline cleanup procedure: use HTTP POST instead of invoking a command via SSH
 - Execute instance cleanup when destroying deployment from manager app
 - Yandex: finish provider-specific abstract methods
-- Yandex: expose platform id via configuration? Default: standard-v1
 - Yandex: restart preempted instances automatically. Instance groups with
   auto-healing? Pulumi? Raw API calls?
 - Config values not referenced yet: [gitlab]
