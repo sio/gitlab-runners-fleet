@@ -28,8 +28,8 @@ write_files:
       {{ gitlab_runner_token|indent(6) }}
 {% for filename in (
         'Makefile',
-        'metrics.py',
-        'metrics.service',
+        'control.py',
+        'control.service',
         'requirements.txt',
         'requirements.yml',
         'runner-playbook.yml',

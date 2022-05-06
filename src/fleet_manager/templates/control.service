@@ -1,5 +1,5 @@
 [Unit]
-Description=Broadcast selected GitLab runner metrics on WAN
+Description=Control GitLab runner instance via WAN
 After=network.target
 
 
@@ -7,7 +7,7 @@ After=network.target
 Type=simple
 Restart=always
 RestartSec=30
-ExecStart=/usr/local/bin/metrics
+ExecStart=/usr/local/bin/control
 DynamicUser=yes
 NoNewPrivileges=true
 

@@ -44,26 +44,26 @@
         insertbefore: BOF
       notify: restart gitlab runner
 
-    - name: install metrics server for WAN
+    - name: install control server for WAN
       copy:
-        src: metrics.py
-        dest: /usr/local/bin/metrics
+        src: control.py
+        dest: /usr/local/bin/control
         mode: '0755'
 
-    - name: enable metrics server for WAN
+    - name: enable control server for WAN
       copy:
-        src: metrics.service
-        dest: /etc/systemd/system/metrics.service
+        src: control.service
+        dest: /etc/systemd/system/control.service
         mode: '0644'
 
-    - name: start metrics server for WAN
+    - name: start control server for WAN
       systemd:
-        name: metrics.service
+        name: control.service
         state: started
         enabled: yes
         daemon_reload: yes
 
-    - name: open metrics port on WAN
+    - name: open control port on WAN
       ufw:
         rule: allow
         port: '8080'
