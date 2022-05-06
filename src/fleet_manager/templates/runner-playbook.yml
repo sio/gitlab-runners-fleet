@@ -44,39 +44,40 @@
         insertbefore: BOF
       notify: restart gitlab runner
 
-    - name: install control server for WAN
+    - name: install control scripts
       copy:
-        src: control.py
-        dest: /usr/local/bin/control
+        src: '{{ item }}'
+        dest: '/usr/local/bin/{{ item.split(".")[0] }}'
         mode: '0755'
+      loop:
+        - control.py
+        - unregister-wait.sh
 
-    - name: enable control server for WAN
+    - name: install systemd units
       copy:
-        src: control.service
-        dest: /etc/systemd/system/control.service
+        src: '{{ item }}'
+        dest: '/etc/systemd/system/{{ item }}'
         mode: '0644'
+      loop:
+        - control.service
+        - unregister.service
+        - unregister.socket
 
-    - name: start control server for WAN
+    - name: start systemd units
       systemd:
-        name: control.service
+        name: '{{ item }}'
         state: started
         enabled: yes
         daemon_reload: yes
+      loop:
+        - control.service
+        - unregister.socket
 
     - name: open control port on WAN
       ufw:
         rule: allow
         port: '8080'
         proto: tcp
-
-    - name: configure sudo for operator
-      copy:
-        content: |
-          op ALL=(gitlab-runner) NOPASSWD: /etc/gitlab-runner-custom/unregister.sh
-        dest: /etc/sudoers.d/op
-        validate: visudo -cf %s
-        mode: '0440'
-        backup: yes
 
 
   # TODO: Docker cleanup (see https://docs.gitlab.com/runner/executors/docker.html#the-builds-and-cache-storage )

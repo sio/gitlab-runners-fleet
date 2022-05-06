@@ -1,0 +1,14 @@
+[Unit]
+Description=Wait for a command on socket and then unregister all GitLab runners
+Requires=unregister.socket
+
+[Service]
+Type=oneshot
+User=gitlab-runner
+DynamicUser=yes
+TimeoutStartSec=infinity
+ExecStart=/usr/local/bin/unregister-wait
+ExecStart=/etc/gitlab-runner-custom/unregister.sh
+StandardInput=socket
+StandardOutput=journal
+ConfigurationDirectory=gitlab-runner-custom
