@@ -30,7 +30,7 @@ class InstanceStatus(Enum):
 status = InstanceStatus
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class CloudInstance(ABC):
     '''Abstract class for a cloud compute instance'''
 

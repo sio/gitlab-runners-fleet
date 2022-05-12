@@ -34,7 +34,7 @@ ROUTER_CIDR = '10.10.10.0/24'
 INNER_CIDR  = '10.0.0.0/24'
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class YandexInstance(CloudInstance):
     '''Yandex Cloud VPS'''
 
