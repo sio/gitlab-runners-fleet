@@ -21,6 +21,7 @@ More information on prices:
 
 from dataclasses import dataclass
 
+import requests
 import pulumi_yandex as yandex
 
 from . import timestamp
@@ -38,7 +39,7 @@ INNER_CIDR  = '10.0.0.0/24'
 class YandexInstance(CloudInstance):
     '''Yandex Cloud VPS'''
 
-    ipv4_address: str = None
+    ipv4_address: str = ''
 
     def update_status(self):
         '''Write updated values to self.status, self.idle_since'''
@@ -79,6 +80,7 @@ class YandexInstance(CloudInstance):
                 subnet_id=self.cloud.subnet.id,
             )],
         )
+        self.ipv4_address = self.cloud.ipv4_external
         super().create()
 
     def cleanup(self):
@@ -90,6 +92,16 @@ class YandexInstance(CloudInstance):
 
         After successful cleanup this method must set self.status to DESTROYING
         '''
+        log.debug(f'cleanup(): {self}')
+        try:
+            response = requests.post(
+                f'http://{self.ipv4_address}/unregister',
+                headers={'Host': self.name},
+            )
+            response.raise_for_status()
+        except Exception as exc:
+            log.error(f'cleanup failed: {exc}')
+            self.status = status.ERROR
         super().cleanup()
 
 
@@ -135,6 +147,7 @@ class YandexCloud(CloudProvider):
                     zone_id=config.availability_zone,
                 )
         )
+        self.ipv4_external = ipv4_address.external_ipv4_address.address
         router = yandex.ComputeInstance(
             resource_name = 'router',
             hostname = 'router',
@@ -168,7 +181,7 @@ class YandexCloud(CloudProvider):
                 yandex.ComputeInstanceNetworkInterfaceArgs(
                     subnet_id=router_subnet.id,
                     nat=True,
-                    nat_ip_address=ipv4_address.external_ipv4_address.address,
+                    nat_ip_address=self.ipv4_external,
                     ip_address=ROUTER_IP,
                 ),
             ],
