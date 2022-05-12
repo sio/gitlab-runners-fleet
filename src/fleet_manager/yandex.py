@@ -107,10 +107,10 @@ class YandexCloud(CloudProvider):
             - etc.
         '''
         config = self.config
-        self.vpc = yandex.VpcNetwork(f'{__package__}:{self.__class__.__name__}:network')
+        vpc = yandex.VpcNetwork(f'{__package__}:{self.__class__.__name__}:network')
         router_table = yandex.VpcRouteTable(
                 f'{__package__}:{self.__class__.__name__}:nat',
-                network_id=self.vpc.id,
+                network_id=vpc.id,
                 static_routes=[yandex.VpcRouteTableStaticRouteArgs(
                     destination_prefix='0.0.0.0/0',
                     next_hop_address=ROUTER_IP,
@@ -118,24 +118,24 @@ class YandexCloud(CloudProvider):
         )
         router_subnet = yandex.VpcSubnet(
                 f'{__package__}:{self.__class__.__name__}:router',
-                network_id = self.vpc.id,
+                network_id = vpc.id,
                 zone=config.availability_zone,
                 v4_cidr_blocks=[ROUTER_CIDR],
         )
         self.subnet = yandex.VpcSubnet(
                 f'{__package__}:{self.__class__.__name__}:subnet',
-                network_id = self.vpc.id,
+                network_id = vpc.id,
                 zone=config.availability_zone,
                 v4_cidr_blocks=[INNER_CIDR],
                 route_table_id=router_table.id,
         )
-        self.ipaddr = yandex.VpcAddress(
+        ipv4_address = yandex.VpcAddress(
                 f'{__package__}:{self.__class__.__name__}:address',
                 external_ipv4_address=yandex.VpcAddressExternalIpv4AddressArgs(
                     zone_id=config.availability_zone,
                 )
         )
-        self.router = yandex.ComputeInstance(
+        router = yandex.ComputeInstance(
             resource_name = 'router',
             hostname = 'router',
             scheduling_policy = yandex.ComputeInstanceSchedulingPolicyArgs(
@@ -168,7 +168,7 @@ class YandexCloud(CloudProvider):
                 yandex.ComputeInstanceNetworkInterfaceArgs(
                     subnet_id=router_subnet.id,
                     nat=True,
-                    nat_ip_address=self.ipaddr.external_ipv4_address.address,
+                    nat_ip_address=ipv4_address.external_ipv4_address.address,
                     ip_address=ROUTER_IP,
                 ),
             ],
