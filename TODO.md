@@ -8,11 +8,11 @@ progress of longer tasks.
 
 ## High level tasks
 
-- Streamline cleanup procedure: use HTTP POST instead of invoking a command via SSH
 - Execute instance cleanup when destroying deployment from manager app
 - Yandex: finish provider-specific abstract methods
 - Yandex: restart preempted instances automatically. Instance groups with
   auto-healing? Pulumi? Raw API calls?
+- Yandex: recreate instance if cloud-init configuration has changed
 - Config values not referenced yet: [gitlab]
 - Figure out dind setup: https://gitlab.com/sio/ci-with-molecule-git/-/jobs/1105519117
 - Investigate: new runners do not pick up old pending jobs unless kicked via webui
