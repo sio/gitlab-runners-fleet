@@ -16,7 +16,14 @@ from .scaling import ScalingConfig
 
 def main(*a, **ka):
     args = parse_args(*a, **ka)
+
     config = Configuration(args.config)
+    if args.action == 'down':
+        args.action = 'up'
+        config._data['scaling'].update(dict(
+            min_total_instances = 0,
+            max_total_instances = 0
+        ))
     logging.setup(config.main.log_level)
     cloud = cloud_provider(config)
     log.debug(f'Initialized cloud provider object:\n{cloud}')
@@ -57,7 +64,7 @@ def parse_args(*a, **ka):
     parser.add_argument(
         'action',
         metavar='ACTION',
-        choices=('up', 'destroy'),
+        choices=('up', 'destroy', 'down'),
         type=str.lower,
         help='infrastructure action to perform',
     )

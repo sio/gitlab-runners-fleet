@@ -14,8 +14,8 @@ PATH:=$(dir $(PULUMI)):$(PATH)
 endif
 
 
-.PHONY: up destroy
-up destroy: | venv check-software state-backend
+.PHONY: up down destroy
+up down destroy: | venv check-software state-backend
 	$(VENV)/fleet-manager $@
 
 

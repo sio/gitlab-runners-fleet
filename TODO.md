@@ -8,7 +8,6 @@ progress of longer tasks.
 
 ## High level tasks
 
-- Execute instance cleanup when destroying deployment from manager app
 - Yandex: finish provider-specific abstract methods
 - Yandex: restart preempted instances automatically. Instance groups with
   auto-healing? Pulumi? Raw API calls?

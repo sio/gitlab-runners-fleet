@@ -122,8 +122,13 @@ class CloudProvider(ABC):
 
     def scale(self):
         '''Calculate scaling actions for cloud instances'''
-        for instance in self.instances:
+        scaling = self.scaling
+        count = 0
+        for instance in self.instances.copy():
             instance.update_status()
+            if  count >= scaling.max_total_instances \
+            and instance.status != status.BUSY:
+                instance.status = status.IDLE
             if instance.status in {
                     status.ERROR,
                     status.IDLE,
@@ -135,8 +140,9 @@ class CloudProvider(ABC):
             }:
                 # pulumi will destroy everything it wasn't explicitly asked to keep
                 self.instances.remove(instance)
+            else:
+                count += 1
 
-        scaling = self.scaling
         jobs_pending = gitlab.get_pending_jobs()
         jobs_capacity = scaling.jobs_per_instance * len([
                 None for i in self.instances if i.status in {status.PROVISIONING, status.READY}
