@@ -9,30 +9,55 @@ METRICS_NAMES = [
     'gitlab_runner_jobs',
     'gitlab_runner_jobs_total',
 ]
+UNREGISTER_FIFO = '/run/unregister-runners.fifo'
+UNREGISTER_COMMAND = 'UNREGISTER\n'
+UNREGISTER_DELAY = 1  # seconds
 
 import json
 import re
 import urllib.request
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from socket import gethostname
+from time import sleep
 
 
-class MetricsHandler(BaseHTTPRequestHandler):
+class ControlAPI(BaseHTTPRequestHandler):
     '''Translate metrics from local Prometheus exporter to public JSON'''
     def do_GET(self):
         if self.path != '/metrics':
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b'')
+            self.send_http(code=401, body='HTTP 401: Unauthorized')
             return
         try:
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps(get_metrics()).encode())
+            self.send_http(
+                body=json.dumps(get_metrics()),
+                headers={'Content-Type': 'application/json'},
+            )
         except Exception:
-            self.send_response(500)
-            self.end_headers()
-            self.wfile.write(b'')
+            self.send_http(code=500)
+
+    def do_POST(self):
+        if self.path != '/unregister' or self.headers.get('Host') != gethostname():
+            self.send_http(code=401, body='HTTP 401: Unauthorized')
+            return
+        try:
+            with open(UNREGISTER_FIFO, 'w') as fifo:
+                fifo.write(UNREGISTER_COMMAND)
+            sleep(UNREGISTER_DELAY)
+            self.send_http('OK')
+        except Exception:
+            self.send_http(code=500)
+
+    def send_http(self, body='', code=200, headers=None):
+        if isinstance(body, str):
+            body = body.encode()
+        if headers is None:
+            headers = dict()
+        self.send_response(code)
+        for header, value in headers.items():
+            self.send_header(header, value)
+        self.send_header('Content-Length', len(body))
+        self.end_headers()
+        self.wfile.write(body)
 
 
 METRICS_REGEX = {name: re.compile(r'^%s{.*} (\d+)' % name) for name in METRICS_NAMES}
@@ -53,7 +78,7 @@ def get_metrics():
 def main():
     address = ''
     port = 8080
-    httpd = HTTPServer((address, port), MetricsHandler)
+    httpd = HTTPServer((address, port), ControlAPI)
     httpd.serve_forever()
 
 
