@@ -5,7 +5,10 @@ Communicate with GitLab API
 
 import os
 from itertools import chain
+from time import sleep
 from cirrus_run import CirrusAPI as GraphqlAPI
+
+from .logging import log
 
 try:
     from functools import cache
@@ -23,6 +26,9 @@ class GitLabAPI(GraphqlAPI):
         self.runner_token = runner_token
         self.rest_url = rest_url
         super().__init__(url=graphql_url, token=api_token)
+
+    def delete(self, *a, **ka):
+        return self._requests.delete(*a, **ka)
 
     def post(self, *a, **ka):
         return self._requests.post(*a, **ka)
@@ -83,7 +89,7 @@ class GitLabAPI(GraphqlAPI):
                         pending_jobs += 1
         return pending_jobs
 
-    def get_project_ids():
+    def get_project_ids(api):
         '''List project IDs associated with current namespace'''
         projects_query = '''
             query GetProjectIDs($namespace: ID!) {
@@ -103,3 +109,50 @@ class GitLabAPI(GraphqlAPI):
             gid = project['id']
             iid = int(gid.split('/')[-1])
             yield iid
+
+    def get_runners(api, tags=None):
+        params = dict()
+        if tags:
+            params['tag_list'] = tags
+        url = f'{api.rest_url}/runners'
+        response = api.get(url, params=params)
+        response.raise_for_status()
+        for runner in response.json():
+            yield runner
+
+    def unregister_runner(api, runner_id):
+        runner = api.get(f'{api.rest_url}/runners/{runner_id}').json()
+        for project in runner.get('projects', []):
+            response = api.delete(f'{api.rest_url}/projects/{project["id"]}/runners/{runner_id}')
+        response = api.delete(f'{api.rest_url}/runners/{runner_id}')
+        if not response.ok:
+            log.error('Could not unregister runner: %s', response.json())
+        log.info(f'Unregistered runner %s #%s (was %s)', runner['description'], runner['id'], runner['status'])
+
+    def assign_runner(api, runner_id, project_ids):
+        response = api.get(f'{api.rest_url}/runners/{runner_id}')
+        response.raise_for_status()
+
+        assigned = set(project['id'] for project in response.json().get('projects', []))
+        missing = set(project_ids).difference(assigned)
+        if missing:
+            log.debug('Assigning runner #%s to projects %s', runner_id, missing)
+        for project_id in missing:
+            response = api.post(
+                f'{api.rest_url}/projects/{project_id}/runners',
+                data=dict(runner_id=runner_id)
+            )
+            response.raise_for_status()
+        return bool(missing)
+
+    def update_runner_assignments(api):
+        projects = list(api.get_project_ids())
+        updated = False
+        for runner in api.get_runners(tags='private-runner'):
+            if runner['status'] == 'online':
+                if api.assign_runner(runner['id'], projects):
+                    updated = True
+            else:
+                api.unregister_runner(runner['id'])
+        if updated:
+            sleep(10)  # allow newly assigned runners to pick up pending jobs

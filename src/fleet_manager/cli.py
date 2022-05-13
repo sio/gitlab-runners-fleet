@@ -40,6 +40,7 @@ def main(*a, **ka):
     cloud.restore(stack)
     action = getattr(stack, args.action)
     action(on_output=print)
+    cloud.gitlab.update_runner_assignments()
 
 
 def cloud_provider(config):
