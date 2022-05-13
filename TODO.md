@@ -8,7 +8,6 @@ progress of longer tasks.
 
 ## High level tasks
 
-- Yandex: finish provider-specific abstract methods
 - Yandex: restart preempted instances automatically. Instance groups with
   auto-healing? Pulumi? Raw API calls?
 - Yandex: recreate instance if cloud-init configuration has changed
@@ -18,3 +17,4 @@ progress of longer tasks.
 - Add provider: Selectel (supports nested virtualization)
 - Remove instances that have reached maximum allowed age
 - Add monitoring entrypoint
+- Remove stale runners via GitLab API (filter by tag)
