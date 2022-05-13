@@ -83,7 +83,7 @@ class ConfigurationTree(Mapping):
         return value
 
     def __getitem__(self, key):
-        return self._dictionary[key]
+        return getattr(self, key)
 
     def __iter__(self):
         return iter(self._dictionary)
