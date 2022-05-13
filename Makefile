@@ -16,7 +16,12 @@ endif
 
 .PHONY: up down destroy
 up down destroy: | venv check-software state-backend
-	$(VENV)/fleet-manager $@
+	$(VENV)/fleet-manager $@ $(FLEET_MANAGER_ARGS)
+
+
+ifneq (,$(DAEMON))
+FLEET_MANAGER_ARGS+=--daemon
+endif
 
 
 .PHONY: test

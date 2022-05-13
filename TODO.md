@@ -8,6 +8,7 @@ progress of longer tasks.
 
 ## High level tasks
 
+- Daemon mode: execute Pulumi in a loop with configurable delay
 - Yandex: restart preempted instances automatically. Instance groups with
   auto-healing? Pulumi? Raw API calls?
 - Yandex: recreate instance if cloud-init configuration has changed

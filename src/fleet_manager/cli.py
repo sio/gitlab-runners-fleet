@@ -5,6 +5,7 @@ Command line interface
 import argparse
 from importlib import import_module
 from pathlib import Path
+from time import sleep
 
 from pulumi import automation as auto
 
@@ -39,8 +40,13 @@ def main(*a, **ka):
     refresh = stack.refresh() # on_output=print)
     cloud.restore(stack)
     action = getattr(stack, args.action)
-    action(on_output=print)
-    cloud.gitlab.update_runner_assignments()
+    while True:
+        action(on_output=print)
+        cloud.gitlab.update_runner_assignments()
+        if not args.daemon:
+            break
+        log.debug('Sleeping for %s minutes', config.main.daemon_delay_minutes)
+        sleep(config.main.daemon_delay_minutes * 60)
 
 
 def cloud_provider(config):
@@ -68,6 +74,7 @@ def parse_args(*a, **ka):
         metavar='ACTION',
         choices=('up', 'destroy', 'down'),
         type=str.lower,
+        default='up',
         help='infrastructure action to perform',
     )
     parser.add_argument(
@@ -78,8 +85,16 @@ def parse_args(*a, **ka):
         type=Path,
         help='path to configuration file',
     )
+    parser.add_argument(
+        '--daemon',
+        action='store_true',
+        default=False,
+        help='keep running indefinitely',
+    )
     args = parser.parse_args(*a, **ka)
     if not args.config.exists():
         log.warning(f'Configuration file not found: {args.config}, continuing with defaults')
         args.config = None
+    if args.daemon and args.action != 'up':
+        parser.error(f'action not supported in daemon mode: {args.action}')
     return args

@@ -47,6 +47,7 @@ class CloudInstance(ABC):
             self.idle_since = timestamp.now()
         if self.status == status.BUSY and self.idle_since:
             self.idle_since = 0
+        log.debug('Updated status of %s', self)
 
     @abstractmethod
     def create(self):

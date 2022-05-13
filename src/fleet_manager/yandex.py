@@ -39,7 +39,7 @@ INNER_CIDR  = '10.0.0.0/24'
 class YandexInstance(CloudInstance):
     '''Yandex Cloud VPS'''
 
-    ipv4_address: str = ''
+    ipv4_address: str = ''  # TODO: fails to resolve Output[str] in daemon mode
 
     def update_status(self):
         '''Write updated values to self.status, self.idle_since'''
@@ -48,14 +48,14 @@ class YandexInstance(CloudInstance):
 
     def _fetch_status(self):
         scaling = self.cloud.scaling
+        metrics_url = f'http://{self.ipv4_address}/metrics'
+        log.debug('Fetching instance metrics: %s (%s)', self.name, metrics_url)
         try:
-            response = requests.get(
-                f'http://{self.ipv4_address}/metrics',
-                headers={'Host': self.name},
-            )
+            response = requests.get(metrics_url, headers={'Host': self.name})
             response.raise_for_status()
             metrics = response.json()
-        except Exception:
+        except Exception as exc:
+            log.debug('Error while fetching metrics: %s', exc)
             if timestamp.now() - self.created_at < scaling.est_provisioning_minutes * 60:
                 return status.PROVISIONING
             return status.ERROR
