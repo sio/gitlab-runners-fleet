@@ -223,3 +223,16 @@ class CloudProvider(ABC):
         for name, params in export.value.items():
             instance = self._instance_cls(name=name, cloud=self, **params)
             self.instances.add(instance)
+
+    def resolve_instance_outputs(self, stack):
+        '''Resolve Pulumi outputs to concrete values'''
+        export = stack.outputs().get(self.__class__.__name__)
+        if export is None:
+            log.debug('Nothing to resolve Pulumi outputs with for %s', self.__class__.__name__)
+            return
+        for instance in self.instances:
+            for field in fields(instance):
+                if not isinstance(getattr(instance, field.name), pulumi.Output):
+                    continue
+                log.debug('Resolving Pulumi output for %s: %s', instance.name, field.name)
+                setattr(instance, field.name, export.value[instance.name][field.name])

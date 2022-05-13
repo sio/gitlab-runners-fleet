@@ -47,6 +47,7 @@ def main(*a, **ka):
             break
         log.debug('Sleeping for %s minutes', config.main.daemon_delay_minutes)
         sleep(config.main.daemon_delay_minutes * 60)
+        cloud.resolve_instance_outputs(stack)
 
 
 def cloud_provider(config):
