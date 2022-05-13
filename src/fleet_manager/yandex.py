@@ -39,7 +39,7 @@ INNER_CIDR  = '10.0.0.0/24'
 class YandexInstance(CloudInstance):
     '''Yandex Cloud VPS'''
 
-    ipv4_address: str = ''  # TODO: fails to resolve Output[str] in daemon mode
+    ipv4_address: str = ''
 
     def update_status(self):
         '''Write updated values to self.status, self.idle_since'''
