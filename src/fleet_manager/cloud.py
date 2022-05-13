@@ -143,7 +143,9 @@ class CloudProvider(ABC):
             }:
                 # pulumi will destroy everything it wasn't explicitly asked to keep
                 self.instances.remove(instance)
+                log.debug('Scaling decision: remove %s', instance)
             else:
+                log.debug('Scaling decision: keep running %s', instance)
                 count += 1
 
         jobs_pending = gitlab.get_pending_jobs()
@@ -165,7 +167,8 @@ class CloudProvider(ABC):
             ),
         )
         for _ in range(instances_to_add):
-            self.new()
+            new_instance = self.new()
+            log.debug('Scaling decision: create %s', new_instance)
 
     @abstractmethod
     def setup(self):
