@@ -18,7 +18,7 @@ max_idle_minutes = -1  # auto
 api_token = "env:GITLAB_API_TOKEN"
 runner_token = "env:GITLAB_RUNNER_TOKEN"
 graphql_url = "https://gitlab.com/api/graphql"
-rest_api_url = "https://gitlab.com/api/v4"
+rest_url = "https://gitlab.com/api/v4"
 
 
 [pulumi]

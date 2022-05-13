@@ -14,7 +14,7 @@ from enum import Enum, auto
 import coolname
 import pulumi
 
-from . import gitlab, timestamp
+from . import timestamp
 from .logging import log
 from .scaling import ScalingConfig
 
@@ -76,7 +76,7 @@ class CloudProvider(ABC):
 
     def __init__(self, config=None, gitlab=None, scaling=None):
         self.config = config or dict()
-        self.gitlab = gitlab or dict()
+        self.gitlab = gitlab
         self.scaling = scaling or ScalingConfig()
         self.instances: set[CloudInstance] = set()
         self._names_seen = set()
@@ -148,7 +148,7 @@ class CloudProvider(ABC):
                 log.debug('Scaling decision: keep running %s', instance)
                 count += 1
 
-        jobs_pending = gitlab.get_pending_jobs()
+        jobs_pending = self.gitlab.get_pending_jobs()
         jobs_capacity = scaling.jobs_per_instance * len([
                 None for i in self.instances if i.status in {status.PROVISIONING, status.READY}
             ])

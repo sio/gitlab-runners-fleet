@@ -10,6 +10,7 @@ from pulumi import automation as auto
 
 from . import logging
 from .config import Configuration
+from .gitlab import GitLabAPI
 from .logging import log
 from .scaling import ScalingConfig
 
@@ -51,7 +52,7 @@ def cloud_provider(config):
     cloud_class = getattr(module, class_name)
     return cloud_class(
         config=getattr(config, class_name, None),
-        gitlab=config.gitlab,
+        gitlab=GitLabAPI(**config.gitlab),
         scaling=ScalingConfig(**config.scaling),
     )
 
