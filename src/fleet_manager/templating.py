@@ -51,6 +51,7 @@ def template(path):
 
 
 @jinja2.pass_environment
+@cache
 def static_file(j2, name):
     '''Jinja2 function to render contents of a static file'''
     filepath = Path(name).expanduser()
