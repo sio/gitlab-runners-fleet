@@ -127,7 +127,10 @@ class CloudProvider(ABC):
         for instance in self.instances.copy():
             instance.update_status()
             if  count >= scaling.max_total_instances \
-            and instance.status != status.BUSY:
+            and instance.status not in {
+                    status.BUSY,
+                    status.PROVISIONING,
+            }:
                 instance.status = status.IDLE
             if instance.status in {
                     status.ERROR,

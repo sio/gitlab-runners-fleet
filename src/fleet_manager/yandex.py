@@ -43,7 +43,27 @@ class YandexInstance(CloudInstance):
 
     def update_status(self):
         '''Write updated values to self.status, self.idle_since'''
+        self.status = self._fetch_status()
         super().update_status()
+
+    def _fetch_status(self):
+        scaling = self.cloud.scaling
+        try:
+            response = requests.get(
+                f'http://{self.ipv4_address}/metrics',
+                headers={'Host': self.name},
+            )
+            response.raise_for_status()
+            metrics = response.json()
+        except Exception:
+            if timestamp.now() - self.created_at < scaling.est_provisioning_minutes * 60:
+                return status.PROVISIONING
+            return status.ERROR
+        if metrics.get('gitlab_runner_jobs', 0) > 0:
+            return status.BUSY
+        if self.idle_since and timestamp.now() - self.idle_since > scaling.max_idle_minutes * 60:
+            return status.IDLE
+        return status.READY
 
     def create(self):
         '''Create cloud instance corresponding to this object'''
