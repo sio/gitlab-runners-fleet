@@ -15,6 +15,9 @@ def test_attribute_access():
     assert tree.hello == 'world'
     assert tree.foo == 'bar'
     assert tree.alice.location == 'NZ'
+    assert tree['hello'] == 'world'
+    assert tree['foo'] == 'bar'
+    assert tree['alice']['location'] == 'NZ'
 
 
 def test_reading_default_config():
@@ -22,6 +25,7 @@ def test_reading_default_config():
     assert config.scaling.jobs_per_instance == 2
     assert config.YandexCloud.preemptible_instances == True
     assert config.pulumi.stack == 'stackname'
+    assert config['pulumi']['stack'] == 'stackname'
 
 
 def test_configuration_merging():
@@ -31,6 +35,9 @@ def test_configuration_merging():
     assert config.pulumi.stack == 'stackname'
     assert config.YandexCloud.memory_gb == 8
     assert config.main.cloud == 'NonExistentProvider'
+    assert config['pulumi']['stack'] == 'stackname'
+    assert config['YandexCloud']['memory_gb'] == 8
+    assert config['main']['cloud'] == 'NonExistentProvider'
 
 
 def test_environment_values():
@@ -38,6 +45,8 @@ def test_environment_values():
     config = Configuration('tests/config_override.toml')
     os.environ['TEST_VARIABLE']= 'hello world'
     assert config.main.environment_test == 'hello world'
+    assert config['main']['environment_test'] == 'hello world'
     os.environ['TEST_VARIABLE']= 'CHANGED VALUE'
     assert config.main.environment_test == 'CHANGED VALUE'
+    assert config['main']['environment_test'] == 'CHANGED VALUE'
     os.environ = env
