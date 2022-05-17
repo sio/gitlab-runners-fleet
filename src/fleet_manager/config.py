@@ -10,7 +10,7 @@ import toml
 from pkg_resources import resource_string
 
 
-class Configuration:
+class Configuration(Mapping):
     '''TOML based application configuration'''
 
     def __init__(self, config_path=None, defaults='config_default.toml'):
@@ -40,6 +40,15 @@ class Configuration:
 
     def __getattr__(self, attr):
         return getattr(self._root, attr)
+
+    def __getitem__(self, key):
+        return getattr(self, key)
+
+    def __iter__(self):
+        return iter(self._root)
+
+    def __len__(self):
+        return len(self._root)
 
 
 def environment(name):
