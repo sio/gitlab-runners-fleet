@@ -112,7 +112,7 @@ class YandexInstance(CloudInstance):
 
         After successful cleanup this method must set self.status to DESTROYING
         '''
-        log.debug(f'cleanup(): {self}')
+        log.debug(f'Initiating cleanup: {self}')
         try:
             response = requests.post(
                 f'http://{self.ipv4_address}/unregister',
@@ -120,7 +120,7 @@ class YandexInstance(CloudInstance):
             )
             response.raise_for_status()
         except Exception as exc:
-            log.error(f'cleanup failed: {exc}')
+            log.error(f'Cleanup failed: {exc}')
             self.status = status.ERROR
         super().cleanup()
 

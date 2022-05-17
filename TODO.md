@@ -17,4 +17,3 @@ progress of longer tasks.
 - Remove instances that have reached maximum allowed age
 - Add monitoring entrypoint
 - Write better README, --help and some documentation (maybe)
-- Capitalize (str.title()) all log messages
