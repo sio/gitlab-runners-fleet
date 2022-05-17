@@ -4,6 +4,7 @@ on:
   push:
     paths-ignore:
       - '**.md'
+  pull_request:
   schedule:
     - cron: '38 9 12 * *'
 
