@@ -17,3 +17,4 @@ progress of longer tasks.
 - Remove instances that have reached maximum allowed age
 - Add monitoring entrypoint
 - Write better README, --help and some documentation (maybe)
+- Create a docker image for fleet-manager
