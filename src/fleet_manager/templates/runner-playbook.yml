@@ -5,6 +5,8 @@
   collections:
     - potyarkin.homelab
   become: yes
+  vars:
+    daemon_json: /etc/docker/daemon.json
   roles:
     - role: server
       server_remote_user: op
@@ -30,6 +32,43 @@
         docker-volumes: '/certs/client'
 
   tasks:
+    - block:
+      - name: load overlay kernel modules immediately
+        modprobe:
+          name: '{{ item }}'
+          state: present
+        loop:
+          - overlay
+      - name: load overlay kernel modules after reboot
+        copy:
+          content: |
+            overlay
+          dest: /etc/modules-load.d/overlay.conf
+          mode: '0600'
+          backup: yes
+
+    - block:
+      - name: create docker daemon config if not exists
+        copy:
+          content: '{}'
+          dest: '{{ daemon_json }}'
+          force: no
+      - name: read docker daemon config
+        slurp:
+          src: '{{ daemon_json }}'
+        register: docker_config
+      - name: update docker daemon config
+        vars:
+          new:
+            storage-driver: overlay2
+          old: '{{ docker_config.content|b64decode|from_json }}'
+        copy:
+          content: |
+            {{ old|combine(new)|to_nice_json }}
+          dest: '{{ daemon_json }}'
+          backup: yes
+        notify: restart docker daemon
+
     - name: grant gitlab-runner access to docker socket
       user:
         name: gitlab-runner
@@ -82,3 +121,10 @@
 
 
   # TODO: Docker cleanup (see https://docs.gitlab.com/runner/executors/docker.html#the-builds-and-cache-storage )
+
+
+  handlers:
+    - name: restart docker daemon
+      service:
+        name: docker
+        state: restarted
