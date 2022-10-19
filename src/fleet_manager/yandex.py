@@ -48,9 +48,11 @@ class YandexInstance(CloudInstance):
 
     def _fetch_status(self):
         scaling = self.cloud.scaling
-        metrics_url = f'http://{self.ipv4_address}/metrics'
-        log.debug('Fetching instance metrics: %s (%s)', self.name, metrics_url)
         try:
+            if not getattr(self, 'ipv4_address'):
+                raise ValueError(f'ipv4_address not found for {self}')
+            metrics_url = f'http://{self.ipv4_address}/metrics'
+            log.debug('Fetching instance metrics: %s (%s)', self.name, metrics_url)
             response = requests.get(metrics_url, headers={'Host': self.name})
             response.raise_for_status()
             metrics = response.json()
@@ -100,7 +102,8 @@ class YandexInstance(CloudInstance):
                 subnet_id=self.cloud.subnet.id,
             )],
         )
-        self.ipv4_address = self.cloud.ipv4_external
+        if not getattr(self, 'ipv4_address'):
+            self.ipv4_address = self.cloud.ipv4_external.apply(str)
         super().create()
 
     def cleanup(self):
@@ -114,6 +117,8 @@ class YandexInstance(CloudInstance):
         '''
         log.debug(f'Initiating cleanup: {self}')
         try:
+            if not getattr(self, 'ipv4_address'):
+                raise ValueError(f'ipv4_address not found for {self}')
             response = requests.post(
                 f'http://{self.ipv4_address}/unregister',
                 headers={'Host': self.name},
