@@ -47,7 +47,7 @@ class YandexInstance(CloudInstance):
         self.status = self._fetch_status()
         super().update_status()
 
-    def _fetch_status(self):
+    def _fetch_status(self):  # TODO: move generic parts into CloudInstance
         scaling = self.cloud.scaling
         try:
             if not getattr(self, 'ipv4_address'):
