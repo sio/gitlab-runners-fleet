@@ -22,7 +22,7 @@ def test_attribute_access():
 
 def test_reading_default_config():
     config = Configuration()
-    assert config.scaling.jobs_per_instance == 2
+    assert config.scaling.jobs_per_instance == 3
     assert config.YandexCloud.preemptible_instances == True
     assert config.pulumi.stack == 'stackname'
     assert config['pulumi']['stack'] == 'stackname'
@@ -30,7 +30,7 @@ def test_reading_default_config():
 
 def test_configuration_merging():
     config = Configuration('tests/config_override.toml')
-    assert config.scaling.jobs_per_instance == 2
+    assert config.scaling.jobs_per_instance == 3
     assert config.YandexCloud.preemptible_instances == True
     assert config.pulumi.stack == 'stackname'
     assert config.YandexCloud.memory_gb == 8
