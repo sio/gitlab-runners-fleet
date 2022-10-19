@@ -1,0 +1,16 @@
+[Unit]
+Description=Sidekick for idle GitLab runner instance
+After=network.target
+After=gitlab-runner.service
+After=control.service
+Requires=control.service
+
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/sidekick
+Environment=PYTHONUNBUFFERED=yes
+
+
+[Install]
+WantedBy=multi-user.target

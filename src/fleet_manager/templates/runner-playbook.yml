@@ -91,6 +91,7 @@
         mode: '0755'
       loop:
         - control.py
+        - sidekick.py
         - unregister-wait.sh
 
     - name: install systemd units
@@ -100,6 +101,7 @@
         mode: '0644'
       loop:
         - control.service
+        - sidekick.service
         - unregister.service
         - unregister.socket
 
@@ -111,6 +113,7 @@
         daemon_reload: yes
       loop:
         - control.service
+        - sidekick.service
         - unregister.socket
 
     - name: open control port on WAN
