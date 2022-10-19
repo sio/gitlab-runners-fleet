@@ -8,7 +8,7 @@ from typing import Optional
 
 import math
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, asdict, fields
+from dataclasses import dataclass, asdict, fields, is_dataclass
 from enum import Enum, auto
 
 import coolname
@@ -221,6 +221,12 @@ class CloudProvider(ABC):
             return
         log.debug('Restoring instances from stack output: %s', export)
         for name, params in export.value.items():
+            if is_dataclass(self._instance_cls):
+                valid_fields = set(f.name for f in fields(self._instance_cls))
+                for key in list(params.keys()):
+                    if key not in valid_fields:
+                        log.warning('Dropping %s from params of %s', key, self.__class__.__name__)
+                        params.pop(key)
             instance = self._instance_cls(name=name, cloud=self, **params)
             self.instances.add(instance)
 
