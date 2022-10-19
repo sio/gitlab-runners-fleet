@@ -164,7 +164,9 @@ class CloudProvider(ABC):
             scaling.min_total_instances - len(self.instances),
             min(
                 instances_required,
-                scaling.max_grow_instances,
+                scaling.max_grow_instances - len(
+                    [None for i in self.instances if i.status == status.PROVISIONING]
+                ),
                 scaling.max_total_instances - len(self.instances),
             ),
         )
