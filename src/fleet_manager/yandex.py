@@ -62,12 +62,12 @@ class YandexInstance(CloudInstance):
             if timestamp.now() - self.created_at < scaling.est_provisioning_minutes * 60:
                 return status.PROVISIONING
             return status.ERROR
-        if metrics.get('gitlab_runner_jobs', 0) > 0:
-            return status.BUSY
         jobs_total = metrics.get('gitlab_runner_jobs_total', 0)
         if jobs_total > self.jobs_total:
             self.jobs_total = jobs_total
             self.idle_since = 0
+        if metrics.get('gitlab_runner_jobs', 0) > 0:
+            return status.BUSY
         if self.idle_since and timestamp.now() - self.idle_since > scaling.max_idle_minutes * 60:
             return status.IDLE
         return status.READY
