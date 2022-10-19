@@ -137,6 +137,7 @@ class CloudProvider(ABC):
                     status.ERROR,
                     status.IDLE,
             }:
+                log.info('Execute cleanup on %s', instance)
                 instance.cleanup()
             if instance.status in {
                     status.DESTROYING,
