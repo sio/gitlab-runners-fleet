@@ -136,7 +136,7 @@ class GitLabAPI(GraphqlAPI):
         assigned = set(project['id'] for project in response.json().get('projects', []))
         missing = set(project_ids).difference(assigned)
         if missing:
-            log.debug('Assigning runner #%s to projects %s', runner_id, missing)
+            log.info('Assigning runner #%s to projects %s', runner_id, missing)
         for project_id in missing:
             response = api.post(
                 f'{api.rest_url}/projects/{project_id}/runners',
