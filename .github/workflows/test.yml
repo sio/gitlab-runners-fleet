@@ -14,8 +14,8 @@ jobs:
     env:
       PIP_CACHE_DIR: cache/pip
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v1
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
         with:
           path: cache
           key: cache-v1-${{ hashFiles('setup.cfg') }}
