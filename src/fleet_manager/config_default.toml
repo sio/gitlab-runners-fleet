@@ -1,11 +1,11 @@
 [main]
 cloud = "fleet_manager.yandex:YandexCloud"
 log_level = "warning"
-daemon_delay_minutes = 3
+daemon_delay_minutes = 2
 
 
 [scaling]
-jobs_per_instance = 2
+jobs_per_instance = 3
 min_total_instances = 0
 max_total_instances = 10
 max_grow_instances = 2
