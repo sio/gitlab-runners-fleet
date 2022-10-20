@@ -1,7 +1,7 @@
 [main]
 cloud = "fleet_manager.yandex:YandexCloud"
 log_level = "warning"
-daemon_delay_minutes = 2
+daemon_delay_minutes = 1
 
 
 [scaling]
