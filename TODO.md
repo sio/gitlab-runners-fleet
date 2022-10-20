@@ -6,13 +6,27 @@ collaborating with other people (if anyone gets interested) and for tracking
 progress of longer tasks.
 
 
-## High level tasks
+## High prioriy: blocks deployment
 
+- Systemd in docker in docker (dind) does not work on my private runners (but
+  did work on shared GitLab ones)
+- Create a docker image for fleet-manager
+
+## Medium priority: quality of life
+
+- Remove instances that have reached maximum allowed age
+- Deal with DockerHub rate limits
+- Add provider: Selectel (supports nested virtualization)
+
+## Low priority: nice to have
+
+- S3 endpoint for shared runner cache
 - Yandex: restart preempted instances automatically. Instance groups with
   auto-healing? Pulumi? Raw API calls?
 - Yandex: recreate instance if cloud-init configuration has changed
-- Add provider: Selectel (supports nested virtualization)
-- Remove instances that have reached maximum allowed age
 - Add monitoring entrypoint
 - Write better README, --help and some documentation (maybe)
-- Create a docker image for fleet-manager
+
+## Lowest priority: maybe sometime (if ever)
+
+- Get rid of magic values (see `legacy:MAGIC.md`)
