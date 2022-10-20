@@ -121,16 +121,36 @@ class CloudProvider(ABC):
             instance.create()
         self.save()
 
+    def _count_instances_by_status(self, *status):
+        return len([None for i in self.instances if i.status in set(status)])
+
     def scale(self):
         '''Calculate scaling actions for cloud instances'''
         scaling = self.scaling
+        for instance in self.instances:
+            instance.update_status()
+
+        num_healthy = self._count_instances_by_status(
+            status.NEW,
+            status.PROVISIONING,
+            status.READY,
+            status.BUSY,
+        )
+        num_idle = self._count_instances_by_status(status.IDLE)
+        keep_idle = max(0, min(num_idle, scaling.min_total_instances - num_healthy))
+        for instance in self.instances:
+            if keep_idle <= 0:
+                break
+            if instance.status == status.IDLE:  # TODO: and instance age < max allowed age
+                instance.status = status.READY
+                keep_idle -= 1
+
         count = 0
         for instance in self.instances.copy():
-            instance.update_status()
             if  count >= scaling.max_total_instances \
-            and instance.status not in {
-                    status.BUSY,
-                    status.PROVISIONING,
+            and instance.status in {
+                    status.NEW,
+                    status.READY,
             }:
                 instance.status = status.IDLE
             if instance.status in {
@@ -151,9 +171,9 @@ class CloudProvider(ABC):
                 count += 1
 
         jobs_pending = self.gitlab.get_pending_jobs()
-        jobs_capacity = scaling.jobs_per_instance * len([
-                None for i in self.instances if i.status in {status.PROVISIONING, status.READY}
-            ])
+        jobs_capacity = scaling.jobs_per_instance * self._count_instances_by_status(
+            status.PROVISIONING, status.READY
+        )
         instances_required = max(
                 0,
                 int(math.ceil(
@@ -164,9 +184,7 @@ class CloudProvider(ABC):
             scaling.min_total_instances - len(self.instances),
             min(
                 instances_required,
-                scaling.max_grow_instances - len(
-                    [None for i in self.instances if i.status == status.PROVISIONING]
-                ),
+                scaling.max_grow_instances - self._count_instances_by_status(status.PROVISIONING),
                 scaling.max_total_instances - len(self.instances),
             ),
         )
