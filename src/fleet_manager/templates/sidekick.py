@@ -22,7 +22,7 @@ from subprocess import run
 
 def kick():
     print('Restarting idle gitlab-runner')
-    run('systemctl restart gitlab-runner.service'.split(), stdout=sys.stdout, stderr=sys.stderr)
+    run('systemctl try-restart gitlab-runner.service'.split(), stdout=sys.stdout, stderr=sys.stderr)
 
 def is_idle() -> bool:
     try:
