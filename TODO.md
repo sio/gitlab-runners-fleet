@@ -8,8 +8,6 @@ progress of longer tasks.
 
 ## High prioriy: blocks deployment
 
-- Systemd in docker in docker (dind) does not work on my private runners (but
-  did work on shared GitLab ones)
 - Create a docker image for fleet-manager
 
 ## Medium priority: quality of life
