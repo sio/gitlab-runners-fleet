@@ -69,6 +69,22 @@
           backup: yes
         notify: restart docker daemon
 
+    - name: verify gitlab-runner health after startup
+      copy:
+        content: |-
+          [Unit]
+          StartLimitIntervalSec=1m
+          StartLimitBurst=5
+
+          [Service]
+          ExecStartPost=/usr/local/bin/verify-start
+          Environment=CONFIG_FILE=/etc/gitlab-runner-custom/config.toml
+          Restart=no
+        dest: /etc/systemd/system/gitlab-runner.service.d/verify-start.conf
+        mode: '0644'
+        backup: yes
+      notify: restart gitlab runner
+
     - name: grant gitlab-runner access to docker socket
       user:
         name: gitlab-runner
@@ -93,6 +109,7 @@
         - control.py
         - sidekick.py
         - unregister-wait.sh
+        - verify-start.sh
 
     - name: install systemd units
       copy:
