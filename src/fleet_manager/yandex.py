@@ -178,7 +178,7 @@ class YandexCloud(CloudProvider):
                 )
         )
         self.ipv4_external = ipv4_address.external_ipv4_address.address
-        router = yandex.ComputeInstance(
+        router = yandex.ComputeInstance( # TODO: VPC gateway can do NAT, but isn't exposed in Pulumi yet
             resource_name = 'router',
             hostname = 'router',
             scheduling_policy = yandex.ComputeInstanceSchedulingPolicyArgs(
