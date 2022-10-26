@@ -4,6 +4,7 @@ ARG PULUMI_VERSION=3.29.1
 ARG PULUMI_YANDEX_VERSION=0.13.0
 ARG PULUMI_PLATFORM=linux-x64
 ENV PULUMI_HOME=/opt/pulumi/x/
+ENV PULUMI_SKIP_UPDATE_CHECK=true
 
 ADD https://get.pulumi.com/releases/sdk/pulumi-v${PULUMI_VERSION}-${PULUMI_PLATFORM}.tar.gz /pulumi.tar.gz
 ADD . /src
