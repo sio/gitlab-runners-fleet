@@ -4,7 +4,7 @@ services:
   fleet-manager:
     image: ghcr.io/sio/gitlab-runners-fleet
     restart: unless-stopped
-    #user: 12321:12321 # TODO: needs a fake passwd entry, does not work with ephemeral uid
+    user: 12321:45654 # TODO: needs a fake passwd entry, does not work with ephemeral uid
     environment:
       PULUMI_CONFIG_PASSPHRASE: dummyvalue
       PULUMI_SKIP_UPDATE_CHECK: dummyvalue

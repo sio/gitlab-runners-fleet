@@ -29,15 +29,17 @@ fakeid() {
     getent group > "$NSS_WRAPPER_GROUP"
 
     sed -i '/^fleetmanager:/d' "$NSS_WRAPPER_PASSWD" "$NSS_WRAPPER_GROUP"
-    echo "fleetmanager:!:$UID:$(id -g):/home/fleetmanager:/usr/sbin/nologin" >> "$NSS_WRAPPER_PASSWD"
+    echo "fleetmanager:!:$UID:$(id -g)::/home/fleetmanager:/usr/sbin/nologin" >> "$NSS_WRAPPER_PASSWD"
     echo "fleetmanager:!:$(id -g):fleetmanager" >> "$NSS_WRAPPER_GROUP"
 
     export LD_PRELOAD=libnss_wrapper.so
+    export USER=fleetmanager
 }; fakeid
 
 
 # Log some troubleshooting information
 id
+whoami
 pulumi version
 pulumi plugin ls
 python3 --version
