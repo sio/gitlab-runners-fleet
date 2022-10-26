@@ -17,8 +17,27 @@ export PULUMI_SKIP_UPDATE_CHECK="${PULUMI_SKIP_UPDATE_CHECK:-true}"
 : "${YC_FOLDER_ID:?required when using default cloud provider (YandexCloud)}"
 
 
+# nss_wrapper <https://cwrap.org/nss_wrapper.html>
+fakeid() {
+    if [[ "$UID" == 0 || "$EUID" == 0 ]]; then return; fi
+    if getent passwd "$UID" &>/dev/null; then return; fi
 
-# Log dependency versions
+    export NSS_WRAPPER_PASSWD=$(mktemp)
+    export NSS_WRAPPER_GROUP=$(mktemp)
+
+    getent passwd > "$NSS_WRAPPER_PASSWD"
+    getent group > "$NSS_WRAPPER_GROUP"
+
+    sed -i '/^fleetmanager:/d' "$NSS_WRAPPER_PASSWD" "$NSS_WRAPPER_GROUP"
+    echo "fleetmanager:!:$UID:$(id -g):/home/fleetmanager:/usr/sbin/nologin" >> "$NSS_WRAPPER_PASSWD"
+    echo "fleetmanager:!:$(id -g):fleetmanager" >> "$NSS_WRAPPER_GROUP"
+
+    export LD_PRELOAD=libnss_wrapper.so
+}; fakeid
+
+
+# Log some troubleshooting information
+id
 pulumi version
 pulumi plugin ls
 python3 --version
