@@ -39,7 +39,6 @@ fakeid() {
 
 # Log some troubleshooting information
 id
-whoami
 pulumi version
 pulumi plugin ls
 python3 --version
