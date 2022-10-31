@@ -26,7 +26,7 @@ tools.
 
 ## Project status
 
-Work in progress, but already mostly usable.
+Rough around the edges but usable. Deployed and used regularly by author.
 
 
 ## Installation and usage

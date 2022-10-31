@@ -8,7 +8,6 @@ progress of longer tasks.
 
 ## High prioriy: blocks deployment
 
-- Create a docker image for fleet-manager
 
 ## Medium priority: quality of life
 
