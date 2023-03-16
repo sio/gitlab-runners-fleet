@@ -4,18 +4,13 @@ TERRAFORM_VERBS=init validate plan apply destroy fmt version
 .PHONY: $(TERRAFORM_VERBS)
 $(filter-out version init fmt,$(TERRAFORM_VERBS)): version .terraform
 $(TERRAFORM_VERBS):
-	$(TERRAFORM) $@ $(TERRAFORM_CLI_ARGS)
+	$(TERRAFORM) $@
 
 .terraform:
 	$(MAKE) init
 
-# Do not prompt for any interactive input
-TERRAFORM_CLI_ARGS+=-input=false
-
-# Some commands do not support -input= parameter
-fmt version validate: TERRAFORM_CLI_ARGS=
-
-# Tune Terraform output for non-interactive use cases
+# Tune Terraform for non-interactive use
+export TF_INPUT=0
 export TF_IN_AUTOMATION=yes
 
 # Use Russian mirror of Terraform registry
