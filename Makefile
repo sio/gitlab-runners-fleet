@@ -9,6 +9,11 @@ $(TERRAFORM_VERBS):
 .terraform:
 	$(MAKE) init
 
+# Do not require interactive confirmation from user
+export TF_CLI_ARGS
+version init:  TF_CLI_ARGS=
+apply destroy: TF_CLI_ARGS=-auto-approve
+
 # Tune Terraform for non-interactive use
 export TF_INPUT=0
 export TF_IN_AUTOMATION=yes
