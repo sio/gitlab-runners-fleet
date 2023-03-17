@@ -24,7 +24,7 @@ variable "outer_cidr" {
   default = ["10.10.10.0/24"]
 }
 locals {
-  gateway_ip = cidrhost(var.outer_cidr[0], 10)  // .1 is reserved by YCloud for itself
+  gateway_ip = cidrhost(var.outer_cidr[0], 10) // .1 is reserved by YCloud for itself
 }
 
 
