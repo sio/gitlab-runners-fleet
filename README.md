@@ -13,7 +13,7 @@ I've decided not to use GitLab's suggested `docker-machine` approach because:
 - I want to be able to choose from a wider set of cloud providers than
   `docker-machine` supports. Coding new bindings for `docker-machine` seems
   to be a pointless endeavor.
-- I wanted a project to learn Terraform/Pulumi. Previous two iteration of this
+- I wanted a project to learn Terraform/Pulumi. Previous two iterations of this
   project were created with Pulumi and Pulumi Automation API. Pulumi stopped
   developing bindings for the cloud I use (Yandex Cloud) and my Python code was
   not as clean as I would like, hence this (third) rewrite to Terraform & Go.
@@ -24,8 +24,8 @@ architect my infra to incur (almost) no costs when no CI jobs are running.
 ## Project status
 
 Under construction (again). Being rewritten to Terraform after
-[Pulumi Automation API](https://github.com/sio/gitlab-runners-fleet/tree/legacy/01-pulumi-plain)
-and [plain Pulumi](https://github.com/sio/gitlab-runners-fleet/tree/legacy/02-pulumi-automation-api).
+[Pulumi Automation API](https://github.com/sio/gitlab-runners-fleet/tree/legacy/02-pulumi-automation-api)
+and [plain Pulumi](https://github.com/sio/gitlab-runners-fleet/tree/legacy/01-pulumi-plain).
 
 
 ## Installation and usage
