@@ -5,7 +5,7 @@ set -v
 
 ip addr
 ip route
-ping 8.8.8.8 -c3
+#ping 8.8.8.8 -c3
 
 apt update
 apt-get install -y \
