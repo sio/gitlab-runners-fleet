@@ -52,6 +52,13 @@ chroot:
 	cp -avr $(TEMPLATE) $(MOUNTPOINT)/etc/provision
 	chroot $(MOUNTPOINT) /etc/provision/$(SCRIPT)
 
+.PHONY: compact
+compact:
+	mv $(OUTPUT) $(OUTPUT).orig
+	qemu-img convert -c -f qcow2 -O qcow2 $(OUTPUT).orig $(OUTPUT)
+	ls -l $(OUTPUT)*
+	rm $(OUTPUT).orig
+
 .PHONY: .gha-environment
 .gha-environment:
 	apt update
