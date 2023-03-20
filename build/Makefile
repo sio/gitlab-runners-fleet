@@ -55,3 +55,5 @@ chroot:
 .gha-environment:
 	apt update
 	apt-get install -y qemu-utils
+	ip addr
+	ip route
