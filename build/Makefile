@@ -3,6 +3,8 @@ INPUT=input.qcow2
 OUTPUT=output.qcow2
 DEVICE=/dev/nbd15
 MOUNTPOINT=rootfs
+TEMPLATE=template
+SCRIPT=install.sh
 
 .PHONY: all
 all: mount chroot umount
@@ -47,9 +49,8 @@ umount:
 
 .PHONY: chroot
 chroot:
-	cp chroot.sh $(MOUNTPOINT)/chroot.sh
-	chroot $(MOUNTPOINT) /chroot.sh
-	rm $(MOUNTPOINT)/chroot.sh
+	cp -avr $(TEMPLATE) $(MOUNTPOINT)/etc/provision
+	chroot $(MOUNTPOINT) /etc/provision/$(SCRIPT)
 
 .PHONY: .gha-environment
 .gha-environment:
