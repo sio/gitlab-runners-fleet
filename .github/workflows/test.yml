@@ -9,6 +9,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: |
-          cd build
-          sudo make all
+      - run: sudo make -C build .gha-environment
+      - run: sudo make -C build

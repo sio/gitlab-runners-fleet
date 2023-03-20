@@ -50,3 +50,8 @@ chroot:
 	cp chroot.sh $(MOUNTPOINT)/chroot.sh
 	chroot $(MOUNTPOINT) /chroot.sh
 	rm $(MOUNTPOINT)/chroot.sh
+
+.PHONY: .gha-environment
+.gha-environment:
+	apt update
+	apt-get install -y qemu-utils
