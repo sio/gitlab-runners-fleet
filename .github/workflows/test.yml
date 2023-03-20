@@ -1,0 +1,10 @@
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          cd build
+          sudo make all
