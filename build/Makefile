@@ -59,6 +59,16 @@ compact:
 	ls -l $(OUTPUT)*
 	rm $(OUTPUT).orig
 
+.PHONY: upload
+AWS_DEFAULT_REGION?=ru-central1
+AWS_ENDPOINT?=https://storage.yandexcloud.net
+S3=aws s3 --endpoint-url=$(AWS_ENDPOINT)
+upload: $(OUTPUT)
+ifeq (,$(BUCKET))
+	$(error Variable not defined: BUCKET)
+endif
+	$(S3) cp $(OUTPUT) s3://$(BUCKET)/base.qcow2
+
 .PHONY: .gha-environment
 .gha-environment:
 	apt update
