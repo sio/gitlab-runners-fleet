@@ -42,3 +42,8 @@ variable "yc_platform" {
   default = "standard-v3"
   type    = string
 }
+variable "ycs3_vmimage_url" {
+  description = "URL to base VM image in Yandex Cloud object storage"
+  nullable    = false
+  type        = string
+}

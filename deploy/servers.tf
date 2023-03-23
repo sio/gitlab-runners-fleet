@@ -1,8 +1,3 @@
-data "yandex_compute_image" "debian" {
-  family = "debian-11"
-}
-
-
 // Compute Cloud instance is cheaper than API gateway in our usecase,
 // and it's a lot easier to configure too. VPC gateway, on the other hand,
 // can't do HTTP reverse proxying (or even plain TCP port forwarding).
@@ -20,7 +15,7 @@ resource "yandex_compute_instance" "gateway" {
   boot_disk {
     auto_delete = true
     initialize_params {
-      image_id = data.yandex_compute_image.debian.id
+      image_id = yandex_compute_image.base[0].id
       size     = 10
     }
   }
@@ -54,7 +49,7 @@ resource "yandex_compute_instance" "runner" {
   boot_disk {
     auto_delete = true
     initialize_params {
-      image_id = data.yandex_compute_image.debian.id
+      image_id = yandex_compute_image.base[0].id
       size     = 15
     }
   }
@@ -67,4 +62,19 @@ resource "yandex_compute_instance" "runner" {
   metadata = {
     serial-port-enable = 1
   }
+}
+
+// Creation/deletion of a base image from S3 storage takes 10-15 seconds.
+// This is fast enough for me to scale down to zero when no runners are in use.
+// Frequent recreation also solves the problem of keeping the base image up to
+// date:
+// - CI pipeline will overwrite the image in S3 bucket as often as required
+// - Terraform will pick up the latest image version after each inactivity cycle
+resource "yandex_compute_image" "base" {
+  count       = local.one_or_none
+  name        = "base"
+  description = "Base image both for gateway and for runners"
+  os_type     = "LINUX"
+  source_url  = var.ycs3_vmimage_url
+  pooled      = "false"
 }
