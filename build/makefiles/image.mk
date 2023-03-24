@@ -59,6 +59,6 @@ chroot:
 .PHONY: compact
 compact:
 	mv $(OUTPUT) $(OUTPUT).orig
-	qemu-img convert -c -f qcow2 -O qcow2 $(OUTPUT).orig $(OUTPUT)
+	qemu-img convert -c -f qcow2 -O qcow2 -o cluster_size=2M $(OUTPUT).orig $(OUTPUT)
 	ls -l $(OUTPUT)*
 	rm $(OUTPUT).orig
