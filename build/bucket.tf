@@ -6,11 +6,16 @@ variable "ycs3_bucket" {
   description = "Object storage bucket which will hold base VM image"
   nullable    = false
   type        = string
-  sensitive   = true
 }
 
 resource "yandex_storage_bucket" "images" {
-  bucket     = var.ycs3_bucket
+  bucket   = var.ycs3_bucket
+  max_size = 5 * pow(2, 30) // GB
+  anonymous_access_flags {
+    read = true
+    list = false
+    config_read = false
+  }
   access_key = yandex_iam_service_account_static_access_key.sa-static-key.access_key
   secret_key = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
 }
@@ -35,4 +40,12 @@ data "yandex_client_config" "client" {}
 
 locals {
   yc_folder = data.yandex_client_config.client.folder_id
+}
+
+output "AWS_ACCESS_KEY_ID" {
+  value = yandex_iam_service_account_static_access_key.sa-static-key.access_key
+}
+
+output "AWS_SECRET_ACCESS_KEY" {
+  value = nonsensitive(yandex_iam_service_account_static_access_key.sa-static-key.secret_key)
 }
