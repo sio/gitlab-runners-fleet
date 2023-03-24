@@ -34,6 +34,18 @@ Documentation is not written yet. See Makefiles for pointers, `make up` will
 yell at you until you provide all required environment variables :)
 
 
+## Infrastructure overview
+
+- Persistent resources
+    - S3 bucket that holds base image for cloud VMs
+- Scaling down to zero on demand
+    - 0 to N runner hosts: Debian hosts with GitLab runner daemon + Docker
+      executor
+    - 0 to 1 gateway: a simple cloud VM which has a public IPv4 and acts as a
+      router, firewall and a reverse proxy for HTTP API
+    - Other required resources (networks, IP addresses, VM images)
+
+
 ## License and copyright
 
 Copyright 2021-2023 Vitaly Potyarkin
