@@ -40,7 +40,7 @@ taken. These notes are mostly intended to be consumed by my future self.
 ## Bringup sequence
 
 - Create S3 bucket: `make -C build bucket` (once)
-- Build base VM image and upload to S3: `make -C build image upload`
+- Build base VM image and upload to S3: `make -C build image compact upload`
   (regularly in CI)
 - Create/update the rest of the infra: `make -C deploy`
   (regularly on fleet manager)
