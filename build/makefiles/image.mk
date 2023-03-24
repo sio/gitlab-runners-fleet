@@ -22,6 +22,10 @@ $(OUTPUT): $(INPUT)
 $(MOUNTPOINT):
 	mkdir -p "$@"
 
+.PHONY: clean
+clean:
+	$(RM) $(OUTPUT)
+
 .PHONY: mount
 mount: $(OUTPUT) $(MOUNTPOINT)
 	modprobe nbd max_part=8
