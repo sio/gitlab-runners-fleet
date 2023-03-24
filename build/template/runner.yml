@@ -1,0 +1,151 @@
+---
+# Ansible playbook to initialize GitLab runner on localhost
+
+- hosts: localhost
+  collections:
+    - potyarkin.homelab
+  become: yes
+  vars:
+    daemon_json: /etc/docker/daemon.json
+  roles:
+    - role: server
+      server_remote_user: op
+      server_keys_public:
+        - /etc/provision/public_key
+
+    - role: packages
+      packages_install:
+        - docker.io
+
+    - role: gitlab_runner
+      gitlab_runner_token: '{{ lookup("file", "/etc/provision/gitlab_runner_token") }}'
+      gitlab_runner_tags:
+        - private-runner
+      gitlab_runner_executor: docker
+      gitlab_runner_concurrent_jobs: 3
+      gitlab_runner_extra_registration_params:
+        name: 'private-runner-{{ ansible_hostname }}'
+        run-untagged: ''
+        locked: 'false'
+        docker-privileged: 'true'
+        docker-image: 'ruby:2.5'
+        docker-volumes: '/certs/client'
+
+  tasks:
+    - block:
+      - name: load overlay kernel modules immediately
+        modprobe:
+          name: '{{ item }}'
+          state: present
+        loop:
+          - overlay
+      - name: load overlay kernel modules after reboot
+        copy:
+          content: |
+            overlay
+          dest: /etc/modules-load.d/overlay.conf
+          mode: '0600'
+          backup: yes
+
+    - block:
+      - name: create docker daemon config if not exists
+        copy:
+          content: '{}'
+          dest: '{{ daemon_json }}'
+          force: no
+      - name: read docker daemon config
+        slurp:
+          src: '{{ daemon_json }}'
+        register: docker_config
+      - name: update docker daemon config
+        vars:
+          new:
+            storage-driver: overlay2
+          old: '{{ docker_config.content|b64decode|from_json }}'
+        copy:
+          content: |
+            {{ old|combine(new)|to_nice_json }}
+          dest: '{{ daemon_json }}'
+          backup: yes
+        notify: restart docker daemon
+
+    - name: verify gitlab-runner health after startup
+      copy:
+        content: |-
+          [Unit]
+          StartLimitIntervalSec=1m
+          StartLimitBurst=5
+
+          [Service]
+          ExecStartPost=/usr/local/bin/verify-start
+          Environment=CONFIG_FILE=/etc/gitlab-runner-custom/config.toml
+          Restart=no
+        dest: /etc/systemd/system/gitlab-runner.service.d/verify-start.conf
+        mode: '0644'
+        backup: yes
+      notify: restart gitlab runner
+
+    - name: grant gitlab-runner access to docker socket
+      user:
+        name: gitlab-runner
+        groups: docker
+        append: yes
+      notify: restart gitlab runner
+
+    - name: enable metrics endpoint for gitlab-runner
+      lineinfile:
+        path: /etc/gitlab-runner-custom/config.toml
+        line: listen_address = "localhost:9252"
+        regexp: '^listen_address'
+        insertbefore: BOF
+      notify: restart gitlab runner
+
+    - name: install control scripts
+      copy:
+        src: 'runner/{{ item }}'
+        dest: '/usr/local/bin/{{ item.split(".")[0] }}'
+        mode: '0755'
+      loop:
+        - control.py
+        - sidekick.py
+        - unregister-wait.sh
+        - verify-start.sh
+        - waitfornetwork.sh
+
+    - name: install systemd units
+      copy:
+        src: 'runner/{{ item }}'
+        dest: '/etc/systemd/system/{{ item }}'
+        mode: '0644'
+      loop:
+        - control.service
+        - sidekick.service
+        - unregister.service
+        - unregister.socket
+
+    - name: start systemd units
+      systemd:
+        name: '{{ item }}'
+        state: started
+        enabled: yes
+        daemon_reload: yes
+      loop:
+        - control.service
+        - sidekick.service
+        - unregister.socket
+
+    - name: open control port on WAN
+      ufw:
+        rule: allow
+        port: '8080'
+        proto: tcp
+
+
+  # TODO: Docker cleanup (see https://docs.gitlab.com/runner/executors/docker.html#the-builds-and-cache-storage )
+
+
+  handlers:
+    - name: restart docker daemon
+      service:
+        name: docker
+        state: restarted

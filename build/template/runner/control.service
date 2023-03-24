@@ -1,0 +1,17 @@
+[Unit]
+Description=Control GitLab runner instance via WAN
+After=network.target
+
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=30
+ExecStart=/usr/local/bin/control
+DynamicUser=yes
+NoNewPrivileges=true
+Environment=PYTHONUNBUFFERED=yes
+
+
+[Install]
+WantedBy=multi-user.target

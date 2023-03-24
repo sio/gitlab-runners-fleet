@@ -1,0 +1,4 @@
+collections:
+  - name: https://gitlab.com/sio/server_common.git
+    type: git
+    version: master

@@ -1,0 +1,8 @@
+[Unit]
+Description=Privilege isolation intermediary between control HTTP server and the OS
+
+[Install]
+WantedBy=sockets.target
+
+[Socket]
+ListenFIFO=/run/unregister-runners.fifo

@@ -1,0 +1,103 @@
+---
+# Ansible playbook to initialize cloud NAT router
+
+- hosts: gateway
+  collections:
+    - potyarkin.homelab
+  become: yes
+  roles:
+    - role: nftables
+      nftables_template_dir: /etc/provision/gateway
+      nftables_templates:
+        - firewall.nft
+      nftables_open_tcp_ports:
+        - ssh
+        - http
+      nftables_inner_subnet: '{{ lookup("file", "/etc/provision/inner_subnet") }}'
+  tasks:
+    - name: enable IPv4 forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        state: present
+        reload: yes
+
+- hosts: localhost
+  collections:
+    - potyarkin.homelab
+  become: yes
+  vars:
+    caddy_version: 2.5.0
+    caddy_binary: /opt/caddy/caddy
+    caddy_config: /etc/caddy/Caddyfile
+    firewall_auto_config: no
+  roles:
+    - role: server
+      server_remote_user: op
+      server_keys_public:
+        - /etc/provision/public_key
+  tasks:
+    # HTTP reverse proxy (Caddy)
+    #   nginx is too quirky with dynamic reverse proxy destinations:
+    #   - requires static resolver IP
+    #   - difficult to resolve short LAN names without FQDN
+    - name: create directories for caddy
+      file:
+        state: directory
+        path: '{{ item }}'
+        mode: '0755'
+      loop:
+        - '{{ caddy_binary|dirname }}'
+        - '{{ caddy_config|dirname }}'
+    - name: install caddy
+      unarchive:
+        src: "\
+          https://github.com/caddyserver/caddy/releases/download/v\
+          {{ caddy_version }}\
+          /caddy_\
+          {{ caddy_version }}\
+          _linux_amd64.tar.gz"
+        dest: '{{ caddy_binary|dirname }}'
+        remote_src: yes
+        creates: '{{ caddy_binary }}'
+    - name: configure caddy
+      copy:
+        dest: '{{ caddy_config }}'
+        mode: '0644'
+        content: |
+          *:80 {  # single domain without any tld suffix
+            reverse_proxy {host}:8080
+          }
+          http:// {  # all other 'Host:' values
+            respond "Access denied (HTTP 403)" 403 {
+              close
+            }
+          }
+    - name: create service file for caddy
+      copy:
+        dest: /etc/systemd/system/reverse-proxy.service
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=Simple reverse proxy for GitLab runner management
+          After=network.target
+
+          [Service]
+          Type=notify
+          DynamicUser=yes
+          Environment=HOME=/tmp/caddy
+          ExecStart={{ caddy_binary|quote }} run --environ --config {{ caddy_config|quote }}
+          ExecReload={{ caddy_binary|quote }} reload --config {{ caddy_config|quote }}
+          TimeoutStopSec=5s
+          LimitNOFILE=1048576
+          LimitNPROC=512
+          AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+          [Install]
+          WantedBy=multi-user.target
+    - name: start caddy
+      systemd:
+        name: reverse-proxy.service
+        state: started
+        enabled: yes
+        daemon_reload: yes

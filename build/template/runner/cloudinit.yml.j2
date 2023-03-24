@@ -1,0 +1,6 @@
+#cloud-config
+runcmd:
+  - /usr/bin/make -C /etc/provision/ && touch /etc/provision/success
+
+bootcmd:
+  - waitfornetwork.sh
