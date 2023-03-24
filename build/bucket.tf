@@ -1,3 +1,7 @@
+// yandex_storage_bucket takes a very long time during `plan` and `update` to
+// refresh its state. Therefore it's not ok to keep bucket definition in the same
+// module as the rest of infra which changes a lot more often
+
 variable "ycs3_bucket" {
   description = "Object storage bucket which will hold base VM image"
   nullable    = false
