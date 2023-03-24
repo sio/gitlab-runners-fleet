@@ -31,10 +31,6 @@ locals {
 //
 // Yandex Cloud
 //
-variable "yc_zone" {
-  type    = string
-  default = "ru-central1-a"
-}
 variable "yc_platform" {
   description = "CPU generation <https://cloud.yandex.com/en-ru/docs/compute/concepts/vm-platforms>"
   // Intel Ice Lake (Xeon Gold 6338), cheapest as of 2023-02-17:
@@ -46,4 +42,5 @@ variable "ycs3_vmimage_url" {
   description = "URL to base VM image in Yandex Cloud object storage"
   nullable    = false
   type        = string
+  sensitive   = true
 }

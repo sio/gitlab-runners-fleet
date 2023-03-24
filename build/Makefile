@@ -6,8 +6,8 @@ MOUNTPOINT=rootfs
 TEMPLATE=template
 SCRIPT=install.sh
 
-.PHONY: all
-all: mount chroot umount
+.PHONY: image
+image: mount chroot umount
 
 $(INPUT):
 	curl -sSL "$(REMOTE)" -o "$@"
@@ -76,3 +76,12 @@ endif
 .gha-environment:
 	apt update
 	apt-get install -y qemu-utils
+
+include ../deploy/Makefile
+.PHONY: bucket
+bucket: apply
+	$(RM) $(BUCKET_EXTRAS)
+BUCKET_EXTRAS=yandex.tf yandex.tfrc
+$(TERRAFORM_VERBS): $(BUCKET_EXTRAS)
+$(BUCKET_EXTRAS):
+	cp ../deploy/$@ $@

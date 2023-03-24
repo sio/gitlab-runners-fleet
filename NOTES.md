@@ -36,3 +36,11 @@ taken. These notes are mostly intended to be consumed by my future self.
   host without virtualization support (qemu without kvm is painfully slow),
   hence we use a bespoke script which relies on qemu-nbd and chroot.
   This still requires root access to the build host.
+
+## Bringup sequence
+
+- Create S3 bucket: `make -C build bucket` (once)
+- Build base VM image and upload to S3: `make -C build image upload`
+  (regularly in CI)
+- Create/update the rest of the infra: `make -C deploy`
+  (regularly on fleet manager)
