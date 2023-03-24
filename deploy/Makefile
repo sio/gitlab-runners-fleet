@@ -1,5 +1,5 @@
 TERRAFORM?=terraform
-TERRAFORM_VERBS=init validate plan apply destroy fmt version
+TERRAFORM_VERBS=init validate plan apply destroy fmt version show
 
 .PHONY: $(TERRAFORM_VERBS)
 $(filter-out version init fmt,$(TERRAFORM_VERBS)): version .terraform
