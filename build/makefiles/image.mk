@@ -26,7 +26,7 @@ $(MOUNTPOINT):
 
 .PHONY: clean
 clean:
-	$(RM) $(OUTPUT)
+	$(RM) -v $(OUTPUT)
 
 .PHONY: mount
 mount: $(OUTPUT) $(MOUNTPOINT)
