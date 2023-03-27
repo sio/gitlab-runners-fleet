@@ -5,6 +5,7 @@ export ANSIBLE_STDOUT_CALLBACK?=yaml
 export PY_COLORS=1
 export ANSIBLE_FORCE_COLOR=1
 export LC_ALL=C.UTF-8
+export PIP_NO_CACHE_DIR=off
 
 
 PLAYBOOKS=runner gateway common
