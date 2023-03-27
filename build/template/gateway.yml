@@ -1,5 +1,6 @@
----
+#
 # Ansible playbook to initialize cloud NAT router
+#
 
 - hosts: gateway
   collections:
@@ -22,7 +23,7 @@
         state: present
         reload: yes
 
-- hosts: localhost
+- hosts: gateway
   collections:
     - potyarkin.homelab
   become: yes
@@ -31,11 +32,6 @@
     caddy_binary: /opt/caddy/caddy
     caddy_config: /etc/caddy/Caddyfile
     firewall_auto_config: no
-  roles:
-    - role: server
-      server_remote_user: op
-      server_keys_public:
-        - /etc/provision/public_key
   tasks:
     # HTTP reverse proxy (Caddy)
     #   nginx is too quirky with dynamic reverse proxy destinations:

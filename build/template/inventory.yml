@@ -1,6 +1,8 @@
 all:
   vars:
     ansible_python_interpreter: /usr/bin/python3
+    packages_recommends: false
+    server_remote_user: op
   children:
     gateway:
       hosts:
@@ -8,3 +10,6 @@ all:
     runner:
       hosts:
         localhost:
+  hosts:
+    localhost:
+      ansible_connection: local

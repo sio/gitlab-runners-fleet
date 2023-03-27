@@ -1,0 +1,35 @@
+#
+# Base OS image. This playbook is executed when image is being built
+#
+
+- hosts: gateway
+  collections:
+    - potyarkin.homelab
+  become: yes
+  pre_tasks:
+    - name: fetch ssh public keys
+      get_url:
+        url: 'https://github.com/sio.keys'
+        dest: /etc/provision/ssh-pub.keys
+        mode: '0644'
+      register: get_url
+      until: get_url is not failed
+      delay: 2
+      retries: 10
+  roles:
+    - role: upgrade
+    - role: packages
+      packages_install:
+        - docker.io
+        - nftables
+    - role: server
+      server_keys_public: /etc/provision/ssh-pub.keys
+    - role: gitlab_runner
+  tasks:
+    - name: disable services in base image
+      service:
+        enabled: no
+        name: '{{ item }}'
+      loop:
+        - docker
+        - gitlab-runner
