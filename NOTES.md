@@ -36,6 +36,9 @@ taken. These notes are mostly intended to be consumed by my future self.
   host without virtualization support (qemu without kvm is painfully slow),
   hence we use a bespoke script which relies on qemu-nbd and chroot.
   This still requires root access to the build host.
+- mkosi seems nice, but it can only build from scratch via debootstrap.
+  Upstream Debian images are rather good, there is no need to redo the work
+  of Debian Cloud Team
 
 ## Bringup sequence
 
