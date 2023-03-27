@@ -6,7 +6,7 @@ REMOTE=https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-genericcl
 INPUT=input.qcow2
 OUTPUT=output.qcow2
 DEVICE=/dev/nbd15
-MOUNTPOINT=rootfs
+MOUNTPOINT=/tmp/gitlab-runners-fleet-rootfs
 TEMPLATE=template
 SCRIPT=install.sh
 
