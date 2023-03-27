@@ -62,7 +62,8 @@ umount:
 
 .PHONY: chroot
 chroot:
-	cp -avr $(TEMPLATE) $(MOUNTPOINT)/etc/provision
+	mkdir -p $(MOUNTPOINT)/etc/provision
+	cp -avr $(TEMPLATE)/* $(MOUNTPOINT)/etc/provision
 	chroot $(MOUNTPOINT) /etc/provision/$(SCRIPT)
 
 .PHONY: compact
