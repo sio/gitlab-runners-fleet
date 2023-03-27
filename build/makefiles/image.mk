@@ -8,7 +8,7 @@ OUTPUT=output.qcow2
 DEVICE=/dev/nbd15
 MOUNTPOINT=/tmp/gitlab-runners-fleet-rootfs
 TEMPLATE=template
-SCRIPT=install.sh
+SCRIPT=prepare.sh
 
 .PHONY: image
 image: mount chroot umount
@@ -42,14 +42,14 @@ mount: $(OUTPUT) $(MOUNTPOINT)
 	mount --bind /proc $(MOUNTPOINT)/proc
 	mount --bind /sys $(MOUNTPOINT)/sys
 	mount --bind /run $(MOUNTPOINT)/run
-	mv -v $(MOUNTPOINT)/etc/resolv.conf $(MOUNTPOINT)/etc/resolv.conf.orig
+	mv -vf $(MOUNTPOINT)/etc/resolv.conf $(MOUNTPOINT)/etc/resolv.conf.orig
 	cat /etc/resolv.conf > $(MOUNTPOINT)/etc/resolv.conf
 	ls $(MOUNTPOINT)
 	tail -n+0 -v $(MOUNTPOINT)/etc/*release*
 
 .PHONY: umount
 umount:
-	mv -v $(MOUNTPOINT)/etc/resolv.conf.orig $(MOUNTPOINT)/etc/resolv.conf
+	mv -vf $(MOUNTPOINT)/etc/resolv.conf.orig $(MOUNTPOINT)/etc/resolv.conf
 	-umount $(MOUNTPOINT)/proc
 	-umount $(MOUNTPOINT)/dev/pts
 	-umount $(MOUNTPOINT)/dev
@@ -70,4 +70,4 @@ chroot:
 compact:
 	qemu-img convert -c -f qcow2 -O qcow2 -o cluster_size=2M $(OUTPUT) $(OUTPUT).compact
 	ls -lh $(INPUT) $(OUTPUT)*
-	mv $(OUTPUT).compact $(OUTPUT)
+	mv -vf $(OUTPUT).compact $(OUTPUT)

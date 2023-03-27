@@ -11,7 +11,8 @@ PLAYBOOKS=runner gateway common
 .PHONY: $(PLAYBOOKS)
 $(PLAYBOOKS): venv
 	$(VENV)/ansible-galaxy install -r requirements.yml
-	$(VENV)/ansible-playbook --inventory inventory.yml $@.yml
+	$(VENV)/ansible-playbook --inventory inventory/ $@.yml
+
 
 include Makefile.venv
 Makefile.venv:
