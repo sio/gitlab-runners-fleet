@@ -30,6 +30,9 @@ resource "yandex_compute_instance" "gateway" {
   }
   metadata = {
     serial-port-enable = 1
+    user-data = templatefile("cloud-config/gateway", {
+      inner_subnet = var.inner_cidr[0],
+    })
   }
 }
 

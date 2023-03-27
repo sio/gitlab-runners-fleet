@@ -14,7 +14,7 @@
       nftables_open_tcp_ports:
         - ssh
         - http
-      nftables_inner_subnet: '{{ lookup("file", "/etc/provision/inner_subnet") }}'
+      nftables_inner_subnet: '{{ inner_subnet }}'
   tasks:
     - name: enable IPv4 forwarding
       sysctl:

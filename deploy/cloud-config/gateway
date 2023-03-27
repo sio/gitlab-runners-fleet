@@ -1,0 +1,14 @@
+#cloud-config
+
+write_files:
+  - owner: root:root
+    permissions: '0600'
+    path: /etc/provision/inventory/local.yml
+    content: |-
+      all:
+        hosts:
+          localhost:
+            inner_subnet: ${inner_subnet}
+
+runcmd:
+  - /usr/bin/make -C /etc/provision gateway
