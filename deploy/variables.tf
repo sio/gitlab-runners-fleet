@@ -10,6 +10,11 @@ variable "runners" {
 locals {
   one_or_none = length(var.runners) > 0 ? 1 : 0
 }
+variable "gitlab_runner_token" {
+  description = "GitLab runner registration token"
+  type = string
+  nullable = false
+}
 
 
 //

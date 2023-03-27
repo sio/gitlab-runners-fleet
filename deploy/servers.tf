@@ -30,7 +30,7 @@ resource "yandex_compute_instance" "gateway" {
   }
   metadata = {
     serial-port-enable = 1
-    user-data = templatefile("cloud-config/gateway", {
+    user-data = templatefile("cloud-config/gateway.yml", {
       inner_subnet = var.inner_cidr[0],
     })
   }
@@ -64,6 +64,9 @@ resource "yandex_compute_instance" "runner" {
   }
   metadata = {
     serial-port-enable = 1
+    user-data = templatefile("cloud-config/runner.yml", {
+      gitlab_runner_token = var.gitlab_runner_token,
+    })
   }
 }
 

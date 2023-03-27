@@ -1,0 +1,17 @@
+#cloud-config
+
+bootcmd:  # wait for Internet before proceeding with the rest of cloud-init
+  - /bin/sh /etc/provision/runner/waitfornetwork.sh
+
+write_files:
+  - owner: root:root
+    permissions: '0600'
+    path: /etc/provision/inventory/local.yml
+    content: |
+      all:
+        hosts:
+          localhost:
+            gitlab_runner_token: ${gitlab_runner_token}
+
+runcmd:
+  - /usr/bin/make -C /etc/provision runner

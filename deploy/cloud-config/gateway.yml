@@ -4,7 +4,7 @@ write_files:
   - owner: root:root
     permissions: '0600'
     path: /etc/provision/inventory/local.yml
-    content: |-
+    content: |
       all:
         hosts:
           localhost:
