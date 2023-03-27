@@ -32,7 +32,7 @@ clean:
 mount: $(OUTPUT) $(MOUNTPOINT)
 	modprobe nbd max_part=8
 	qemu-nbd --connect=$(DEVICE) --format=qcow2 $(OUTPUT)
-	growpart $(DEVICE) 1
+	-growpart $(DEVICE) 1
 	e2fsck -fy $(DEVICE)p1
 	resize2fs $(DEVICE)p1
 	fdisk -l $(DEVICE)
