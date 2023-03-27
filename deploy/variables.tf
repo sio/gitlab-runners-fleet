@@ -14,6 +14,7 @@ variable "gitlab_runner_token" {
   description = "GitLab runner registration token"
   type = string
   nullable = false
+  sensitive = true
 }
 
 
