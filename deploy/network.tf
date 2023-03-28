@@ -8,6 +8,7 @@ resource "yandex_vpc_subnet" "inner" {
   name           = "inner"
   v4_cidr_blocks = var.inner_cidr
   network_id     = yandex_vpc_network.vpc[0].id
+  route_table_id = yandex_vpc_route_table.behind_nat[0].id
 }
 
 resource "yandex_vpc_subnet" "outer" {
