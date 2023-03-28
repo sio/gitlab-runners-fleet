@@ -1,6 +1,6 @@
 GO?=go
 APP=bin/scale$(shell $(GO) env GOEXE)
-EVERYTHING=$(EVERYTHING)
+EVERYTHING=./...
 
 .PHONY: run
 run: $(APP)  ## run scaler app

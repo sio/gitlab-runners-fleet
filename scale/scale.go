@@ -1,7 +1,7 @@
 package main
 
-import "scale/app"
+import "scale/cloud"
 
 func main() {
-	app.Run()
+	cloud.Run()
 }
