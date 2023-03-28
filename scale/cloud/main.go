@@ -1,16 +1,33 @@
 package cloud
 
-import "fmt"
+import (
+	"os"
+	"encoding/json"
+	"log"
+	"io"
+	"strings"
+)
 
 func Run() {
-	fmt.Println("hello world")
-	fleet := Fleet{
-		Entrypoint: "hello",
-		Hosts: []Host{
-			{Name: "foo"},
-			{Name: "bar"},
-		},
+}
+
+// Provide a Terraform external datasource
+// by communicating in JSON via stdin/stdout
+func TerraformExternalDataSource() {
+	var data []byte
+	var err error
+	if data, err = io.ReadAll(os.Stdin); err != nil {
+		log.Fatal(err)
 	}
-	fmt.Println(fleet)
-	fleet.Save("fleet.json")
+	var params map[string]string
+	if err = json.Unmarshal(data, &params); err != nil {
+		log.Fatal(err)
+	}
+	params["HELLO"] = "TF INTERFACE WORKS!"
+	if data, err = json.Marshal(params); err != nil {
+		log.Fatal(err)
+	}
+	if _, err = os.Stdout.Write(data); err != nil {
+		log.Fatal(err)
+	}
 }
