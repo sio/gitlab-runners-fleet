@@ -40,6 +40,7 @@ taken. These notes are mostly intended to be consumed by my future self.
   Upstream Debian images are rather good, there is no need to redo the work
   of Debian Cloud Team
 
+
 ## Bringup sequence
 
 - Create S3 bucket: `make -C build bucket` (once)

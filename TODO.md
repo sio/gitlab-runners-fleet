@@ -2,7 +2,6 @@
 
 ## build/
 
-- Build custom cloud image for Yandex Cloud
 - Create CI pipeline with GitHub actions to push updated images to S3 (on schedule)
 - Figure out Docker-in-Docker CI problems
 - Switch reverse proxy from Caddy to Nginx: Caddy is not available in Debian repos
@@ -22,6 +21,7 @@
 
 - Rewrite in Go: calculate scaling actions and populate tfvars
 - Optional: use external data source in terraform to call scaler automatically
+
 
 ## Global
 
