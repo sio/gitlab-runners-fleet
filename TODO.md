@@ -15,6 +15,8 @@
   That would allow to make the S3 bucket private.
   Be careful: changing URL (GET params) would trigger tf to rebuild the image,
   which in turn could(?) trigger VM rebuilds.
+- `tf destroy` triggers graceful Linux shutdown. Does gitlab-runner get
+  gracefully unregistered by systemd?
 
 
 ## scale/
