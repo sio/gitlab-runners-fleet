@@ -9,6 +9,10 @@ $(TERRAFORM_VERBS):
 .terraform:
 	$(MAKE) init
 
+.PHONY: upgrade
+upgrade: init
+upgrade: TF_CLI_ARGS=-upgrade
+
 # Do not require interactive confirmation from user
 export TF_CLI_ARGS
 version init:  TF_CLI_ARGS=
