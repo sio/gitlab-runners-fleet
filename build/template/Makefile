@@ -10,9 +10,13 @@ export PIP_NO_CACHE_DIR=off
 
 PLAYBOOKS=runner gateway common
 .PHONY: $(PLAYBOOKS)
-$(PLAYBOOKS): venv
-	$(VENV)/ansible-galaxy install -r requirements.yml
+$(PLAYBOOKS): | venv .ansible-galaxy-ready
 	$(VENV)/ansible-playbook --inventory inventory/ $@.yml
+
+
+.ansible-galaxy-ready: | venv
+	$(VENV)/ansible-galaxy install -r requirements.yml
+	touch $@
 
 
 include Makefile.venv
