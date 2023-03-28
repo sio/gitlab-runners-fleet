@@ -1,11 +1,10 @@
 package cloud
 
 import (
-	"os"
 	"encoding/json"
-	"log"
 	"io"
-	"strings"
+	"log"
+	"os"
 )
 
 func Run() {
