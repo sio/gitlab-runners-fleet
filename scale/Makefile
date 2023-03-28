@@ -1,14 +1,14 @@
 GO?=go
-APP=scale$(shell $(GO) env GOEXE)
+APP=bin/scale$(shell $(GO) env GOEXE)
 EVERYTHING=$(EVERYTHING)
 
 .PHONY: run
-run: build/$(APP)  ## run scaler app
+run: $(APP)  ## run scaler app
 	$<
 
 .PHONY: build
-build: build/$(APP)  ## build scaler app
-build/$(APP): $(shell find . -type f -iname '*.go')
+build: $(APP)  ## build scaler app
+$(APP): $(shell find . -type f -iname '*.go')
 	$(GO) build -o $@
 
 .PHONY: test
