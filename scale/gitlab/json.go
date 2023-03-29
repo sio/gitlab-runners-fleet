@@ -2,6 +2,7 @@ package gitlab
 
 import (
 	"fmt"
+	"strings"
 )
 
 type jsObject = map[string]any
@@ -21,11 +22,11 @@ func jsNested(js any, key ...string) (any, error) {
 	for index := 0; index < len(key); index++ {
 		value, ok = current[key[index]]
 		if !ok {
-			return nil, fmt.Errorf("key not found: %q (level %d)", key[index], index)
+			return nil, fmt.Errorf("key not found: %q (level %d)", strings.Join(key[:index+1], "/"), index)
 		}
 		next, ok = value.(jsObject)
 		if !ok && index < len(key)-1 {
-			return nil, fmt.Errorf("type conversion failed for key %s (level %d): %v", key[index], index, value)
+			return nil, fmt.Errorf("type conversion failed for key %s (level %d): %v", strings.Join(key[:index+1], "/"), index, value)
 		}
 		current = next
 	}
