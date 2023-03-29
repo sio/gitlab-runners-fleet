@@ -20,7 +20,7 @@ func jsonEqual(a, b any) bool {
 	return false
 }
 
-// Tests for jsNested()
+// Tests for jsGetAny()
 func TestNestedAccess(t *testing.T) {
 	input := `{
 		"hello": "world",
@@ -38,9 +38,9 @@ func TestNestedAccess(t *testing.T) {
 		t.Fatal(err)
 	}
 	tests := []struct {
-		path  string
-		want  any
-		iserr bool
+		path string
+		want any
+		fail bool
 	}{
 		{"hello", "world", false},
 		{"foo:bar", "baz", false},
@@ -54,15 +54,44 @@ func TestNestedAccess(t *testing.T) {
 	}
 	for index, tt := range tests {
 		var got any
-		got, err = jsNested(js, strings.Split(tt.path, ":")...)
-		if !tt.iserr && err != nil {
+		got, err = jsGetAny(js, strings.Split(tt.path, ":")...)
+		if !tt.fail && err != nil {
 			t.Errorf("#%d %v: unexpected error: %v", index, tt.path, err)
 		}
-		if tt.iserr && err == nil {
+		if tt.fail && err == nil {
 			t.Errorf("#%d %v: expected an error, got %v", index, tt.path, got)
 		}
 		if got != tt.want && !jsonEqual(got, tt.want) {
 			t.Errorf("#%d %v: got %v, want %v", index, tt.path, got, tt.want)
+		}
+	}
+
+	stringTests := []struct {
+		path string
+		want string
+		fail bool
+	}{
+		{"hello", "world", false},
+		{"foo:bar", "baz", false},
+		{"foo:message:alice", "bob", false},
+		{"foo:message", "", true},
+		{"NONEXISTENT", "", true},
+		{"hello:NONEXISTENT", "", true},
+		{"foo:NONEXISTENT", "", true},
+		{"foo:bar:baz:NONEXISTENT", "", true},
+		{"foo:message:alice:NONEXISTENT", "", true},
+	}
+	for index, tt := range stringTests {
+		var got string
+		got, err = jsGetString(js, strings.Split(tt.path, ":")...)
+		if !tt.fail && err != nil {
+			t.Errorf("string#%d %v: unexpected error: %v", index, tt.path, err)
+		}
+		if tt.fail && err == nil {
+			t.Errorf("string#%d %v: expected an error, got %v", index, tt.path, got)
+		}
+		if got != tt.want {
+			t.Errorf("string#%d %v: got %v, want %v", index, tt.path, got, tt.want)
 		}
 	}
 }

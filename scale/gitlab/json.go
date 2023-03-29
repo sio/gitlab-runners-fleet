@@ -8,7 +8,7 @@ import (
 type jsObject = map[string]any
 
 // Fetch a value from deeply nested JSON
-func jsNested(js any, key ...string) (any, error) {
+func jsGetAny(js any, key ...string) (any, error) {
 	if len(key) == 0 {
 		return js, nil
 	}
@@ -34,18 +34,24 @@ func jsNested(js any, key ...string) (any, error) {
 }
 
 // Fetch a string from deeply nested JSON
-func jsNestedString(js any, key ...string) (string, error) {
+func jsGetString(js any, key ...string) (string, error) {
+	return jsGet[string](js, key...)
+}
+
+// Fetch a specific type from deeply nested JSON
+func jsGet[T any](js any, key ...string) (T, error) {
 	var value any
 	var err error
-	value, err = jsNested(js, key...)
+	value, err = jsGetAny(js, key...)
+	var zero T
 	if err != nil {
-		return "", err
+		return zero, err
 	}
-	var result string
+	var result T
 	var ok bool
-	result, ok = value.(string)
+	result, ok = value.(T)
 	if !ok {
-		return "", fmt.Errorf("key %v is pointing to non-string value: %v", key, value)
+		return zero, fmt.Errorf("type error: value for %v is not %T but %T = %v", key, zero, value, value)
 	}
 	return result, nil
 }
