@@ -30,10 +30,13 @@ func TestSerialization(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(temp)
+	defer func() { _ = os.RemoveAll(temp) }()
 
 	stateFile := filepath.Join(temp, "state.json")
-	original.Save(stateFile)
+	err = original.Save(stateFile)
+	if err != nil {
+		t.Fatalf("failed to save state file: %v", err)
+	}
 
 	var saved []byte
 	saved, err = os.ReadFile(stateFile)
@@ -43,7 +46,11 @@ func TestSerialization(t *testing.T) {
 	t.Log(string(saved))
 
 	restored = &Fleet{}
-	restored.Load(stateFile)
+	err = restored.Load(stateFile)
+	if err != nil {
+		t.Fatalf("failed to load state file: %v", err)
+	}
+
 	if original.entrypoint != restored.entrypoint {
 		t.Errorf("entrypoint was %q, became %q", original.entrypoint, restored.entrypoint)
 	}

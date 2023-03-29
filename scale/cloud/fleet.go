@@ -90,7 +90,7 @@ func (fleet *Fleet) Save(filename string) error {
 	if err != nil {
 		return err
 	}
-	defer os.Remove(temp.Name())
+	defer func() { _ = os.Remove(temp.Name()) }()
 
 	if _, err = temp.Write(output); err != nil {
 		return err
