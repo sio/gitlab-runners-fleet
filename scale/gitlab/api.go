@@ -22,8 +22,6 @@ var (
 	}
 )
 
-type jsObject = map[string]any
-
 // Create API object with custom endpoint and/or authorization token.
 // Empty strings are accepted for default host / anonymous auth.
 func NewAPI(host string, token string) API {
