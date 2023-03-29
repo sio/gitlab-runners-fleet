@@ -46,6 +46,14 @@ type API struct {
 	token string
 }
 
+func (api API) String() string {
+	var token string = "none"
+	if api.token != "" {
+		token = "XXXX"
+	}
+	return fmt.Sprintf("API{host:%s, token:%s}", api.host, token)
+}
+
 // Execute a single GraphQL query with appropriate retries/timeouts
 func (api *API) GraphQL(query string, params jsObject) (data jsObject, err error) {
 	if api.host == "" {
