@@ -52,8 +52,14 @@ func (api *API) GraphQL(query string, params jsObject) (data jsObject, err error
 		api.host = defaultHost
 	}
 	var url string = fmt.Sprintf("https://%s/api/graphql", api.host)
-	data, err = api.graphql(url, query, params)
-	return data, err
+	for attempts := 0; attempts < apiRetryAttempts; attempts++ {
+		data, err = api.graphql(url, query, params)
+		if err == nil {
+			return data, nil
+		}
+		time.Sleep(apiRetryDelay)
+	}
+	return nil, err
 }
 
 // Execute a straightforward GraphQL API call without any error handling
