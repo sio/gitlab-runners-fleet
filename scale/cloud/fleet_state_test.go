@@ -1,4 +1,4 @@
-package tests
+package cloud
 
 import (
 	"testing"
@@ -6,13 +6,11 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
-
-	"scale/cloud"
 )
 
 func TestSerialization(t *testing.T) {
-	var original, restored *cloud.Fleet
-	original = &cloud.Fleet{}
+	var original, restored *Fleet
+	original = &Fleet{}
 	var err error
 
 	var data = []byte(`
@@ -44,26 +42,26 @@ func TestSerialization(t *testing.T) {
 	}
 	t.Log(string(saved))
 
-	restored = &cloud.Fleet{}
+	restored = &Fleet{}
 	restored.Load(stateFile)
-	if original.Entrypoint != restored.Entrypoint {
-		t.Errorf("entrypoint was %q, became %q", original.Entrypoint, restored.Entrypoint)
+	if original.entrypoint != restored.entrypoint {
+		t.Errorf("entrypoint was %q, became %q", original.entrypoint, restored.entrypoint)
 	}
-	if len(restored.Hosts) != len(original.Hosts) {
-		t.Fatalf("saved %d hosts, restored %d hosts", len(original.Hosts), len(restored.Hosts))
+	if len(restored.hosts) != len(original.hosts) {
+		t.Fatalf("saved %d hosts, restored %d hosts", len(original.hosts), len(restored.hosts))
 	}
-	for key := range original.Hosts {
-		var got, want cloud.Host
-		want = *original.Hosts[key]
-		got = *restored.Hosts[key]
+	for key := range original.hosts {
+		var got, want Host
+		want = *original.hosts[key]
+		got = *restored.hosts[key]
 		if got != want {
 			t.Errorf("serialization failure for host %q: got %v, want %v", key, got, want)
 		}
 	}
-	if len(original.Hosts) == 0 {
+	if len(original.hosts) == 0 {
 		t.Errorf("empty original host list: %v", original)
 	}
-	if len(restored.Hosts) == 0 {
+	if len(restored.hosts) == 0 {
 		t.Errorf("empty restored host list: %v", restored)
 	}
 }

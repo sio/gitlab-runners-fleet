@@ -24,8 +24,8 @@ func (h *Host) String() string {
 }
 
 type Fleet struct {
-	Hosts      map[string]*Host
-	Entrypoint string
+	hosts      map[string]*Host
+	entrypoint string
 }
 
 // Create new host record
@@ -50,17 +50,18 @@ func (fleet *Fleet) New() *Host {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	fleet.Hosts[host.Name] = host
+	fleet.hosts[host.Name] = host
 	return host
 }
 
 // Delete host record
 func (fleet *Fleet) Delete(name string) {
+	delete(fleet.hosts, name)
 }
 
 // Get host by name
 func (fleet *Fleet) Get(name string) (host *Host, ok bool) {
-	host, ok = fleet.Hosts[name]
+	host, ok = fleet.hosts[name]
 	return host, ok
 }
 
@@ -126,19 +127,19 @@ type serializableFleet struct {
 }
 
 func (s *serializableFleet) Pack(f *Fleet) {
-	s.Entrypoint = f.Entrypoint
-	s.Hosts = make([]*Host, 0, len(f.Hosts))
+	s.Entrypoint = f.entrypoint
+	s.Hosts = make([]*Host, 0, len(f.hosts))
 	var h *Host
-	for _, h = range f.Hosts {
+	for _, h = range f.hosts {
 		s.Hosts = append(s.Hosts, h)
 	}
 	sort.Slice(s.Hosts, func(i, j int) bool { return s.Hosts[i].Name < s.Hosts[j].Name })
 }
 func (s *serializableFleet) Unpack(f *Fleet) {
-	f.Entrypoint = s.Entrypoint
-	f.Hosts = make(map[string]*Host)
+	f.entrypoint = s.Entrypoint
+	f.hosts = make(map[string]*Host)
 	var h *Host
 	for _, h = range s.Hosts {
-		f.Hosts[h.Name] = h
+		f.hosts[h.Name] = h
 	}
 }
