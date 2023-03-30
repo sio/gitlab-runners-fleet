@@ -1,0 +1,21 @@
+# Fetch all projects and all project-level runners
+query RunnersByProject($tag: [String!], $page: String!)
+{
+  projects(membership: true, after: $page) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      runners(tagList: $tag) {
+        edges {
+          node {
+            id
+            status
+          }
+        }
+      }
+    }
+  }
+}

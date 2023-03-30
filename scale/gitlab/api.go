@@ -84,8 +84,6 @@ func (api *API) graphql(url string, query string, params map[string]any) (reply 
 		return zero, fmt.Errorf("could not construct payload: %w", err)
 	}
 
-	fmt.Println(string(payload))
-
 	var body io.Reader = bytes.NewBuffer(payload)
 	var req *http.Request
 	req, err = http.NewRequest("POST", url, body)
