@@ -5,16 +5,14 @@ import (
 	"strings"
 )
 
-type jsObject = map[string]any
-
 // Fetch a value from deeply nested JSON
 func jsGetAny(js any, key ...string) (any, error) {
 	if len(key) == 0 {
 		return js, nil
 	}
-	var current, next jsObject
+	var current, next map[string]any
 	var ok bool
-	current, ok = js.(jsObject)
+	current, ok = js.(map[string]any)
 	if !ok {
 		return nil, fmt.Errorf("input does not look like a JS object: %v", js)
 	}
@@ -24,7 +22,7 @@ func jsGetAny(js any, key ...string) (any, error) {
 		if !ok {
 			return nil, fmt.Errorf("key not found: %q (level %d)", strings.Join(key[:index+1], "/"), index)
 		}
-		next, ok = value.(jsObject)
+		next, ok = value.(map[string]any)
 		if !ok && index < len(key)-1 {
 			return nil, fmt.Errorf("type conversion failed for key %s (level %d): %v", strings.Join(key[:index+1], "/"), index, value)
 		}

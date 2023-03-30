@@ -31,7 +31,7 @@ func TestNestedAccess(t *testing.T) {
 			}
 		}
 	}`
-	var js jsObject
+	var js map[string]any
 	var err error
 	err = json.Unmarshal([]byte(input), &js)
 	if err != nil {

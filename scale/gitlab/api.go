@@ -53,7 +53,7 @@ func (api API) String() string {
 }
 
 // Execute a single GraphQL query with appropriate retries/timeouts
-func (api *API) GraphQL(query string, params jsObject) (data jsObject, err error) {
+func (api *API) GraphQL(query string, params map[string]any) (data map[string]any, err error) {
 	if api.host == "" {
 		api.host = defaultHost
 	}
@@ -69,8 +69,8 @@ func (api *API) GraphQL(query string, params jsObject) (data jsObject, err error
 }
 
 // Execute a straightforward GraphQL API call without any error handling
-func (api *API) graphql(url string, query string, params jsObject) (data jsObject, err error) {
-	var payloadObject = jsObject{
+func (api *API) graphql(url string, query string, params map[string]any) (data map[string]any, err error) {
+	var payloadObject = map[string]any{
 		"query": query,
 	}
 	if params != nil {
@@ -123,7 +123,7 @@ func (api *API) graphql(url string, query string, params jsObject) (data jsObjec
 	if !ok {
 		return nil, fmt.Errorf("GraphQL API returned no data: %v", data)
 	}
-	data, ok = apiData.(jsObject)
+	data, ok = apiData.(map[string]any)
 	if !ok {
 		return nil, fmt.Errorf("type conversion to map[string]any failed: %v", apiData)
 	}
