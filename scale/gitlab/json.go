@@ -20,11 +20,11 @@ func jsGetAny(js any, key ...string) (any, error) {
 	for index := 0; index < len(key); index++ {
 		value, ok = current[key[index]]
 		if !ok {
-			return nil, fmt.Errorf("key not found: %q (level %d)", strings.Join(key[:index+1], "."), index)
+			return nil, fmt.Errorf("key not found: %s (level %d)", repr(key[:index+1]), index)
 		}
 		next, ok = value.(map[string]any)
 		if !ok && index < len(key)-1 {
-			return nil, fmt.Errorf("type conversion failed for key %s (level %d): %v", strings.Join(key[:index+1], "."), index, value)
+			return nil, fmt.Errorf("can not go deeper than key %s (level %d): %v", repr(key[:index+1]), index, value)
 		}
 		current = next
 	}
@@ -49,7 +49,13 @@ func jsGet[T any](js any, key ...string) (T, error) {
 	var ok bool
 	result, ok = value.(T)
 	if !ok {
-		return zero, fmt.Errorf("type error: value for %v is not %T but %T = %v", key, zero, value, value)
+		return zero, fmt.Errorf("type error: value for %s is not %T but %T: %v", repr(key), zero, value, value)
 	}
 	return result, nil
+}
+
+// String representation of deep JSON key for error messages
+func repr(key []string) string {
+	const pathSeparator = "."
+	return strings.Join(key, pathSeparator)
 }
