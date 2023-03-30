@@ -57,12 +57,15 @@ func TestNestedAccess(t *testing.T) {
 		got, err = jsGetAny(js, strings.Split(tt.path, ":")...)
 		if !tt.fail && err != nil {
 			t.Errorf("#%d %v: unexpected error: %v", index, tt.path, err)
+			continue
 		}
 		if tt.fail && err == nil {
 			t.Errorf("#%d %v: expected an error, got %v", index, tt.path, got)
+			continue
 		}
 		if got != tt.want && !jsonEqual(got, tt.want) {
 			t.Errorf("#%d %v: got %v, want %v", index, tt.path, got, tt.want)
+			continue
 		}
 	}
 
@@ -86,12 +89,15 @@ func TestNestedAccess(t *testing.T) {
 		got, err = jsGetString(js, strings.Split(tt.path, ":")...)
 		if !tt.fail && err != nil {
 			t.Errorf("string#%d %v: unexpected error: %v", index, tt.path, err)
+			continue
 		}
 		if tt.fail && err == nil {
 			t.Errorf("string#%d %v: expected an error, got %v", index, tt.path, got)
+			continue
 		}
 		if got != tt.want {
 			t.Errorf("string#%d %v: got %v, want %v", index, tt.path, got, tt.want)
+			continue
 		}
 	}
 }
