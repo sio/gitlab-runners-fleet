@@ -1,0 +1,5 @@
+mutation RunnerAssignment($runner: CiRunnerID!, $projects: [ProjectID!]) {
+  runnerUpdate(input: {id: $runner, associatedProjects: $projects}) {
+    errors
+  }
+}

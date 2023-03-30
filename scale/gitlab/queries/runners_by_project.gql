@@ -1,4 +1,3 @@
-# Fetch all projects and all project-level runners
 query RunnersByProject($tag: [String!], $page: String!)
 {
   projects(membership: true, after: $page) {
@@ -13,6 +12,7 @@ query RunnersByProject($tag: [String!], $page: String!)
           node {
             id
             status
+            description
           }
         }
       }
