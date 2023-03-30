@@ -53,23 +53,25 @@ func (api API) String() string {
 }
 
 // Execute a single GraphQL query with appropriate retries/timeouts
-func (api *API) GraphQL(query string, params map[string]any) (data map[string]any, err error) {
+func (api *API) GraphQL(query string, params map[string]any) (reply graphqlResponse, err error) {
 	if api.host == "" {
 		api.host = defaultHost
 	}
 	var url string = fmt.Sprintf("https://%s/api/graphql", api.host)
 	for attempts := 0; attempts < apiRetryAttempts; attempts++ {
-		data, err = api.graphql(url, query, params)
+		reply, err = api.graphql(url, query, params)
 		if err == nil {
-			return data, nil
+			return reply, nil
 		}
 		time.Sleep(apiRetryDelay)
 	}
-	return nil, err
+	var zero graphqlResponse
+	return zero, err
 }
 
 // Execute a straightforward GraphQL API call without any error handling
-func (api *API) graphql(url string, query string, params map[string]any) (data map[string]any, err error) {
+func (api *API) graphql(url string, query string, params map[string]any) (reply graphqlResponse, err error) {
+	var zero graphqlResponse
 	var payloadObject = map[string]any{
 		"query": query,
 	}
@@ -79,7 +81,7 @@ func (api *API) graphql(url string, query string, params map[string]any) (data m
 	var payload []byte
 	payload, err = json.Marshal(payloadObject)
 	if err != nil {
-		return nil, fmt.Errorf("could not construct payload: %w", err)
+		return zero, fmt.Errorf("could not construct payload: %w", err)
 	}
 
 	fmt.Println(string(payload))
@@ -88,7 +90,7 @@ func (api *API) graphql(url string, query string, params map[string]any) (data m
 	var req *http.Request
 	req, err = http.NewRequest("POST", url, body)
 	if err != nil {
-		return nil, fmt.Errorf("could not create request object: %w", err)
+		return zero, fmt.Errorf("could not create request object: %w", err)
 	}
 	req.Header.Set("User-Agent", userAgent)
 	req.Header.Set("Accept", "application/json")
@@ -100,32 +102,39 @@ func (api *API) graphql(url string, query string, params map[string]any) (data m
 	var resp *http.Response
 	resp, err = httpClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("HTTP request failed: %w", err)
+		return zero, fmt.Errorf("HTTP request failed: %w", err)
 	}
 	defer func() { _ = resp.Body.Close() }()
 
 	var replyData []byte
 	replyData, err = io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read HTTP response: %w", err)
+		return zero, fmt.Errorf("failed to read HTTP response: %w", err)
 	}
-	err = json.Unmarshal(replyData, &data)
+	err = json.Unmarshal(replyData, &reply)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse JSON response: %w", err)
+		return zero, fmt.Errorf("failed to parse JSON response: %w", err)
 	}
-	var ok, failed bool
-	var apiErrors, apiData any
-	apiErrors, failed = data["errors"]
-	if failed {
-		return nil, fmt.Errorf("GraphQL API returned error(s): %v", apiErrors)
+	if len(reply.Errors) > 0 {
+		return reply, fmt.Errorf("GraphQL API returned error(s): %v", reply.Errors)
 	}
-	apiData, ok = data["data"]
-	if !ok {
-		return nil, fmt.Errorf("GraphQL API returned no data: %v", data)
+	if !json.Valid(reply.Data) {
+		return zero, fmt.Errorf("reply data is not valid JSON: %s", string(reply.Data))
 	}
-	data, ok = apiData.(map[string]any)
-	if !ok {
-		return nil, fmt.Errorf("type conversion to map[string]any failed: %v", apiData)
+	err = json.Unmarshal(reply.Data, &reply.Unstructured)
+	if err != nil {
+		return zero, fmt.Errorf("reply data can not be parsed as JS object: %w", err)
 	}
-	return data, nil
+	return reply, nil
+}
+
+type graphqlResponse struct {
+	// Raw JSON object for custom parsing later
+	Data json.RawMessage
+
+	// Straightforward unstructured parsed Data
+	Unstructured map[string]any
+
+	// GraphQL error messags
+	Errors []map[string]any
 }

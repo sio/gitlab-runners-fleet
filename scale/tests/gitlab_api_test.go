@@ -19,7 +19,7 @@ func TestGraphQL_Echo(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	value, ok := reply["echo"]
+	value, ok := reply.Unstructured["echo"]
 	if !ok {
 		t.Fatalf("reply does not contain echo field: %v", reply)
 	}
@@ -34,7 +34,7 @@ func TestGraphQL_NoParams(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	name, ok := reply["currentUser"]
+	name, ok := reply.Unstructured["currentUser"]
 	if !ok {
 		t.Fatalf("reply does not contain currentUser field: %v", reply)
 	}
