@@ -30,6 +30,14 @@ taken. These notes are mostly intended to be consumed by my future self.
   expensive than a single VM instance for a gateway.
 
 
+## GitLab
+
+- GitLab API has matured significantly since the first iteration of this
+  project was started. Now all runner operations are exposed via GraphQL API
+  and there is no more need for the REST API. I'm glad these changes happened
+  because I find GraphQL API to be a lot more convenient.
+
+
 ## Building VM image
 
 - Packer does not appear to provide an easy way to modify qcow2 image on a
