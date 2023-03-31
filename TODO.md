@@ -23,6 +23,10 @@
 
 - Rewrite in Go: calculate scaling actions and populate tfvars
 - Optional: use external data source in terraform to call scaler automatically
+- Pass cloud IP address as a parameter to scaler app (via `external` data source)
+- Add a delay after assigning new runners to GitLab projects - to let them
+  pick up pending jobs. Or better yet, take new assignments into account when
+  calculating existing jobs capacity
 
 
 ## Global
