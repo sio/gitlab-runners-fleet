@@ -7,3 +7,6 @@ var queryRunnersByProject string
 
 //go:embed queries/runner_assign.gql
 var mutationRunnerAssignment string
+
+//go:embed queries/runner_remove.gql
+var mutationRunnerRemove string

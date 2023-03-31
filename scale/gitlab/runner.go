@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 )
 
 // Execute all maintenance chores:
@@ -64,6 +65,14 @@ func (api API) UpdateRunnerAssignments(tag string) error {
 		projectGID = append(projectGID, gid)
 	}
 	for _, runner := range runners {
+		if strings.ToLower(runner.Status) != "online" {
+			log.Printf("unregistering runner %s", runner)
+			err = api.unregisterRunner(runner.ID)
+			if err != nil {
+				log.Printf("could not unregister runner %s: %v", runner, err)
+			}
+			continue
+		}
 		if runner.ProjectCount == len(projectGID) {
 			continue
 		}
@@ -82,22 +91,41 @@ func (api *API) assignRunner(runnerGID string, projectGID []string) error {
 	var err error
 	graphql, err = api.GraphQL(mutationRunnerAssignment, map[string]any{"runner": runnerGID, "projects": projectGID})
 	if err != nil {
-		return fmt.Errorf("mutation failed: %w", err)
+		return fmt.Errorf("runner assignment failed: %w", err)
 	}
 	var reply runnerAssignmentReply
 	err = json.Unmarshal(graphql.Data, &reply)
 	if err != nil {
-		return fmt.Errorf("mutation completed but returned unparsable reply:%w\n%s", err, string(graphql.Data))
+		return fmt.Errorf("runner assignment completed with unparsable reply:%w\n%s", err, string(graphql.Data))
 	}
 	if len(reply.RunnerUpdate.Errors) > 0 {
-		return fmt.Errorf("mutation completed with errors: %v", reply.RunnerUpdate.Errors)
+		return fmt.Errorf("runner assignment completed with errors: %v", reply.RunnerUpdate.Errors)
 	}
 	return nil
 }
 
-//
-//func removeRunner(uid string) {
-//}
+// Remove runner from GitLab API
+func (api *API) unregisterRunner(gid string) (err error) {
+	err = api.assignRunner(gid, []string{})
+	if err != nil {
+		log.Printf("failed to clear project assignments for %s: %v", gid, err)
+	}
+
+	var graphql graphqlResponse
+	graphql, err = api.GraphQL(mutationRunnerRemove, map[string]any{"runner": gid})
+	if err != nil {
+		return fmt.Errorf("failed to unregister %s: %w", gid, err)
+	}
+	var reply runnerRemovalReply
+	err = json.Unmarshal(graphql.Data, &reply)
+	if err != nil {
+		return fmt.Errorf("runner removal completed with unparsable reply:%w\n%s", err, string(graphql.Data))
+	}
+	if len(reply.RunnerDelete.Errors) > 0 {
+		return fmt.Errorf("runner removal completed with errors: %v", reply.RunnerDelete.Errors)
+	}
+	return nil
+}
 
 type runnerInfo struct {
 	ID           string
@@ -133,6 +161,12 @@ type projectQueryReply struct {
 
 type runnerAssignmentReply struct {
 	RunnerUpdate struct {
+		Errors []map[string]any
+	}
+}
+
+type runnerRemovalReply struct {
+	RunnerDelete struct {
 		Errors []map[string]any
 	}
 }

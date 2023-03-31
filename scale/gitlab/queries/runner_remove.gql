@@ -1,0 +1,5 @@
+mutation RunnerRemove($runner: CiRunnerID!) {
+  runnerDelete(input: {id: $runner}) {
+    errors
+  }
+}
