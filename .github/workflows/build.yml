@@ -1,0 +1,23 @@
+name: build-image
+
+on:
+  push:
+    paths:
+      - 'build/**'
+      - '!**.md'
+  workflow_dispatch:
+
+jobs:
+  base-image:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: build
+    steps:
+      - uses: actions/checkout@v3
+      - name: install required tools
+        run: sudo make .gha-environment
+      - name: build image
+        run: sudo make image
+      - name: compress image
+        run: make compact
