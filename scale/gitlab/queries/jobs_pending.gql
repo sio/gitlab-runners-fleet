@@ -1,0 +1,29 @@
+query PendingJobs($page: String!) {
+  projects(membership: true, after: $page) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      running: pipelines(status: RUNNING) {
+        ...JobDetails
+      }
+      waiting: pipelines(status: WAITING_FOR_RESOURCE) {
+        ...JobDetails
+      }
+      pending: pipelines(status: PENDING) {
+        ...JobDetails
+      }
+    }
+  }
+}
+
+fragment JobDetails on PipelineConnection {
+  nodes {
+    jobs {
+      nodes {
+        status
+      }
+    }
+  }
+}

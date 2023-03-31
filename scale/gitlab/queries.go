@@ -2,6 +2,9 @@ package gitlab
 
 import _ "embed"
 
+//go:embed queries/jobs_pending.gql
+var queryPendingJobs string
+
 //go:embed queries/runners_by_project.gql
 var queryRunnersByProject string
 
