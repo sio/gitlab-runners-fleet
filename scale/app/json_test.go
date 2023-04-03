@@ -1,4 +1,4 @@
-package gitlab
+package app
 
 import (
 	"testing"
@@ -86,7 +86,7 @@ func TestNestedAccess(t *testing.T) {
 	}
 	for index, tt := range stringTests {
 		var got string
-		got, err = jsGetString(js, strings.Split(tt.path, ".")...)
+		got, err = JsGet[string](js, strings.Split(tt.path, ".")...)
 		if !tt.fail && err != nil {
 			t.Errorf("string#%d %v: unexpected error: %v", index, tt.path, err)
 			continue

@@ -1,20 +1,15 @@
-package gitlab
+package app
 
 import (
 	"fmt"
 	"strings"
 )
 
-// Fetch a string from deeply nested JSON
-func jsGetString(js any, key ...string) (string, error) {
-	return jsGet[string](js, key...)
-}
-
-// Fetch a specific type from deeply nested JSON
-func jsGet[T any](js any, key ...string) (T, error) {
+// Fetch vaule of a specific type from deeply nested JSON
+func JsGet[T any](tree any, key ...string) (T, error) {
 	var value any
 	var err error
-	value, err = jsGetAny(js, key...)
+	value, err = jsGetAny(tree, key...)
 	var zero T
 	if err != nil {
 		return zero, err
@@ -29,15 +24,15 @@ func jsGet[T any](js any, key ...string) (T, error) {
 }
 
 // Fetch a value from deeply nested JSON
-func jsGetAny(js any, key ...string) (any, error) {
+func jsGetAny(tree any, key ...string) (any, error) {
 	if len(key) == 0 {
-		return js, nil
+		return tree, nil
 	}
 	var current, next map[string]any
 	var ok bool
-	current, ok = js.(map[string]any)
+	current, ok = tree.(map[string]any)
 	if !ok {
-		return nil, fmt.Errorf("input does not look like a JS object: %v", js)
+		return nil, fmt.Errorf("input does not look like a parsed JSON: %v", tree)
 	}
 	var value any
 	for index := 0; index < len(key); index++ {
