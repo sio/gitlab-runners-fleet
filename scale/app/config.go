@@ -8,6 +8,20 @@ import (
 	"time"
 )
 
+var DefaultConfiguration = Configuration{
+	GitLabToken:           "env:GITLAB_API_TOKEN",
+	RunnerTag:             "gitlab_runner_fleet",
+	RunnerMaxJobs:         3,
+	InstanceCountMax:      10,
+	InstanceCountMin:      0,
+	InstanceGrowMax:       3,
+	InstanceProvisionTime: NewDuration(10 * 60 * second),
+	InstanceMaxAge:        NewDuration(24 * 60 * 60 * second),
+	InstanceMaxIdleTime:   NewDuration(40 * 60 * second),
+}
+
+const second = 1_000_000_000 // nanoseconds
+
 type Configuration struct {
 	GitLabHost            EnvString `json:"gitlab_host"`
 	GitLabToken           EnvString `json:"gitlab_token"`
@@ -18,6 +32,7 @@ type Configuration struct {
 	InstanceGrowMax       int       `json:"instance_grow_max"`
 	InstanceProvisionTime Duration  `json:"instance_provision_time"`
 	InstanceMaxAge        Duration  `json:"instance_max_age"`
+	InstanceMaxIdleTime   Duration  `json:"instance_max_idle_time"`
 }
 
 // A string that will be unmarshalled from an environment variable
