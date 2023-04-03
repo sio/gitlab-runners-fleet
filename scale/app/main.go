@@ -4,10 +4,38 @@ import (
 	"fmt"
 	"log"
 	"time"
+
+	"scale/cloud"
 )
 
-func Run() {
-	fmt.Println(tfExternalDatasourceConfig())
+type Application struct {
+	Configuration
+	cloud.Fleet
+}
+
+func (app *Application) Run() {
+	app.Configuration = tfExternalDatasourceConfig()
+	app.LoadState()
+	for _, host := range app.Hosts() {
+		fmt.Printf("Updating %s... ", host)
+		app.UpdateStatus(host)
+		fmt.Printf("Done: %s\n", host)
+	}
+}
+
+func (app *Application) LoadState() {
+	var config = app.Configuration
+	var err = app.LoadScalerState(string(config.ScalerState))
+	if err != nil {
+		log.Printf("Failed to load previous scaler state: %v", err)
+	}
+	err = app.LoadTerraformState(string(config.TerraformState))
+	if err != nil {
+		log.Printf("Failed to load terraform state: %v", err)
+	}
+	if config.RunnerAddress != "" {
+		app.Entrypoint = config.RunnerAddress
+	}
 }
 
 // Read configuration for Terraform external datasource (parse JSON from stdin)

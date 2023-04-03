@@ -17,15 +17,16 @@ type Host struct {
 	IdleSince time.Time  `json:"idle_since"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	Status    HostStatus `json:"status"`
+	JobsDone  int        `json:"jobs_done"`
 }
 
 func (h *Host) String() string {
-	return fmt.Sprintf("(%s@%d)", h.Name, h.Status)
+	return fmt.Sprintf("(%s@%s)", h.Name, h.Status)
 }
 
 type Fleet struct {
 	hosts      map[string]*Host
-	entrypoint string
+	Entrypoint string
 }
 
 // A static slice of all hosts at this point in time
@@ -75,7 +76,7 @@ func (fleet *Fleet) Get(name string) (host *Host, ok bool) {
 }
 
 // Load Hosts state from a file
-func (fleet *Fleet) Load(filename string) error {
+func (fleet *Fleet) LoadScalerState(filename string) error {
 	var data []byte
 	var err error
 	data, err = os.ReadFile(filename)
@@ -99,8 +100,8 @@ func (fleet *Fleet) LoadTerraformState(filename string) (err error) {
 		return fmt.Errorf("failed to parse JSON: %w", err)
 	}
 
-	fleet.entrypoint, err = JsGet[string](tfstate, "outputs", "external_ip", "value")
-	if err != nil || fleet.entrypoint == "" {
+	fleet.Entrypoint, err = JsGet[string](tfstate, "outputs", "external_ip", "value")
+	if err != nil || fleet.Entrypoint == "" {
 		return fmt.Errorf("terraform state file does not contain previous value for external_ip")
 	}
 	resources, err := JsGet[[]any](tfstate, "resources")
@@ -196,12 +197,12 @@ type serializableFleet struct {
 }
 
 func (s *serializableFleet) Pack(f *Fleet) {
-	s.Entrypoint = f.entrypoint
+	s.Entrypoint = f.Entrypoint
 	s.Hosts = f.Hosts()
 	sort.Slice(s.Hosts, func(i, j int) bool { return s.Hosts[i].Name < s.Hosts[j].Name })
 }
 func (s *serializableFleet) Unpack(f *Fleet) {
-	f.entrypoint = s.Entrypoint
+	f.Entrypoint = s.Entrypoint
 	f.hosts = make(map[string]*Host)
 	var h *Host
 	for _, h = range s.Hosts {

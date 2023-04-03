@@ -9,6 +9,8 @@ import (
 )
 
 var DefaultConfiguration = Configuration{
+	ScalerState:           "scaler.state",
+	TerraformState:        "terraform.tfstate",
 	RunnerTag:             "gitlab_runner_fleet",
 	RunnerMaxJobs:         3,
 	InstanceCountMax:      10,
@@ -24,6 +26,9 @@ const second = 1_000_000_000 // nanoseconds
 type Configuration struct {
 	GitLabHost            EnvString `json:"gitlab_host"`
 	GitLabToken           EnvString `json:"gitlab_token"`
+	ScalerState           EnvString `json:"scaler_state_file"`
+	TerraformState        EnvString `json:"terraform_state_file"`
+	RunnerAddress         string    `json:"runner_address"`
 	RunnerTag             EnvString `json:"runner_tag"`
 	RunnerMaxJobs         int       `json:"runner_max_jobs"`
 	InstanceCountMax      int       `json:"instance_count_max"`

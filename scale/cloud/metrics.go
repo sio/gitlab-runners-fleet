@@ -18,10 +18,10 @@ func (fleet *Fleet) Metrics(host *Host) (Metrics, error) {
 		req     *http.Request
 		resp    *http.Response
 	)
-	if fleet.entrypoint == "" {
-		return metrics, fmt.Errorf("HTTP entrypoint is not yet known")
+	if fleet.Entrypoint == "" {
+		return metrics, fmt.Errorf("HTTP endpoint is not yet known")
 	}
-	req, err = http.NewRequest("GET", fmt.Sprintf("http://%s/metrics", fleet.entrypoint), nil)
+	req, err = http.NewRequest("GET", fmt.Sprintf("http://%s/metrics", fleet.Entrypoint), nil)
 	if err != nil {
 		return metrics, fmt.Errorf("failed to create HTTP request: %w", err)
 	}

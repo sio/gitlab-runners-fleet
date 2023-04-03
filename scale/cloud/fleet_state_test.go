@@ -46,13 +46,13 @@ func TestSerialization(t *testing.T) {
 	t.Log(string(saved))
 
 	restored = &Fleet{}
-	err = restored.Load(stateFile)
+	err = restored.LoadScalerState(stateFile)
 	if err != nil {
 		t.Fatalf("failed to load state file: %v", err)
 	}
 
-	if original.entrypoint != restored.entrypoint {
-		t.Errorf("entrypoint was %q, became %q", original.entrypoint, restored.entrypoint)
+	if original.Entrypoint != restored.Entrypoint {
+		t.Errorf("Entrypoint was %q, became %q", original.Entrypoint, restored.Entrypoint)
 	}
 	if len(restored.hosts) != len(original.hosts) {
 		t.Fatalf("saved %d hosts, restored %d hosts", len(original.hosts), len(restored.hosts))
