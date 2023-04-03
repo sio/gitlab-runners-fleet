@@ -1,32 +1,31 @@
 package app
 
 import (
-	"encoding/json"
-	"io"
+	"fmt"
 	"log"
-	"os"
+	"time"
 )
 
 func Run() {
+	fmt.Println(tfExternalDatasourceConfig())
 }
 
-// Provide a Terraform external datasource
-// by communicating in JSON via stdin/stdout
-func TerraformExternalDataSource() {
-	var data []byte
-	var err error
-	if data, err = io.ReadAll(os.Stdin); err != nil {
-		log.Fatal(err)
+// Read configuration for Terraform external datasource (parse JSON from stdin)
+func tfExternalDatasourceConfig() Configuration {
+	const timeout = 1 * time.Second
+
+	var config Configuration = DefaultConfiguration
+	var errors = make(chan error, 1)
+	go func() {
+		errors <- config.ReadStdin()
+	}()
+	select {
+	case err := <-errors:
+		if err != nil {
+			log.Fatal("failed to load configuration: ", err)
+		}
+	case <-time.After(timeout):
+		log.Fatal("configuration not received on stdin, exiting")
 	}
-	var params map[string]string
-	if err = json.Unmarshal(data, &params); err != nil {
-		log.Fatal(err)
-	}
-	params["HELLO"] = "TF INTERFACE WORKS!"
-	if data, err = json.Marshal(params); err != nil {
-		log.Fatal(err)
-	}
-	if _, err = os.Stdout.Write(data); err != nil {
-		log.Fatal(err)
-	}
+	return config
 }

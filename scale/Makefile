@@ -4,7 +4,7 @@ EVERYTHING=./...
 
 .PHONY: run
 run: $(APP)  ## run scaler app
-	$<
+	cat sample_config.json | $<
 
 .PHONY: build
 build: $(APP)  ## build scaler app

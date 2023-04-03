@@ -34,6 +34,11 @@ type Configuration struct {
 	InstanceMaxIdleTime   Duration  `json:"instance_max_idle_time"`
 }
 
+func (c *Configuration) ReadStdin() (err error) {
+	err = json.NewDecoder(os.Stdin).Decode(c)
+	return err
+}
+
 // A string that will be unmarshalled from an environment variable
 // if a corresponding JSON value starts with `env:` prefix
 type EnvString string
