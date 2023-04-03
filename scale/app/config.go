@@ -9,7 +9,6 @@ import (
 )
 
 var DefaultConfiguration = Configuration{
-	GitLabToken:           "env:GITLAB_API_TOKEN",
 	RunnerTag:             "gitlab_runner_fleet",
 	RunnerMaxJobs:         3,
 	InstanceCountMax:      10,
