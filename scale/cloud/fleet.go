@@ -107,7 +107,9 @@ func (fleet *Fleet) LoadTerraformState(filename string) (err error) {
 	if err != nil {
 		return fmt.Errorf("failed to read terraform resources")
 	}
-	fleet.hosts = make(map[string]*Host)
+	if fleet.hosts == nil {
+		fleet.hosts = make(map[string]*Host)
+	}
 	for _, r := range resources {
 		var resourceType string
 		resourceType, err = JsGet[string](r, "type")
@@ -132,6 +134,10 @@ func (fleet *Fleet) LoadTerraformState(filename string) (err error) {
 				if err == nil {
 					host.CreatedAt = t
 				}
+			}
+			_, exists := fleet.hosts[host.Name]
+			if exists {
+				continue
 			}
 			fleet.hosts[host.Name] = host
 		}
