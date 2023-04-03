@@ -28,6 +28,15 @@ type Fleet struct {
 	entrypoint string
 }
 
+// A static slice of all hosts at this point in time
+func (fleet *Fleet) Hosts() []*Host {
+	var hosts = make([]*Host, 0, len(fleet.hosts))
+	for _, h := range fleet.hosts {
+		hosts = append(hosts, h)
+	}
+	return hosts
+}
+
 // Create new host record
 func (fleet *Fleet) New() *Host {
 	var name string
@@ -55,8 +64,8 @@ func (fleet *Fleet) New() *Host {
 }
 
 // Delete host record
-func (fleet *Fleet) Delete(name string) {
-	delete(fleet.hosts, name)
+func (fleet *Fleet) Delete(host *Host) {
+	delete(fleet.hosts, host.Name)
 }
 
 // Get host by name
@@ -128,11 +137,7 @@ type serializableFleet struct {
 
 func (s *serializableFleet) Pack(f *Fleet) {
 	s.Entrypoint = f.entrypoint
-	s.Hosts = make([]*Host, 0, len(f.hosts))
-	var h *Host
-	for _, h = range f.hosts {
-		s.Hosts = append(s.Hosts, h)
-	}
+	s.Hosts = f.Hosts()
 	sort.Slice(s.Hosts, func(i, j int) bool { return s.Hosts[i].Name < s.Hosts[j].Name })
 }
 func (s *serializableFleet) Unpack(f *Fleet) {
