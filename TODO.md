@@ -40,6 +40,8 @@
     - Call cleanup before destroying an instance
     - Restore instances from TF state, from GitLab API (maybe)
 - Update fleet_manager Ansible role
+- Update statuses asynchronously
+- App ignores Ctrl+C interrupt
 
 
 ## Global
