@@ -105,6 +105,7 @@ func (app *Application) Scale(ci *gitlab.API) {
 
 	// Remove idle instances
 	var wg sync.WaitGroup
+	app.debug("Triggering graceful cleanup for instances about to be deleted")
 	for _, host = range hosts {
 		if host.Status.Is(cloud.Idle | cloud.OldAge | cloud.Error) {
 			wg.Add(1)
@@ -113,6 +114,8 @@ func (app *Application) Scale(ci *gitlab.API) {
 				err := app.Cleanup(host)
 				if err != nil {
 					log.Printf("cleanup failed for %s: %v", host, err)
+				} else {
+					app.debug("..cleanup complete: %s", host)
 				}
 			}(host)
 		}

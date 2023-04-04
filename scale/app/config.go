@@ -37,6 +37,7 @@ type Configuration struct {
 	InstanceProvisionTime Duration  `json:"instance_provision_time"`
 	InstanceMaxAge        Duration  `json:"instance_max_age"`
 	InstanceMaxIdleTime   Duration  `json:"instance_max_idle_time"`
+	Debug                 bool      `json:"debug"`
 }
 
 func (c *Configuration) ReadStdin() (err error) {

@@ -12,28 +12,36 @@ import (
 type Application struct {
 	Configuration
 	cloud.Fleet
+	debugEnabled bool
 }
 
 func (app *Application) Run() {
 	app.Configuration = tfExternalDatasourceConfig()
+	app.debugEnabled = app.Configuration.Debug
+
+	app.debug("Restoring application state")
 	app.LoadState()
 
+	app.debug("Updating runner assignments")
 	var ci *gitlab.API = gitlab.NewAPI(string(app.GitLabHost), string(app.GitLabToken))
 	var err error = ci.UpdateRunnerAssignments(string(app.RunnerTag))
 	if err != nil {
 		log.Printf("failed to update runner assignments: %v", err)
 	}
 
+	app.debug("Querying instance status")
 	var wg sync.WaitGroup
 	for _, host := range app.Hosts() {
 		wg.Add(1)
 		go func(host *cloud.Host) {
 			defer wg.Done()
 			app.UpdateStatus(host)
+			app.debug("..status updated: %s", host)
 		}(host)
 	}
 	wg.Wait()
 
+	app.debug("Calculating scaling actions")
 	app.Scale(ci)
 }
 
@@ -70,4 +78,11 @@ func tfExternalDatasourceConfig() Configuration {
 		log.Fatal("configuration not received on stdin, exiting")
 	}
 	return config
+}
+
+func (app *Application) debug(msg string, values ...any) {
+	if !app.debugEnabled {
+		return
+	}
+	log.Printf(msg, values...)
 }
