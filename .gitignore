@@ -5,3 +5,4 @@
 *.exe
 /tmp
 /scale/bin
+*.state

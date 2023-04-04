@@ -43,6 +43,12 @@ func (app *Application) Run() {
 
 	app.debug("Calculating scaling actions")
 	app.Scale(ci)
+
+	app.debug("Saving application state")
+	err = app.Save(string(app.ScalerState))
+	if err != nil {
+		log.Printf("Failed to save application state: %v", err)
+	}
 }
 
 func (app *Application) LoadState() {
