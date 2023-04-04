@@ -45,6 +45,19 @@ lint:  ## run linters
 	$(STATICCHECK) $(EVERYTHING)
 	$(ERRCHECK) $(EVERYTHING)
 
+CLOC=$(shell $(GO) env GOPATH)/bin/gocloc$(shell $(GO) env GOEXE)
+$(CLOC):
+	$(GO) install github.com/hhatto/gocloc/cmd/gocloc@latest
+
+.PHONY: loc
+loc: $(CLOC)  ## count lines of code
+	@echo "This directory: ./scale/"
+	@$(CLOC) .
+	@echo
+	@echo
+	@echo "Whole git repo: ../"
+	@$(CLOC) --not-match-d='\.terraform' ..
+
 .PHONY: help
 help:  ## show help message
 	@awk "$$HELP_AWK" $(lastword $(MAKEFILE_LIST)) | column -t -s '	'
