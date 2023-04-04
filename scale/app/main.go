@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"scale/cloud"
+	"scale/gitlab"
 )
 
 type Application struct {
@@ -16,6 +17,12 @@ type Application struct {
 func (app *Application) Run() {
 	app.Configuration = tfExternalDatasourceConfig()
 	app.LoadState()
+
+	var ci gitlab.API = gitlab.NewAPI(string(app.GitLabHost), string(app.GitLabToken))
+	var err error = ci.UpdateRunnerAssignments(string(app.RunnerTag))
+	if err != nil {
+		log.Printf("failed to update runner assignments: %v", err)
+	}
 
 	var wg sync.WaitGroup
 	for _, host := range app.Hosts() {
