@@ -4,3 +4,4 @@
 *.qcow2*
 *.exe
 /tmp
+/scale/bin

@@ -1,5 +1,5 @@
 GO?=go
-APP=bin/scale$(shell $(GO) env GOEXE)
+APP=bin/scale-$(shell $(GO) env GOOS)-$(shell $(GO) env GOARCH)$(shell $(GO) env GOEXE)
 EVERYTHING=./...
 
 .PHONY: run
@@ -10,6 +10,15 @@ run: $(APP)  ## run scaler app
 build: $(APP)  ## build scaler app
 $(APP): $(shell find . -type f -iname '*.go')
 	$(GO) build -o $@
+
+.PHONY: build-all
+build-all:  ## build scaler app for all OS/architectures
+	GOOS=linux   GOARCH=amd64 $(MAKE) build
+	GOOS=linux   GOARCH=arm64 $(MAKE) build
+	GOOS=windows GOARCH=amd64 $(MAKE) build
+	GOOS=windows GOARCH=arm64 $(MAKE) build
+	GOOS=darwin  GOARCH=amd64 $(MAKE) build
+	GOOS=darwin  GOARCH=arm64 $(MAKE) build
 
 .PHONY: test
 test:  ## run automated tests
