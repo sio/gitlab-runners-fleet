@@ -23,8 +23,8 @@ func (app *Application) Run() {
 	app.LoadState()
 
 	app.debug("Updating runner assignments")
-	var ci *gitlab.API = gitlab.NewAPI(string(app.GitLabHost), string(app.GitLabToken))
-	var err error = ci.UpdateRunnerAssignments(string(app.RunnerTag))
+	var ci *gitlab.API = gitlab.NewAPI(app.GitLabHost, app.GitLabToken)
+	var err error = ci.UpdateRunnerAssignments(app.RunnerTag)
 	if err != nil {
 		log.Printf("failed to update runner assignments: %v", err)
 	}
@@ -45,7 +45,7 @@ func (app *Application) Run() {
 	app.Scale(ci)
 
 	app.debug("Saving application state")
-	err = app.Save(string(app.ScalerState))
+	err = app.Save(app.ScalerState)
 	if err != nil {
 		log.Printf("Failed to save application state: %v", err)
 	}
@@ -53,11 +53,11 @@ func (app *Application) Run() {
 
 func (app *Application) LoadState() {
 	var config = app.Configuration
-	var err = app.LoadScalerState(string(config.ScalerState))
+	var err = app.LoadScalerState(config.ScalerState)
 	if err != nil {
 		log.Printf("Failed to load previous scaler state: %v", err)
 	}
-	err = app.LoadTerraformState(string(config.TerraformState))
+	err = app.LoadTerraformState(config.TerraformState)
 	if err != nil {
 		log.Printf("Failed to load terraform state: %v", err)
 	}
