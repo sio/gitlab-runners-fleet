@@ -6,14 +6,27 @@ import (
 
 type HostStatus uint8
 
-const New HostStatus = 0
+const New HostStatus = 0 // not deployed yet
 const (
+	// Deployed but not ready to accept jobs yet
 	Provisioning HostStatus = 1 << iota
+
+	// Ready to accept jobs but not currenty executing any
 	Ready
+
+	// Currently executing one or more jobs
 	Busy
+
+	// Has not been running any jobs for a while
 	Idle
+
+	// Has reached maximum allowed age
 	OldAge
+
+	// Cleanup completed, instance is about to be destroyed
 	Destroying
+
+	// Irrecoverable error, instance will be destroyed
 	Error
 )
 

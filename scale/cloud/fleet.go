@@ -22,7 +22,7 @@ type Host struct {
 }
 
 func (h *Host) String() string {
-	return fmt.Sprintf("(%s@%s)", h.Name, h.Status)
+	return fmt.Sprintf("%s[%s]", h.Name, h.Status)
 }
 
 type Fleet struct {

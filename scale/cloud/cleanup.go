@@ -21,7 +21,7 @@ func (fleet *Fleet) Cleanup(host *Host) (err error) {
 	req.Header.Set("Host", host.Name)
 	resp, err = http.DefaultClient.Do(req)
 	if err != nil {
-		return fmt.Errorf("unregister request failed for %s: %w", host.Name, err)
+		return err
 	}
 	defer func() { _ = resp.Body.Close() }()
 	return nil
