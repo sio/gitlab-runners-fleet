@@ -39,7 +39,7 @@ $(ERRCHECK):
 
 .PHONY: lint
 lint: $(STATICCHECK) $(ERRCHECK)
-lint:  ## run linter for current day's solution
+lint:  ## run linters
 	$(GO) fmt $(EVERYTHING)
 	$(GO) vet $(EVERYTHING)
 	$(STATICCHECK) $(EVERYTHING)
