@@ -2,6 +2,7 @@ package app
 
 import (
 	"log"
+	"sync"
 	"time"
 
 	"scale/cloud"
@@ -103,13 +104,21 @@ func (app *Application) Scale(ci *gitlab.API) {
 	}
 
 	// Remove idle instances
+	var wg sync.WaitGroup
 	for _, host = range hosts {
-		if host.Status.Is(cloud.Idle | cloud.OldAge) {
-			err := app.Cleanup(host)
-			if err != nil {
-				log.Printf("cleanup failed for %s: %v", host, err)
-			}
+		if host.Status.Is(cloud.Idle | cloud.OldAge | cloud.Error) {
+			wg.Add(1)
+			go func(host *cloud.Host) {
+				defer wg.Done()
+				err := app.Cleanup(host)
+				if err != nil {
+					log.Printf("cleanup failed for %s: %v", host, err)
+				}
+			}(host)
 		}
+	}
+	wg.Wait()
+	for _, host = range hosts {
 		if host.Status.Is(cloud.Destroying | cloud.Error) {
 			app.Delete(host)
 		}
