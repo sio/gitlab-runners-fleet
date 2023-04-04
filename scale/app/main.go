@@ -1,6 +1,8 @@
 package app
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -16,7 +18,7 @@ type Application struct {
 }
 
 func (app *Application) Run() {
-	app.Configuration = tfExternalDatasourceConfig()
+	app.Configuration = readTerraformExternalProtocol()
 	app.debugEnabled = app.Configuration.Debug
 
 	app.debug("Restoring application state")
@@ -49,6 +51,7 @@ func (app *Application) Run() {
 	if err != nil {
 		log.Printf("Failed to save application state: %v", err)
 	}
+	writeTerraformExternalProtocol(&app.Fleet)
 }
 
 func (app *Application) LoadState() {
@@ -67,7 +70,7 @@ func (app *Application) LoadState() {
 }
 
 // Read configuration for Terraform external datasource (parse JSON from stdin)
-func tfExternalDatasourceConfig() Configuration {
+func readTerraformExternalProtocol() Configuration {
 	const timeout = 1 * time.Second
 
 	var config Configuration = DefaultConfiguration
@@ -91,4 +94,23 @@ func (app *Application) debug(msg string, values ...any) {
 		return
 	}
 	log.Printf(msg, values...)
+}
+
+// Write data for Terraform external data source (print JSON on stdout)
+func writeTerraformExternalProtocol(fleet *cloud.Fleet) {
+	var hosts = fleet.Hosts()
+	var hostnames = make([]string, len(hosts))
+	for i := 0; i < len(hosts); i++ {
+		hostnames[i] = hosts[i].Name
+	}
+	var result = map[string]any{
+		"runners": hostnames,
+	}
+	var output []byte
+	var err error
+	output, err = json.MarshalIndent(result, "", "  ")
+	if err != nil {
+		log.Fatalf("Failed to compose Terraform output: %v", err)
+	}
+	fmt.Println(string(output))
 }
