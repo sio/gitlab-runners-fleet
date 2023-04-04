@@ -12,12 +12,13 @@ import (
 )
 
 type Host struct {
-	Name      string     `json:"name"`
-	CreatedAt time.Time  `json:"created_at"`
-	IdleSince time.Time  `json:"idle_since"`
-	UpdatedAt time.Time  `json:"updated_at"`
-	Status    HostStatus `json:"status"`
-	JobsDone  int        `json:"jobs_done"`
+	Name        string     `json:"name"`
+	CreatedAt   time.Time  `json:"created_at"`
+	IdleSince   time.Time  `json:"idle_since"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	Status      HostStatus `json:"status"`
+	JobsDone    int        `json:"jobs_done"`
+	JobsRunning int        `json:"-"`
 }
 
 func (h *Host) String() string {
@@ -42,7 +43,7 @@ func (fleet *Fleet) Hosts() []*Host {
 }
 
 // Create new host record
-func (fleet *Fleet) New() *Host {
+func (fleet *Fleet) AddHost() *Host {
 	var name string
 	for {
 		var err error

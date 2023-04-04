@@ -24,11 +24,11 @@ var (
 
 // Create API object with custom endpoint and/or authorization token.
 // Empty strings are accepted for default host / anonymous auth.
-func NewAPI(host string, token string) API {
+func NewAPI(host string, token string) *API {
 	if host == "" {
 		host = defaultHost
 	}
-	return API{
+	return &API{
 		host:  host,
 		token: token,
 	}

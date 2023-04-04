@@ -18,7 +18,7 @@ func (app *Application) Run() {
 	app.Configuration = tfExternalDatasourceConfig()
 	app.LoadState()
 
-	var ci gitlab.API = gitlab.NewAPI(string(app.GitLabHost), string(app.GitLabToken))
+	var ci *gitlab.API = gitlab.NewAPI(string(app.GitLabHost), string(app.GitLabToken))
 	var err error = ci.UpdateRunnerAssignments(string(app.RunnerTag))
 	if err != nil {
 		log.Printf("failed to update runner assignments: %v", err)
@@ -33,6 +33,8 @@ func (app *Application) Run() {
 		}(host)
 	}
 	wg.Wait()
+
+	app.Scale(ci)
 }
 
 func (app *Application) LoadState() {

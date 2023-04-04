@@ -81,6 +81,7 @@ func (api API) UpdateRunnerAssignments(tag string) error {
 		if err != nil {
 			log.Printf("could not reassign runner %s: %v", runner, err)
 		}
+		// TODO: wait for a while after reassigning runners to allow them to pick up jobs
 	}
 	return nil
 }

@@ -6,6 +6,7 @@ import (
 )
 
 func (fleet *Fleet) Cleanup(host *Host) (err error) {
+	defer func() { host.Status = Destroying }()
 	if fleet.Entrypoint == "" {
 		return fmt.Errorf("HTTP endpoint is not defined")
 	}
