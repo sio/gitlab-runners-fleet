@@ -1,8 +1,8 @@
 package app
 
 import (
-	"fmt"
 	"log"
+	"sync"
 	"time"
 
 	"scale/cloud"
@@ -16,11 +16,16 @@ type Application struct {
 func (app *Application) Run() {
 	app.Configuration = tfExternalDatasourceConfig()
 	app.LoadState()
+
+	var wg sync.WaitGroup
 	for _, host := range app.Hosts() {
-		fmt.Printf("Updating %s... ", host)
-		app.UpdateStatus(host)
-		fmt.Printf("Done: %s\n", host)
+		wg.Add(1)
+		go func(host *cloud.Host) {
+			defer wg.Done()
+			app.UpdateStatus(host)
+		}(host)
 	}
+	wg.Wait()
 }
 
 func (app *Application) LoadState() {

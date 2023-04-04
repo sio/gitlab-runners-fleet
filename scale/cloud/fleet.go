@@ -31,6 +31,9 @@ type Fleet struct {
 
 // A static slice of all hosts at this point in time
 func (fleet *Fleet) Hosts() []*Host {
+	if len(fleet.hosts) > 100 {
+		panic("This app was never meant to manage a fleet that large! Thorough code review is required, a full rewrite might be in order")
+	}
 	var hosts = make([]*Host, 0, len(fleet.hosts))
 	for _, h := range fleet.hosts {
 		hosts = append(hosts, h)
