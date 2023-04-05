@@ -1,34 +1,64 @@
 # TODO list
 
-## build/
+High level tasks go here, low level items are marked as TОDO in comments next
+to the relevant parts of source code. GitHub issues will be used for
+collaborating with other people (if anyone gets interested) and for tracking
+progress of longer tasks.
 
-- Create CI pipeline with GitHub actions to push updated images to S3 (on schedule)
+
+## High priority: blocks deployment
+
+**build/**
+
 - Figure out Docker-in-Docker CI problems
-- Switch reverse proxy from Caddy to Nginx: Caddy is not available in Debian repos
+- Create CI pipeline with GitHub actions to push updated images to S3 (on schedule)
 
+**deploy/**
 
-## deploy/
-
-- Package into a Docker container
+- Add wrapper that runs `tf apply` in a loop with a small delay (~1min)
+- Package into a Docker container: terraform + scaler app
 - Deploy fleet manager to home server
+
+
+## Medium priority: quality of life
+
+**deploy/**
+
+- Deal with DockerHub rate limits
+
+
+## Low priority: nice to have
+
+**build/**
+
+- Switch reverse proxy from Caddy to Nginx: Caddy is not available in Debian repos
+- `tf destroy` triggers graceful Linux shutdown. Does gitlab-runner get
+  gracefully unregistered by systemd? Looks like no. Do we want it to?
+
+**scale/**
+
+- App ignores Ctrl+C interrupt
+
+**global**
+
+- Write minimal documentation for each stage
+
+
+## Lowest priority: maybe sometime (if ever)
+
+**deploy/**
+
 - Look into generating a pre-signed URL for VM image on fleet manager.
   That would allow to make the S3 bucket private.
   Be careful: changing URL (GET params) would trigger tf to rebuild the image,
   which in turn could(?) trigger VM rebuilds.
-- `tf destroy` triggers graceful Linux shutdown. Does gitlab-runner get
-  gracefully unregistered by systemd?
-- Add wrapper that runs `tf apply` in a loop with a small delay (~1min)
-- Package scaler app + terraform into Docker container for deployment
+- Add provider: Selectel (supports nested virtualization)
+- Yandex: recreate instance if cloud-init configuration has changed
+- Yandex: restart preempted instances automatically. Instance groups with
+  auto-healing? Pulumi? Raw API calls?
+- S3 bucket for shared runner cache. Private runners do not share cache
+  between hosts by default
 
+**global**
 
-## scale/
-
-- Rewrite in Go: calculate scaling actions and populate tfvars
-- Update fleet_manager Ansible role
-- App ignores Ctrl+C interrupt
-
-
-## Global
-
-- Write minimal documentation for each stage
-- Review todo lists in legacy branches (+MAGIC.md)
+- Add monitoring entrypoint for fleet manager
