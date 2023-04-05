@@ -51,7 +51,7 @@ func (app *Application) Run() {
 	if err != nil {
 		log.Printf("Failed to save application state: %v", err)
 	}
-	writeTerraformExternalProtocol(&app.Fleet)
+	app.writeTerraformExternalProtocol()
 }
 
 func (app *Application) LoadState() {
@@ -97,14 +97,15 @@ func (app *Application) debug(msg string, values ...any) {
 }
 
 // Write data for Terraform external data source (print JSON on stdout)
-func writeTerraformExternalProtocol(fleet *cloud.Fleet) {
-	var hosts = fleet.Hosts()
+func (app *Application) writeTerraformExternalProtocol() {
+	var hosts = app.Hosts()
 	var hostnames = make([]string, len(hosts))
 	for i := 0; i < len(hosts); i++ {
 		hostnames[i] = hosts[i].Name
 	}
 	var result = map[string]any{
-		"runners": hostnames,
+		"runners":           hostnames,
+		"gitlab_runner_tag": app.RunnerTag,
 	}
 	var output []byte
 	var err error
