@@ -64,6 +64,9 @@ func (fleet *Fleet) AddHost() *Host {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
+	if fleet.hosts == nil {
+		fleet.hosts = make(map[string]*Host)
+	}
 	fleet.hosts[host.Name] = host
 	return host
 }
