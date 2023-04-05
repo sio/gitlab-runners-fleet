@@ -97,11 +97,18 @@ func (app *Application) Scale(ci *gitlab.API) {
 	}
 
 	// Grow fleet if current capacity is not enough
+	var countProvisioning int
+	for _, host = range hosts {
+		if host.Status == cloud.Provisioning {
+			countProvisioning++
+		}
+	}
 	var jobsPending = ci.CountPendingJobs()
-	for jobsCapacity < jobsPending {
+	for jobsCapacity < jobsPending && countProvisioning < app.InstanceGrowMax {
 		_ = app.AddHost()
 		jobsCapacity += app.RunnerMaxJobs
 		countHealthy++
+		countProvisioning++
 	}
 
 	// Remove idle instances
