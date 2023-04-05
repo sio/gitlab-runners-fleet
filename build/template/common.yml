@@ -2,7 +2,7 @@
 # Base OS image. This playbook is executed when image is being built
 #
 
-- hosts: gateway
+- hosts: all
   collections:
     - potyarkin.homelab
   become: yes
