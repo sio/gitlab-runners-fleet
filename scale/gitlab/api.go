@@ -109,6 +109,9 @@ func (api *API) graphql(url string, query string, params map[string]any) (reply 
 	if err != nil {
 		return zero, fmt.Errorf("failed to read HTTP response: %w", err)
 	}
+	if resp.StatusCode != http.StatusOK {
+		return zero, fmt.Errorf("HTTP %d (%s): %s", resp.StatusCode, req.URL, string(replyData))
+	}
 	err = json.Unmarshal(replyData, &reply)
 	if err != nil {
 		return zero, fmt.Errorf("failed to parse JSON response: %w", err)

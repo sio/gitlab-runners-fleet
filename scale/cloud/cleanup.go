@@ -24,5 +24,8 @@ func (fleet *Fleet) Cleanup(host *Host) (err error) {
 		return err
 	}
 	defer func() { _ = resp.Body.Close() }()
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("HTTP %d: %s", resp.StatusCode, req.URL)
+	}
 	return nil
 }
