@@ -24,23 +24,11 @@
 ## scale/
 
 - Rewrite in Go: calculate scaling actions and populate tfvars
-    - Optional: use external data source in terraform to call scaler automatically
-    - Pass cloud IP address as a parameter to scaler app (via `external` data source)
-    - Read all configuration from JSON on stdin, add sample config for manual
-      invocation during testing. Print usage message on stderr and fail after a
-      timeout if no stding was received
-    - Use custom datatype for unmarshalling strings that may come from env vars
 - GitLab API
     - Add a delay after assigning new runners to GitLab projects - to let them
       pick up pending jobs. Or better yet, take new assignments into account when
       calculating existing jobs capacity
-- Instance management
-    - Calculate instance status
-    - Calculate scaling actions
-    - Call cleanup before destroying an instance
-    - Restore instances from TF state, from GitLab API (maybe)
 - Update fleet_manager Ansible role
-- Update statuses asynchronously
 - App ignores Ctrl+C interrupt
 
 
