@@ -40,8 +40,9 @@ func (api API) UpdateRunnerAssignments(tag string) error {
 			for _, runner := range project.Runners.Edges {
 				r, ok := runners[runner.Node.ID]
 				if !ok {
-					r = &runner.Node
-					runners[r.ID] = r
+					var newRunner runnerInfo = runner.Node
+					runners[newRunner.ID] = &newRunner
+					r = &newRunner
 				}
 				// ProjectCount is intentionally calculated manually and not
 				// taken from API.
