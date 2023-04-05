@@ -1,10 +1,10 @@
 # Auto scaling fleet of GitLab CI runners
 
 This repo contains infrastructure definitions and configuration for a fleet of
-GitLab CI runners. The tools included enable scaling the number of runner
+GitLab CI runners. Provided tools allow to scale the number of runner
 instances up and down (to zero) as demand changes.
 
-I've decided not to use GitLab's suggested `docker-machine` approach because:
+I decided not to use GitLab's suggested `docker-machine` approach because:
 
 - `docker-machine` is mostly abandoned, life support from GitLab is barely
   enough to keep it alive. GitLab themselves
@@ -18,8 +18,8 @@ I've decided not to use GitLab's suggested `docker-machine` approach because:
   developing bindings for the cloud I use (Yandex Cloud) and my Python code was
   not as clean as I would like, hence this (third) rewrite to Terraform & Go.
 
-I intend to deploy the runners strictly for personal use and I aim to
-architect my infra to incur (almost) no costs when no CI jobs are running.
+I intend to deploy the runners only for personal use and I aim to
+architect my infra to incur (next to) zero costs when no CI jobs are running.
 
 ## Project status
 
@@ -30,7 +30,7 @@ and [plain Pulumi](https://github.com/sio/gitlab-runners-fleet/tree/legacy/01-pu
 
 ## Installation and usage
 
-Documentation is not written yet. See Makefiles for pointers, `make up` will
+Documentation is not written yet. See Makefiles for pointers, `make` will
 yell at you until you provide all required environment variables :)
 
 

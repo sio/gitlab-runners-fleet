@@ -25,7 +25,15 @@ taken. These notes are mostly intended to be consumed by my future self.
   `source` file is modified. There are no etag/checksum parameters to trigger
   an update.
 - `yandex_compute_image` `source_url` MUST point to Yandex Cloud object
-  storage
+  storage.
+  As far as I know there is no way to provide just `(bucket_name, object_key)`
+  tuple like in `aws_ebs_snapshot_import`, only full URL. This is
+  inconvenitent because presigned URLs are by their nature unstable and would
+  trigger image reupload after each expiration. I just make the bucket public
+  for now, there is no confidential information in the image. The only harm an
+  attacker can inflict is to grow my egress bill by downloading the image in a
+  loop. Budgets take care of that for now, but
+  I should look into limiting bucket access based on IP address also (TODO).
 - Application load balancer is too complex to configure and much more
   expensive than a single VM instance for a gateway.
 
@@ -33,7 +41,7 @@ taken. These notes are mostly intended to be consumed by my future self.
 ## GitLab
 
 - GitLab API has matured significantly since the first iteration of this
-  project was started. Now all runner operations are exposed via GraphQL API
+  project. Now all runner operations are exposed via GraphQL API
   and there is no more need for the REST API. I'm glad these changes happened
   because I find GraphQL API to be a lot more convenient.
 
@@ -43,7 +51,8 @@ taken. These notes are mostly intended to be consumed by my future self.
 - Packer does not appear to provide an easy way to modify qcow2 image on a
   host without virtualization support (qemu without kvm is painfully slow),
   hence we use a bespoke script which relies on qemu-nbd and chroot.
-  This still requires root access to the build host.
+  This still requires root access to the build host - but that's not a problem
+  in GitHub Actions environment.
 - mkosi seems nice, but it can only build from scratch via debootstrap.
   Upstream Debian images are rather good, there is no need to redo the work
   of Debian Cloud Team
