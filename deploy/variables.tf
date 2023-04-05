@@ -16,6 +16,12 @@ variable "gitlab_runner_token" {
   nullable    = false
   sensitive   = true
 }
+variable "gitlab_runner_tag" {
+  description = "GitLab runner tag"
+  type        = string
+  default     = "auto-scaling-ycloud"
+  nullable    = false
+}
 
 
 //

@@ -11,11 +11,11 @@
   roles:
     - role: gitlab_runner
       gitlab_runner_tags:
-        - private-runner
+        - '{{ gitlab_runner_tag }}'
       gitlab_runner_executor: docker
       gitlab_runner_concurrent_jobs: 3
       gitlab_runner_extra_registration_params:
-        name: 'private-runner-{{ ansible_hostname }}'
+        name: '{{ ansible_hostname }}'
         run-untagged: ''
         locked: 'false'
         docker-privileged: 'true'

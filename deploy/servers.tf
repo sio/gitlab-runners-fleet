@@ -65,6 +65,7 @@ resource "yandex_compute_instance" "runner" {
   metadata = {
     serial-port-enable = 1
     user-data = templatefile("cloud-config/runner.yml", {
+      gitlab_runner_tag   = var.gitlab_runner_tag,
       gitlab_runner_token = var.gitlab_runner_token,
     })
   }

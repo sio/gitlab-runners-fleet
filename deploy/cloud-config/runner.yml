@@ -12,6 +12,7 @@ write_files:
         hosts:
           localhost:
             gitlab_runner_token: ${gitlab_runner_token}
+            gitlab_runner_tag: ${gitlab_runner_tag}
 
 runcmd:
   - /usr/bin/make -C /etc/provision runner
