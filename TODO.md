@@ -24,10 +24,6 @@
 ## scale/
 
 - Rewrite in Go: calculate scaling actions and populate tfvars
-- GitLab API
-    - Add a delay after assigning new runners to GitLab projects - to let them
-      pick up pending jobs. Or better yet, take new assignments into account when
-      calculating existing jobs capacity
 - Update fleet_manager Ansible role
 - App ignores Ctrl+C interrupt
 
