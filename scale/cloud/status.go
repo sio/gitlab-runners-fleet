@@ -30,7 +30,7 @@ const (
 	Error
 )
 
-var StatusName = map[HostStatus]string{
+var statusName = map[HostStatus]string{
 	New:          "NEW",
 	Provisioning: "PROVISIONING",
 	Ready:        "READY",
@@ -42,7 +42,7 @@ var StatusName = map[HostStatus]string{
 }
 
 func (status HostStatus) String() string {
-	repr, ok := StatusName[status]
+	repr, ok := statusName[status]
 	if !ok {
 		panic(fmt.Sprintf("invalid HostStatus=0b%b", status))
 	}

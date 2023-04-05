@@ -104,11 +104,11 @@ func (fleet *Fleet) LoadTerraformState(filename string) (err error) {
 		return fmt.Errorf("failed to parse JSON: %w", err)
 	}
 
-	fleet.Entrypoint, err = JsGet[string](tfstate, "outputs", "external_ip", "value")
+	fleet.Entrypoint, err = jsGet[string](tfstate, "outputs", "external_ip", "value")
 	if err != nil || fleet.Entrypoint == "" {
 		return fmt.Errorf("terraform state file does not contain previous value for external_ip")
 	}
-	resources, err := JsGet[[]any](tfstate, "resources")
+	resources, err := jsGet[[]any](tfstate, "resources")
 	if err != nil {
 		return fmt.Errorf("failed to read terraform resources")
 	}
@@ -117,23 +117,23 @@ func (fleet *Fleet) LoadTerraformState(filename string) (err error) {
 	}
 	for _, r := range resources {
 		var resourceType string
-		resourceType, err = JsGet[string](r, "type")
+		resourceType, err = jsGet[string](r, "type")
 		if err != nil || resourceType != "yandex_compute_instance" {
 			continue
 		}
 		var instances []any
-		instances, err = JsGet[[]any](r, "instances")
+		instances, err = jsGet[[]any](r, "instances")
 		if err != nil {
 			continue
 		}
 		for _, i := range instances {
 			var host = &Host{}
-			host.Name, err = JsGet[string](i, "attributes", "name")
+			host.Name, err = jsGet[string](i, "attributes", "name")
 			if err != nil || host.Name == "" || host.Name == "gateway" {
 				continue
 			}
 			var ctime string
-			ctime, err = JsGet[string](i, "attributes", "created_at")
+			ctime, err = jsGet[string](i, "attributes", "created_at")
 			if err == nil {
 				t, err := time.Parse(time.RFC3339, ctime)
 				if err == nil {

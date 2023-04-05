@@ -86,7 +86,7 @@ func TestNestedAccess(t *testing.T) {
 	}
 	for index, tt := range stringTests {
 		var got string
-		got, err = JsGet[string](js, strings.Split(tt.path, ".")...)
+		got, err = jsGet[string](js, strings.Split(tt.path, ".")...)
 		if !tt.fail && err != nil {
 			t.Errorf("string#%d %v: unexpected error: %v", index, tt.path, err)
 			continue

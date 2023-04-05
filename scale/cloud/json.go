@@ -6,7 +6,7 @@ import (
 )
 
 // Fetch vaule of a specific type from deeply nested JSON
-func JsGet[T any](tree any, key ...string) (T, error) {
+func jsGet[T any](tree any, key ...string) (T, error) {
 	var value any
 	var err error
 	value, err = jsGetAny(tree, key...)
