@@ -18,7 +18,7 @@ func (fleet *Fleet) Cleanup(host *Host) (err error) {
 	if err != nil {
 		return fmt.Errorf("failed to create HTTP request: %w", err)
 	}
-	req.Header.Set("Host", host.Name)
+	req.Host = host.Name
 	resp, err = http.DefaultClient.Do(req)
 	if err != nil {
 		return err

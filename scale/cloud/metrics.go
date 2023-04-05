@@ -25,7 +25,7 @@ func (fleet *Fleet) Metrics(host *Host) (Metrics, error) {
 	if err != nil {
 		return metrics, fmt.Errorf("failed to create HTTP request: %w", err)
 	}
-	req.Header.Set("Host", host.Name)
+	req.Host = host.Name
 	resp, err = http.DefaultClient.Do(req)
 	if err != nil {
 		return metrics, fmt.Errorf("metrics request failed for %s: %w", host.Name, err)
