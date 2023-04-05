@@ -23,6 +23,7 @@ func (app *Application) UpdateStatus(host *cloud.Host) {
 	metrics, err = app.Metrics(host)
 	switch {
 	case err != nil:
+		app.debug("Failed to fetch metrics for %s: %v", host, err)
 		host.Status = cloud.Error
 		if now.Sub(host.CreatedAt) < app.Configuration.InstanceProvisionTime.Duration {
 			host.Status = cloud.Provisioning

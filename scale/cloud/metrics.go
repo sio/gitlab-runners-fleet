@@ -3,6 +3,7 @@ package cloud
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -32,9 +33,17 @@ func (fleet *Fleet) Metrics(host *Host) (Metrics, error) {
 	}
 	defer func() { _ = resp.Body.Close() }()
 
-	err = json.NewDecoder(resp.Body).Decode(&metrics)
+	var raw []byte
+	raw, err = io.ReadAll(resp.Body)
 	if err != nil {
-		return metrics, fmt.Errorf("failed to parse host metrics for %s: %w", host.Name, err)
+		return metrics, fmt.Errorf("failed to read HTTP response: %w", err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		return metrics, fmt.Errorf("HTTP %d (%s): %s", resp.StatusCode, req.URL, string(raw))
+	}
+	err = json.Unmarshal(raw, &metrics)
+	if err != nil {
+		return metrics, fmt.Errorf("failed to parse JSON metrics for %s: %w\n%s", host.Name, err, string(raw))
 	}
 	return metrics, nil
 }
