@@ -66,6 +66,10 @@ chroot:
 	cp -avr $(TEMPLATE)/* $(MOUNTPOINT)/etc/provision
 	chroot $(MOUNTPOINT) /etc/provision/$(SCRIPT)
 
+.PHONY: shell
+shell:
+	chroot $(MOUNTPOINT) /bin/bash -c 'TERM=xterm exec bash'
+
 .PHONY: compact
 compact:
 	qemu-img convert -c -f qcow2 -O qcow2 -o cluster_size=2M $(OUTPUT) $(OUTPUT).compact
