@@ -26,7 +26,7 @@ func TestSerialization(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	temp, err := os.MkdirTemp("", "scaler-state")
+	temp, err := os.MkdirTemp("", "scale-state")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -46,7 +46,7 @@ func TestSerialization(t *testing.T) {
 	t.Log(string(saved))
 
 	restored = &Fleet{}
-	err = restored.LoadScalerState(stateFile)
+	err = restored.LoadScaleState(stateFile)
 	if err != nil {
 		t.Fatalf("failed to load state file: %v", err)
 	}

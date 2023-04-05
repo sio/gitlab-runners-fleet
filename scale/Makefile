@@ -3,16 +3,16 @@ APP=bin/scale-$(shell $(GO) env GOOS)-$(shell $(GO) env GOARCH)$(shell $(GO) env
 EVERYTHING=./...
 
 .PHONY: run
-run: $(APP)  ## run scaler app
+run: $(APP)  ## run scale app
 	cat sample_config.json | $<
 
 .PHONY: build
-build: $(APP)  ## build scaler app
+build: $(APP)  ## build scale app
 $(APP): $(shell find . -type f -iname '*.go')
 	$(GO) build -o $@
 
 .PHONY: build-all
-build-all:  ## build scaler app for all OS/architectures
+build-all:  ## build scale app for all OS/architectures
 	GOOS=linux   GOARCH=amd64 $(MAKE) build
 	GOOS=linux   GOARCH=arm64 $(MAKE) build
 	GOOS=windows GOARCH=amd64 $(MAKE) build

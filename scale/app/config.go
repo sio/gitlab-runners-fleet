@@ -9,7 +9,7 @@ import (
 )
 
 var DefaultConfiguration = Configuration{
-	ScalerState:           "scaler.state",
+	ScaleState:            "scale.state",
 	TerraformState:        "terraform.tfstate",
 	RunnerTag:             "gitlab_runner_fleet",
 	RunnerMaxJobs:         3,
@@ -26,7 +26,7 @@ const second = 1_000_000_000 // nanoseconds
 type Configuration struct {
 	GitLabHost            string   `json:"gitlab_host"`
 	GitLabToken           string   `json:"gitlab_token"`
-	ScalerState           string   `json:"scaler_state_file"`
+	ScaleState            string   `json:"scale_state_file"`
 	TerraformState        string   `json:"terraform_state_file"`
 	RunnerAddress         string   `json:"runner_address"`
 	RunnerTag             string   `json:"runner_tag"`
@@ -58,8 +58,8 @@ func (conf *Configuration) UnmarshalJSON(raw []byte) (err error) {
 	if data.GitLabToken, err = parseEnv(data.GitLabToken); err != nil {
 		return fmt.Errorf("GitLabToken=%q: %w", data.GitLabToken, err)
 	}
-	if data.ScalerState, err = parseEnv(data.ScalerState); err != nil {
-		return fmt.Errorf("ScalerState=%q: %w", data.ScalerState, err)
+	if data.ScaleState, err = parseEnv(data.ScaleState); err != nil {
+		return fmt.Errorf("ScaleState=%q: %w", data.ScaleState, err)
 	}
 	if data.TerraformState, err = parseEnv(data.TerraformState); err != nil {
 		return fmt.Errorf("TerraformState=%q: %w", data.TerraformState, err)

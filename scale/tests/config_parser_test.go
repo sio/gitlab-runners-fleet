@@ -65,7 +65,7 @@ func TestDefaultConfig(t *testing.T) {
 	}
 
 	want = app.Configuration{
-		ScalerState:           "scaler.state",
+		ScaleState:            "scale.state",
 		TerraformState:        "terraform.tfstate",
 		GitLabHost:            "test_host",
 		GitLabToken:           "test_token",

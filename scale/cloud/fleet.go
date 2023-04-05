@@ -80,7 +80,7 @@ func (fleet *Fleet) Get(name string) (host *Host, ok bool) {
 }
 
 // Load Hosts state from a file
-func (fleet *Fleet) LoadScalerState(filename string) error {
+func (fleet *Fleet) LoadScaleState(filename string) error {
 	var data []byte
 	var err error
 	data, err = os.ReadFile(filename)

@@ -47,7 +47,7 @@ func (app *Application) Run() {
 	app.Scale(ci)
 
 	app.debug("Saving application state")
-	err = app.Save(app.ScalerState)
+	err = app.Save(app.ScaleState)
 	if err != nil {
 		log.Printf("Failed to save application state: %v", err)
 	}
@@ -56,9 +56,9 @@ func (app *Application) Run() {
 
 func (app *Application) LoadState() {
 	var config = app.Configuration
-	var err = app.LoadScalerState(config.ScalerState)
+	var err = app.LoadScaleState(config.ScaleState)
 	if err != nil {
-		log.Printf("Failed to load previous scaler state: %v", err)
+		log.Printf("Failed to load previous scale state: %v", err)
 	}
 	err = app.LoadTerraformState(config.TerraformState)
 	if err != nil {
