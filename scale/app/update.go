@@ -111,6 +111,7 @@ func (app *Application) Scale(ci *gitlab.API) {
 	for jobsCapacity < jobsPending &&
 		countProvisioning < app.InstanceGrowMax &&
 		countHealthy < app.InstanceCountMax {
+
 		host = app.AddHost()
 		app.debug("Add host to the fleet: %s", host)
 		jobsCapacity += app.RunnerMaxJobs
