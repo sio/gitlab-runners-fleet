@@ -89,6 +89,7 @@ func (app *Application) Scale(ci *gitlab.API) {
 				host.Status = cloud.Idle
 				countHealthy--
 				jobsCapacity -= app.RunnerMaxJobs - host.JobsRunning
+				break
 			}
 		}
 		if !found {
@@ -107,7 +108,9 @@ func (app *Application) Scale(ci *gitlab.API) {
 	if jobsPending > 0 {
 		app.debug("CI jobs currently pending: %d", jobsPending)
 	}
-	for jobsCapacity < jobsPending && countProvisioning < app.InstanceGrowMax {
+	for jobsCapacity < jobsPending &&
+		countProvisioning < app.InstanceGrowMax &&
+		countHealthy < app.InstanceCountMax {
 		host = app.AddHost()
 		app.debug("Add host to the fleet: %s", host)
 		jobsCapacity += app.RunnerMaxJobs
