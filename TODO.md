@@ -8,10 +8,6 @@ progress of longer tasks.
 
 ## High priority: blocks deployment
 
-**build/**
-
-- Create CI pipeline with GitHub actions to push updated images to S3 (on schedule)
-
 **deploy/**
 
 - Add wrapper that runs `tf apply` in a loop with a small delay (~1min)

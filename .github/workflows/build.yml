@@ -6,6 +6,8 @@ on:
       - 'build/**'
       - '!**.md'
   workflow_dispatch:
+  schedule:
+    - cron: '9 21 7 * *'
 
 jobs:
   base-image:
@@ -15,9 +17,12 @@ jobs:
         working-directory: build
     steps:
       - uses: actions/checkout@v3
-      - name: install required tools
-        run: sudo make .gha-environment
-      - name: build image
-        run: sudo make image
-      - name: compress image
-        run: make compact
+      - run: sudo make .gha-environment
+      - run: sudo make image
+      - run: make compact
+      - if: github.ref == 'refs/heads/terraform'
+        run: make upload
+        env:
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
