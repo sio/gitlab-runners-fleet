@@ -10,7 +10,6 @@ progress of longer tasks.
 
 **build/**
 
-- Figure out Docker-in-Docker CI problems
 - Create CI pipeline with GitHub actions to push updated images to S3 (on schedule)
 
 **deploy/**
@@ -24,7 +23,7 @@ progress of longer tasks.
 
 **deploy/**
 
-- Deal with DockerHub rate limits
+- Deal with DockerHub rate limits: set up Docker proxy on the gateway?
 
 
 ## Low priority: nice to have
