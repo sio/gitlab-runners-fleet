@@ -10,4 +10,4 @@ upload: $(OUTPUT)
 ifeq (,$(S3_BUCKET))
 	$(error Variable not defined: S3_BUCKET)
 endif
-	$(S3) cp $(OUTPUT) s3://$$S3_BUCKET/$$S3_OBFUSCATION_PREFIX/base.qcow2
+	$(S3) cp $(OUTPUT) s3://$$S3_BUCKET/$$S3_OBFUSCATION_PREFIX/base.qcow2 --only-show-errors
