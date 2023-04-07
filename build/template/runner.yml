@@ -18,6 +18,7 @@
         name: '{{ ansible_hostname }}'
         run-untagged: ''
         locked: 'false'
+        docker-pull-policy: 'if-not-present'
         docker-privileged: 'true'
         docker-image: 'ruby:2.5'
         docker-volumes: '/certs/client'
