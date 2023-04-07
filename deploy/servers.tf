@@ -23,7 +23,6 @@ resource "yandex_compute_instance" "gateway" {
     subnet_id      = yandex_vpc_subnet.outer[0].id
     nat            = true
     ip_address     = local.gateway_ip
-    nat_ip_address = local.external_ip
   }
   scheduling_policy {
     preemptible = false // we don't want our gateway to go down suddenly
@@ -84,4 +83,12 @@ resource "yandex_compute_image" "base" {
   os_type     = "LINUX"
   source_url  = var.ycs3_vmimage_url
   pooled      = "false"
+}
+
+locals {
+  external_ip = try(yandex_compute_instance.gateway[0].network_interface[0].nat_ip_address, "")
+}
+
+output "external_ip" {
+  value = local.external_ip
 }

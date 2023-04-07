@@ -27,19 +27,3 @@ resource "yandex_vpc_route_table" "behind_nat" {
     next_hop_address   = local.gateway_ip
   }
 }
-
-resource "yandex_vpc_address" "external" {
-  name  = "external"
-  count = local.one_or_none
-  external_ipv4_address {
-    zone_id = var.yc_zone
-  }
-}
-
-locals {
-  external_ip = join("", yandex_vpc_address.external[*].external_ipv4_address[0].address)
-}
-
-output "external_ip" {
-  value = local.external_ip
-}
