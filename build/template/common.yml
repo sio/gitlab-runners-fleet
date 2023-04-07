@@ -31,5 +31,6 @@
         enabled: no
         name: '{{ item }}'
       loop:
+        - containerd
         - docker
         - gitlab-runner
