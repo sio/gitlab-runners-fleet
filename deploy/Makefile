@@ -42,4 +42,4 @@ endif
 .PHONY: scale
 SCALE=../scale/bin/scale-windows-amd64.exe
 scale: $(SCALE)
-	cat scale.config | $(SCALE) > scale.auto.tfvars.json
+	$(SCALE) < scale.config > scale.auto.tfvars.json
