@@ -56,4 +56,6 @@ progress of longer tasks.
 
 **global**
 
-- Add monitoring entrypoint for fleet manager
+- Add monitoring entrypoint for fleet manager. Simple implementation: write
+  metrics to file after each `terraform apply` to be consumed by Prometheus
+  (node_exporter / textfile collector)
