@@ -29,8 +29,6 @@ progress of longer tasks.
 - Switch reverse proxy from Caddy to Nginx: Caddy is not available in Debian repos
 - `tf destroy` triggers graceful Linux shutdown. Does gitlab-runner get
   gracefully unregistered by systemd? Looks like no. Do we want it to?
-- Read `tf output` via subprocess and pipe instead of accessing tfstate file
-  directly. Currently S3 backend for Terraform is not supported
 
 **scale/**
 

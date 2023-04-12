@@ -93,66 +93,6 @@ func (fleet *Fleet) LoadScaleState(filename string) error {
 	return json.Unmarshal(data, fleet)
 }
 
-func (fleet *Fleet) LoadTerraformState(filename string) (err error) {
-	var (
-		tfstate any
-		tfjson  []byte
-	)
-	tfjson, err = os.ReadFile(filename)
-	if err != nil {
-		return err
-	}
-	err = json.Unmarshal(tfjson, &tfstate)
-	if err != nil {
-		return fmt.Errorf("failed to parse JSON: %w", err)
-	}
-
-	fleet.Entrypoint, err = jsGet[string](tfstate, "outputs", "external_ip", "value")
-	if err != nil || fleet.Entrypoint == "" {
-		return fmt.Errorf("terraform state file does not contain previous value for external_ip")
-	}
-	resources, err := jsGet[[]any](tfstate, "resources")
-	if err != nil {
-		return fmt.Errorf("failed to read terraform resources")
-	}
-	if fleet.hosts == nil {
-		fleet.hosts = make(map[string]*Host)
-	}
-	for _, r := range resources {
-		var resourceType string
-		resourceType, err = jsGet[string](r, "type")
-		if err != nil || resourceType != "yandex_compute_instance" {
-			continue
-		}
-		var instances []any
-		instances, err = jsGet[[]any](r, "instances")
-		if err != nil {
-			continue
-		}
-		for _, i := range instances {
-			var host = &Host{}
-			host.Name, err = jsGet[string](i, "attributes", "name")
-			if err != nil || host.Name == "" || host.Name == "gateway" {
-				continue
-			}
-			var ctime string
-			ctime, err = jsGet[string](i, "attributes", "created_at")
-			if err == nil {
-				t, err := time.Parse(time.RFC3339, ctime)
-				if err == nil {
-					host.CreatedAt = t
-				}
-			}
-			_, exists := fleet.hosts[host.Name]
-			if exists {
-				continue
-			}
-			fleet.hosts[host.Name] = host
-		}
-	}
-	return nil
-}
-
 // Save Hosts state to a file
 func (fleet *Fleet) Save(filename string) error {
 	var output []byte
