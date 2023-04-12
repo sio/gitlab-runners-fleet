@@ -10,7 +10,7 @@ progress of longer tasks.
 
 **deploy/**
 
-- Add wrapper that runs `tf apply` in a loop with a small delay (~1min)
+- Add wrapper that runs `terraform apply` in a loop with a small delay (~1min)
 - Package into a Docker container: terraform + scaler app
 - Deploy fleet manager to home server
 
@@ -27,7 +27,7 @@ progress of longer tasks.
 **build/**
 
 - Switch reverse proxy from Caddy to Nginx: Caddy is not available in Debian repos
-- `tf destroy` triggers graceful Linux shutdown. Does gitlab-runner get
+- `terraform destroy` triggers graceful Linux shutdown. Does gitlab-runner get
   gracefully unregistered by systemd? Looks like no. Do we want it to?
 
 **scale/**
@@ -45,7 +45,7 @@ progress of longer tasks.
 
 - Look into generating a pre-signed URL for VM image on fleet manager.
   That would allow to make the S3 bucket private.
-  Be careful: changing URL (GET params) would trigger tf to rebuild the image,
+  Be careful: changing URL (GET params) would trigger terraform to rebuild the image,
   which in turn could(?) trigger VM rebuilds.
 - Add provider: Selectel (supports nested virtualization)
 - Yandex: recreate instance if cloud-init configuration has changed
