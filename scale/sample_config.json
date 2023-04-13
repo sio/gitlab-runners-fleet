@@ -1,7 +1,6 @@
 {
     "debug": true,
-    "terraform_state_file": "tests/fleet_tfstate.sample",
     "gitlab_token": "env:GITLAB_API_TOKEN",
-    "runner_tag": "private-runner",
-    "instance_grow_max": 1
+    "runner_tag": "ycloud",
+    "instance_grow_max": 2
 }
