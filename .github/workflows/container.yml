@@ -1,0 +1,26 @@
+name: container
+
+on:
+  push:
+    paths-ignore:
+      - 'build/**'
+      - '**.md'
+  pull-request:
+    paths-ignore:
+      - 'build/**'
+      - '**.md'
+  workflow_dispatch:
+  schedule:
+    - cron: '9 21 8 * *'
+
+jobs:
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: make -C scale ci
+      - run: make -C container docker-build
+      - if: github.ref == 'refs/heads/terraform'
+        run: make -C container docker-push
+        env:
+          DOCKER_REGISTRY_PASSWD: ${{ secrets.DOCKER_REGISTRY_PASSWD }}
