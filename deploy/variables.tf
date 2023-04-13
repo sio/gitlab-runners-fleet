@@ -19,7 +19,7 @@ variable "gitlab_runner_token" {
 variable "gitlab_runner_tag" {
   description = "GitLab runner tag"
   type        = string
-  default     = "auto-scaling-ycloud"
+  default     = "gitlab_runner_fleet"
   nullable    = false
 }
 
