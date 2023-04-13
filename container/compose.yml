@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  gitlab-runners-fleet:
+    image: ghcr.io/sio/gitlab-runners-fleet:v3
+    restart: unless-stopped
+    user: 1234:1234
+    environment:
+      TF_VAR_ycs3_vmimage_url: "${S3_IMAGE_URL}"
+      TF_VAR_gitlab_runner_token: "${GITLAB_RUNNER_TOKEN}"
+      GITLAB_API_TOKEN: "${GITLAB_API_TOKEN}"
+      YC_TOKEN: "${YC_TOKEN}"
+      YC_CLOUD_ID: "${YC_CLOUD_ID}"
+      YC_FOLDER_ID: "${YC_FOLDER_ID}"
+    volumes:
+      - type: bind
+        source: /tmp/gitlab-runners-fleet-state/
+        target: /infra/state
