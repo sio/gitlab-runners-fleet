@@ -1,1 +1,4 @@
-# Deploy this container to fleet manager
+# Fleet manager Docker container
+
+This container combines all components of this project into one deployable
+artifact.
