@@ -15,6 +15,7 @@ FROM hashicorp/terraform:${TERRAFORM_VERSION} as terraform
 FROM debian:${DEBIAN_VERSION}
 ENV SCALE_CONFIG=/infra/state/scale.config
 ENV SCALE_OUTPUT=/infra/scale.auto.tfvars.json
+ENV SCALE_OUTPUT_TMP=/infra/state/scale.auto.tfvars.tmp
 COPY --from=builder /app/scale /usr/local/bin/scale
 COPY --from=terraform /bin/terraform /usr/local/bin/terraform
 RUN apt-get update && \

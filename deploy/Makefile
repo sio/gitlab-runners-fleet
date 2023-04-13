@@ -43,9 +43,11 @@ endif
 SCALE?=scale
 SCALE_CONFIG?=scale.config
 SCALE_OUTPUT?=scale.auto.tfvars.json
+SCALE_OUTPUT_TMP?=$(SCALE_OUTPUT).new
 scale:
-	$(SCALE) < $(SCALE_CONFIG) > $(SCALE_OUTPUT).new
-	mv $(SCALE_OUTPUT).new $(SCALE_OUTPUT)
+	$(SCALE) < $(SCALE_CONFIG) > $(SCALE_OUTPUT_TMP)
+	cat $(SCALE_OUTPUT_TMP) > $(SCALE_OUTPUT)
+	@rm -v $(SCALE_OUTPUT_TMP)
 
 .PHONY: loop
 loop:
