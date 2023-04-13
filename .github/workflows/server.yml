@@ -5,7 +5,7 @@ on:
     paths:
       - 'build/**'
       - '!**.md'
-  pull-request:
+  pull_request:
     paths:
       - 'build/**'
       - '!**.md'
