@@ -3,9 +3,6 @@ set -euo pipefail
 IFS=$'\n\t'
 set -v
 
-# Root password for interactive debugging
-echo 'root:bydtyn22'|chpasswd # TODO: remove debug password
-
 # Enable cloud-init unconditionally
 cp -v /etc/provision/cloud.cfg.d/* /etc/cloud/cloud.cfg.d
 ln -vsf /lib/systemd/system/cloud-init.target /etc/systemd/system/multi-user.target.wants/
