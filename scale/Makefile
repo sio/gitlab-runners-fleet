@@ -54,6 +54,10 @@ lint:  ## run linters
 	$(STATICCHECK) $(EVERYTHING)
 	$(ERRCHECK) $(EVERYTHING)
 
+.PHONY: ci
+ci: lint
+	git diff --exit-code --name-only
+
 CLOC=$(shell $(GO) env GOPATH)/bin/gocloc$(shell $(GO) env GOEXE)
 $(CLOC):
 	$(GO) install github.com/hhatto/gocloc/cmd/gocloc@latest
