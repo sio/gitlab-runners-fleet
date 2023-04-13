@@ -1,7 +1,11 @@
-name: build-image
+name: server
 
 on:
   push:
+    paths:
+      - 'build/**'
+      - '!**.md'
+  pull-request:
     paths:
       - 'build/**'
       - '!**.md'
@@ -10,7 +14,7 @@ on:
     - cron: '9 21 7 * *'
 
 jobs:
-  base-image:
+  server-image:
     runs-on: ubuntu-latest
     defaults:
       run:
