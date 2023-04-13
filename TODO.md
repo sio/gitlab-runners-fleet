@@ -10,8 +10,6 @@ progress of longer tasks.
 
 **deploy/**
 
-- Add wrapper that runs `terraform apply` in a loop with a small delay (~1min)
-- Package into a Docker container: terraform + scaler app
 - Deploy fleet manager to home server
 
 
