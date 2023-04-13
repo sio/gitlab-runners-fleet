@@ -16,3 +16,6 @@ services:
       - type: bind
         source: /tmp/gitlab-runners-fleet-state/
         target: /infra/state
+        # Don't forget to provide /infra/state/scale.config with relevant options and
+        # "scale_state_file": "/infra/state/scale.state"
+        # (because /infra is not writable by container process and /infra/state is)
