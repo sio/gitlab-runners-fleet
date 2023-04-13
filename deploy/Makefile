@@ -36,10 +36,17 @@ ifeq ($(YC_FOLDER_ID),)
 MISSING_ENV+=YC_FOLDER_ID
 endif
 ifneq ($(MISSING_ENV),)
-$(warning Required variables not defined: $(MISSING_ENV))
+$(warning variables not defined: $(MISSING_ENV))
 endif
 
 .PHONY: scale
-SCALE=../scale/bin/scale-windows-amd64.exe
-scale: $(SCALE)
-	$(SCALE) < scale.config > scale.auto.tfvars.json
+SCALE?=scale
+SCALE_CONFIG?=scale.config
+SCALE_OUTPUT?=scale.auto.tfvars.json
+scale:
+	$(SCALE) < $(SCALE_CONFIG) > $(SCALE_OUTPUT).new
+	mv $(SCALE_OUTPUT).new $(SCALE_OUTPUT)
+
+.PHONY: loop
+loop:
+	./loop.sh
