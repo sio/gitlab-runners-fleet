@@ -16,7 +16,7 @@ resource "yandex_compute_instance" "gateway" {
     auto_delete = true
     initialize_params {
       image_id = yandex_compute_image.base[0].id
-      size     = 10
+      size     = 25
     }
   }
   network_interface {
@@ -31,6 +31,7 @@ resource "yandex_compute_instance" "gateway" {
     serial-port-enable = 1
     user-data = templatefile("cloud-config/gateway.yml", {
       inner_subnet = var.inner_cidr[0],
+      inner_ip     = local.gateway_ip,
     })
   }
 }
@@ -64,6 +65,7 @@ resource "yandex_compute_instance" "runner" {
   metadata = {
     serial-port-enable = 1
     user-data = templatefile("cloud-config/runner.yml", {
+      gateway_ip          = local.gateway_ip,
       gitlab_runner_tag   = var.gitlab_runner_tag,
       gitlab_runner_token = var.gitlab_runner_token,
     })

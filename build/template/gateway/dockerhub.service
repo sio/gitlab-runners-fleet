@@ -1,0 +1,38 @@
+# I know that systemd service will own only docker client process, not the
+# container process itself.
+#
+# Typically this is less than ideal (and this is where alternative tools like
+# Podman truly shine) but for current usecase it's acceptable. Gateway is not
+# expected to live long (it will be destroyed if there were no CI jobs within
+# last hour) and there is only a slight chance that we will encounter a
+# failure not handled either by systemd or by docker in that short time.
+
+[Unit]
+Description=Docker Hub caching proxy
+After=docker.service
+Requires=docker.service
+
+[Service]
+Environment=REMOTE_IMAGE=registry:2
+Environment=LOCAL_CONTAINER=dockerhub
+Environment=LOCAL_USER=1912:1954
+Environment=LOCAL_STORAGE=/dockerhub
+ExecStop=-/usr/bin/docker stop ${LOCAL_CONTAINER}
+ExecStop=-/usr/bin/docker rm ${LOCAL_CONTAINER}
+ExecStartPre=/bin/mkdir -p ${LOCAL_STORAGE}
+ExecStartPre=/bin/chown -R ${LOCAL_USER} ${LOCAL_STORAGE}
+ExecStartPre=-/usr/bin/docker stop ${LOCAL_CONTAINER}
+ExecStartPre=-/usr/bin/docker rm ${LOCAL_CONTAINER}
+ExecStart=/usr/bin/docker run \
+    --name ${LOCAL_CONTAINER} \
+    --env REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io \
+    --volume ${LOCAL_STORAGE}:/var/lib/registry \
+    --publish {{ inner_ip }}:5000:5000 \
+    --user ${LOCAL_USER} \
+    --restart unless-stopped \
+    ${REMOTE_IMAGE}
+TimeoutStartSec=0
+Restart=always
+
+[Install]
+WantedBy=default.target

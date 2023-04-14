@@ -9,6 +9,7 @@ write_files:
         hosts:
           localhost:
             inner_subnet: ${inner_subnet}
+            inner_ip: ${inner_ip}
 
 runcmd:
   - /usr/bin/make -C /etc/provision gateway

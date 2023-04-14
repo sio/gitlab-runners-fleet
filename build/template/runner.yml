@@ -53,6 +53,8 @@
         vars:
           new:
             storage-driver: overlay2
+            registry-mirrors:
+              - 'http://{{ gateway_ip }}:5000'
           old: '{{ docker_config.content|b64decode|from_json }}'
         copy:
           content: |

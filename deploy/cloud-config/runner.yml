@@ -11,6 +11,7 @@ write_files:
       all:
         hosts:
           localhost:
+            gateway_ip: ${gateway_ip}
             gitlab_runner_token: ${gitlab_runner_token}
             gitlab_runner_tag: ${gitlab_runner_tag}
 

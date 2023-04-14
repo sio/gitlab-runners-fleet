@@ -12,12 +12,9 @@ progress of longer tasks.
 
 - Deploy fleet manager to home server
 
-
+<!--
 ## Medium priority: quality of life
-
-**deploy/**
-
-- Deal with DockerHub rate limits: set up Docker proxy on the gateway?
+-->
 
 
 ## Low priority: nice to have

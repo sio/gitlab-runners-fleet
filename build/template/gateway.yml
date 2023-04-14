@@ -33,6 +33,19 @@
     caddy_config: /etc/caddy/Caddyfile
     firewall_auto_config: no
   tasks:
+    - name: create systemd service for Docker Hub proxy
+      template:
+        src: /etc/provision/gateway/dockerhub.service
+        dest: /etc/systemd/system/dockerhub.service
+        mode: '0644'
+        owner: root
+    - name: enable systemd service for Docker Hub proxy
+      systemd:
+        name: dockerhub.service
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
     # HTTP reverse proxy (Caddy)
     #   nginx is too quirky with dynamic reverse proxy destinations:
     #   - requires static resolver IP
