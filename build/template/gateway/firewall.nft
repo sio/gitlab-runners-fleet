@@ -56,8 +56,10 @@ table inet router {
         jump banned
         ip saddr $INNER_SUBNET accept
         ip daddr $INNER_SUBNET ct state {established, related} accept
+
         iifname "docker0" oifname != "docker0" accept
-        iifname != "docker0" oifname "docker0" accept
+        iifname != "docker0" ip saddr $INNER_SUBNET oifname "docker0" accept
+        iifname != "docker0" oifname "docker0" ct state {established, related} accept
     }
 
     chain postrouting {
