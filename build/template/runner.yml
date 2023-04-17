@@ -21,7 +21,9 @@
         docker-pull-policy: 'if-not-present'
         docker-privileged: 'true'
         docker-image: 'ruby:2.5'
-        docker-volumes: '/certs/client'
+        docker-volumes:
+          - '/certs/client'
+          - '/etc/gitlab-runner-custom/docker.json:{{ daemon_json }}:ro'
 
   tasks:
     - block:
@@ -62,6 +64,15 @@
           dest: '{{ daemon_json }}'
           backup: yes
         notify: restart docker daemon
+      - name: create docker daemon config for docker-in-docker
+        vars:
+          config:
+            registry-mirrors:
+              - 'http://{{ gateway_ip }}:5000'
+        copy:
+          content: |
+            {{ config|to_nice_json }}
+          dest: /etc/gitlab-runner-custom/docker.json
 
     - name: verify gitlab-runner health after startup
       copy:
