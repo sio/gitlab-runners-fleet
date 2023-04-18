@@ -13,3 +13,4 @@ write_files:
 
 runcmd:
   - /usr/bin/make -C /etc/provision gateway
+  - /bin/rm -rf /etc/provision
