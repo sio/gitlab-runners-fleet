@@ -57,7 +57,7 @@ It's incredible how much power and how easily can a single individual wield
 thanks to modern tech! This project is made possible by standing on shoulders
 of giants:
 
-<table><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><center>
+<table><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align="center">
 
 [Ansible](https://docs.ansible.com/) &nbsp;&nbsp;·&nbsp;&nbsp;
 [chroot](https://manpages.debian.org/2/chroot) &nbsp;&nbsp;·&nbsp;&nbsp;
@@ -76,7 +76,7 @@ of giants:
 [Terraform](https://www.terraform.io/) &nbsp;&nbsp;·&nbsp;&nbsp;
 [Yandex Cloud](https://cloud.yandex.com) &nbsp;&nbsp;·&nbsp;&nbsp;
 
-<center></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr></table>
+</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr></table>
 
 
 ## License and copyright
