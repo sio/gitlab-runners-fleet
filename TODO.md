@@ -41,7 +41,7 @@ progress of longer tasks.
 - Look into generating a pre-signed URL for VM image on fleet manager.
   That would allow to make the S3 bucket private.
   Be careful: changing URL (GET params) would trigger terraform to rebuild the image,
-  which in turn could(?) trigger VM rebuilds.
+  which in turn could(?) trigger VM rebuilds, use `lifecycle_rule.ignore_changes`
 - Add provider: Selectel (supports nested virtualization)
 - Yandex: recreate instance if cloud-init configuration has changed
 - Yandex: restart preempted instances automatically. Instance groups with
