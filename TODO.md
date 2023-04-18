@@ -29,10 +29,6 @@ progress of longer tasks.
 
 - App ignores Ctrl+C interrupt
 
-**global**
-
-- Write minimal documentation for each stage
-
 
 ## Lowest priority: maybe sometime (if ever)
 

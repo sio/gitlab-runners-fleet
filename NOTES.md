@@ -6,15 +6,18 @@ taken. These notes are mostly intended to be consumed by my future self.
 
 ## Pulumi vs Terraform
 
-- Plain Pulumi was not very interesting, running it in a loop involved a lot
+- [Plain Pulumi][v01] was not very interesting, running it in a loop involved a lot
   of shell/Makefile glue code and was not elegant
-- Pulumi Automation API was very cool! Unfortunately, Pulumi had stopped
+- [Pulumi Automation API][v02] was very cool! Unfortunately, Pulumi had stopped
   developing the plugin for Yandex Cloud
 - Terraform-CDK is as inelegant as raw Pulumi, there is nothing like
   Automation API (yet)
 - Plain Terraform requires the same glue code to run in a loop as plain
   Pulumi, but at this point it appears to be the least worst option.
   Declarative code is nice enough for my simple infra though.
+
+[v01]: https://github.com/sio/gitlab-runners-fleet/tree/legacy/01-pulumi-plain
+[v02]: https://github.com/sio/gitlab-runners-fleet/tree/legacy/02-pulumi-automation-api
 
 
 ## Yandex Cloud
@@ -40,7 +43,7 @@ taken. These notes are mostly intended to be consumed by my future self.
 
 ## GitLab
 
-- GitLab API has matured significantly since the first iteration of this
+- GitLab API has matured significantly since [previous iteration][v02] of this
   project. Now all runner operations are exposed via GraphQL API
   and there is no more need for the REST API. I'm glad these changes happened
   because I find GraphQL API to be a lot more convenient.
@@ -50,12 +53,15 @@ taken. These notes are mostly intended to be consumed by my future self.
 
 - Packer does not appear to provide an easy way to modify qcow2 image on a
   host without virtualization support (qemu without kvm is painfully slow),
-  hence we use a bespoke script which relies on qemu-nbd and chroot.
+  hence we use a [bespoke script] which relies on qemu-nbd and chroot.
   This still requires root access to the build host - but that's not a problem
   in GitHub Actions environment.
 - mkosi seems nice, but it can only build from scratch via debootstrap.
-  Upstream Debian images are rather good, there is no need to redo the work
+  Upstream [Debian images] are rather good, there is no need to redo the work
   of Debian Cloud Team
+
+[bespoke script]: build/makefiles/image.mk
+[Debian images]: https://cloud.debian.org
 
 
 ## Bringup sequence
@@ -63,5 +69,5 @@ taken. These notes are mostly intended to be consumed by my future self.
 - Create S3 bucket: `make -C build bucket` (once)
 - Build base VM image and upload to S3: `make -C build image compact upload`
   (regularly in CI)
-- Create/update the rest of the infra: `make -C deploy`
-  (regularly on fleet manager)
+- Create/update the rest of the infra: `make -C deploy loop`
+  (continuously on fleet manager)

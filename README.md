@@ -23,15 +23,13 @@ architect my infra to incur (next to) zero costs when no CI jobs are running.
 
 ## Project status
 
-Under construction (again). Being rewritten to Terraform after
+Ready for deployment.
+Deployed in ad-hoc fashion from time to time.
+Not deployed to homeprod yet.
+
+Rewritten to Terraform after
 [Pulumi Automation API](https://github.com/sio/gitlab-runners-fleet/tree/legacy/02-pulumi-automation-api)
 and [plain Pulumi](https://github.com/sio/gitlab-runners-fleet/tree/legacy/01-pulumi-plain).
-
-
-## Installation and usage
-
-Documentation is not written yet. See Makefiles for pointers, `make` will
-yell at you until you provide all required environment variables :)
 
 
 ## Infrastructure overview
@@ -42,8 +40,43 @@ yell at you until you provide all required environment variables :)
     - 0 to N runner hosts: Debian hosts with GitLab runner daemon + Docker
       executor
     - 0 to 1 gateway: a simple cloud VM which has a public IPv4 and acts as a
-      router, firewall and a reverse proxy for HTTP API
+      router, firewall, reverse proxy for HTTP API and as a caching proxy for
+      Docker Hub.
     - Other required resources (networks, IP addresses, VM images)
+
+
+## Usage
+
+- Prepare S3 bucket with a prebaked VM image: [build/README.md](build/README.md)
+- Launch fleet manager container: [container/README.md](container/README.md)
+
+
+## Underlying technology
+
+It's incredible how much power and how easily can a single individual wield
+thanks to modern tech! This project is made possible by standing on shoulders
+of giants:
+
+<table><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><center>
+
+[Ansible](https://docs.ansible.com/) &nbsp;&nbsp;·&nbsp;&nbsp;
+[chroot](https://manpages.debian.org/2/chroot) &nbsp;&nbsp;·&nbsp;&nbsp;
+[cloud-init](https://cloudinit.readthedocs.io/) &nbsp;&nbsp;·&nbsp;&nbsp;
+[Debian](https://debian.org) &nbsp;&nbsp;·&nbsp;&nbsp;
+[Docker](https://docs.docker.com/) &nbsp;&nbsp;·&nbsp;&nbsp;
+[GitHub Actions](https://docs.github.com/actions) &nbsp;&nbsp;·&nbsp;&nbsp;
+[GitLab CI](https://docs.gitlab.com/ee/ci/) &nbsp;&nbsp;·&nbsp;&nbsp;
+[GNU Make](https://www.gnu.org/software/make/) &nbsp;&nbsp;·&nbsp;&nbsp;
+[Golang](https://go.dev) &nbsp;&nbsp;·&nbsp;&nbsp;
+[GraphQL](https://graphql.org/) &nbsp;&nbsp;·&nbsp;&nbsp;
+[nftables](https://netfilter.org/projects/nftables/) &nbsp;&nbsp;·&nbsp;&nbsp;
+[Python](https://python.org) &nbsp;&nbsp;·&nbsp;&nbsp;
+[Qemu (qemu-utils)](https://www.qemu.org/) &nbsp;&nbsp;·&nbsp;&nbsp;
+[systemd](https://systemd.io) &nbsp;&nbsp;·&nbsp;&nbsp;
+[Terraform](https://www.terraform.io/) &nbsp;&nbsp;·&nbsp;&nbsp;
+[Yandex Cloud](https://cloud.yandex.com) &nbsp;&nbsp;·&nbsp;&nbsp;
+
+<center></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr></table>
 
 
 ## License and copyright
