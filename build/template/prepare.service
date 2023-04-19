@@ -1,0 +1,14 @@
+[Unit]
+Description=Apply modifications to Debian Cloud image
+Requires=dbus.service systemd-networkd.service network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/tmp/prepare/template/prepare.sh
+ExecStopPost=/bin/sh -c "echo ${SERVICE_RESULT} ${EXIT_CODE} ${EXIT_STATUS} > /tmp/prepare/result"
+ExecStopPost=-/usr/bin/umount /etc/systemd/system/prepare.service
+ExecStopPost=-/bin/rm /etc/systemd/system/prepare.service
+ExecStopPost=/usr/bin/systemctl poweroff
+StandardOutput=journal+console
+StandardError=journal+console
+Restart=no

@@ -23,7 +23,6 @@ jobs:
       - uses: actions/checkout@v3
       - run: sudo make .gha-environment
       - run: sudo make image
-      - run: make compact
       - if: github.ref == 'refs/heads/terraform'
         run: make upload
         env:

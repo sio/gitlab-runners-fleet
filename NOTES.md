@@ -53,7 +53,7 @@ taken. These notes are mostly intended to be consumed by my future self.
 
 - Packer does not appear to provide an easy way to modify qcow2 image on a
   host without virtualization support (qemu without kvm is painfully slow),
-  hence we use a [bespoke script] which relies on qemu-nbd and chroot.
+  hence we use a [bespoke script] which relies on systemd-nspawn
   This still requires root access to the build host - but that's not a problem
   in GitHub Actions environment.
 - mkosi seems nice, but it can only build from scratch via debootstrap.

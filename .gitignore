@@ -3,6 +3,8 @@
 *.auto.tfvars*
 *.tfstate*
 *.qcow2*
+*.raw*
+*.result
 *.exe
 /tmp
 /scale/bin

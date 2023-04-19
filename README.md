@@ -60,21 +60,20 @@ of giants:
 <table><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align="center">
 
 [Ansible](https://docs.ansible.com/) &nbsp;&nbsp;·&nbsp;&nbsp;
-[chroot](https://manpages.debian.org/2/chroot) &nbsp;&nbsp;·&nbsp;&nbsp;
 [cloud-init](https://cloudinit.readthedocs.io/) &nbsp;&nbsp;·&nbsp;&nbsp;
 [Debian](https://debian.org) &nbsp;&nbsp;·&nbsp;&nbsp;
 [Docker](https://docs.docker.com/) &nbsp;&nbsp;·&nbsp;&nbsp;
-[GitHub Actions](https://docs.github.com/actions) &nbsp;&nbsp;·&nbsp;&nbsp;
-[GitLab CI](https://docs.gitlab.com/ee/ci/) &nbsp;&nbsp;·&nbsp;&nbsp;
-[GNU Make](https://www.gnu.org/software/make/) &nbsp;&nbsp;·&nbsp;&nbsp;
+[GitHub Actions](https://docs.github.com/actions) &nbsp;&nbsp;·&nbsp;&nbsp;
+[GitLab CI](https://docs.gitlab.com/ee/ci/) &nbsp;&nbsp;·&nbsp;&nbsp;
+[GNU Make](https://www.gnu.org/software/make/) &nbsp;&nbsp;·&nbsp;&nbsp;
 [Golang](https://go.dev) &nbsp;&nbsp;·&nbsp;&nbsp;
 [GraphQL](https://graphql.org/) &nbsp;&nbsp;·&nbsp;&nbsp;
 [nftables](https://netfilter.org/projects/nftables/) &nbsp;&nbsp;·&nbsp;&nbsp;
 [Python](https://python.org) &nbsp;&nbsp;·&nbsp;&nbsp;
-[Qemu (qemu-utils)](https://www.qemu.org/) &nbsp;&nbsp;·&nbsp;&nbsp;
+[Qemu (qemu-utils)](https://www.qemu.org/) &nbsp;&nbsp;·&nbsp;&nbsp;
 [systemd](https://systemd.io) &nbsp;&nbsp;·&nbsp;&nbsp;
 [Terraform](https://www.terraform.io/) &nbsp;&nbsp;·&nbsp;&nbsp;
-[Yandex Cloud](https://cloud.yandex.com) &nbsp;&nbsp;·&nbsp;&nbsp;
+[Yandex Cloud](https://cloud.yandex.com) &nbsp;&nbsp;·&nbsp;&nbsp;
 
 </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr></table>
 
