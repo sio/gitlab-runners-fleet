@@ -7,7 +7,7 @@ S3_OBFUSCATION_PREFIX?=$(firstword $(shell echo $(OUTPUT)|md5sum))
 S3_PATH?=s3://$$S3_BUCKET/$$S3_OBFUSCATION_PREFIX/base.qcow2
 export S3_OBFUSCATION_PREFIX
 export S3_BUCKET
-upload: $(OUTPUT)
+upload:
 ifeq (,$(S3_BUCKET))
 	$(error Variable not defined: S3_BUCKET)
 endif
