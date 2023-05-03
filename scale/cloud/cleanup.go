@@ -3,6 +3,7 @@ package cloud
 import (
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func (fleet *Fleet) Cleanup(host *Host) (err error) {
@@ -19,7 +20,8 @@ func (fleet *Fleet) Cleanup(host *Host) (err error) {
 		return fmt.Errorf("failed to create HTTP request: %w", err)
 	}
 	req.Host = host.Name
-	resp, err = http.DefaultClient.Do(req)
+	client := &http.Client{Timeout: 3 * time.Second}
+	resp, err = client.Do(req)
 	if err != nil {
 		return err
 	}

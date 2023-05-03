@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 type Metrics struct {
@@ -27,7 +28,8 @@ func (fleet *Fleet) Metrics(host *Host) (Metrics, error) {
 		return metrics, fmt.Errorf("failed to create HTTP request: %w", err)
 	}
 	req.Host = host.Name
-	resp, err = http.DefaultClient.Do(req)
+	client := &http.Client{Timeout: 3 * time.Second}
+	resp, err = client.Do(req)
 	if err != nil {
 		return metrics, fmt.Errorf("metrics request failed for %s: %w", host.Name, err)
 	}
