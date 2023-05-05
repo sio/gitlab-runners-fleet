@@ -46,6 +46,7 @@ endif
 	kpartx -av $(LOOP)
 	e2fsck -fy $(LOOPp1)
 	resize2fs $(LOOPp1)
+	sync
 	kpartx -dv $(LOOP)
 	losetup -d $(LOOP)
 	fdisk -l $(SCRATCH)
