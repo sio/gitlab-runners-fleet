@@ -12,9 +12,13 @@ progress of longer tasks.
 
 - Deploy fleet manager to home server
 
-<!--
+
 ## Medium priority: quality of life
--->
+
+**build/**
+
+- My SSH keys are hardcoded into VM image: `build/template/common.yml`.
+  That's less than ideal, and should be made configurable
 
 
 ## Low priority: nice to have
