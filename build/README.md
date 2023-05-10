@@ -18,5 +18,5 @@ that will be deployed as Yandex Compute instance later.
 
 ## Deployment status
 
-This VM image is continuously deployed to pre-existing S3 bucket
+This VM image is continuously delivered to pre-existing S3 bucket
 using GitHub Actions (see [.github/workflows/server.yml](../.github/workflows/server.yml))

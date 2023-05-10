@@ -6,18 +6,16 @@ collaborating with other people (if anyone gets interested) and for tracking
 progress of longer tasks.
 
 
+<!--
 ## High priority: blocks deployment
-
-**deploy/**
-
-- Deploy fleet manager to home server
+-->
 
 
 ## Medium priority: quality of life
 
 **build/**
 
-- My SSH keys are hardcoded into VM image: `build/template/common.yml`.
+- Public SSH keys are hardcoded into VM image: `build/template/common.yml`.
   That's less than ideal, and should be made configurable
 
 

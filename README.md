@@ -24,8 +24,7 @@ architect my infra to incur (next to) zero costs when no CI jobs are running.
 ## Project status
 
 Ready for deployment.
-Deployed in ad-hoc fashion from time to time.
-Not deployed to homeprod yet.
+Deployed and used regularly by author.
 
 Rewritten to Terraform after
 [Pulumi Automation API](https://github.com/sio/gitlab-runners-fleet/tree/legacy/02-pulumi-automation-api)

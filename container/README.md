@@ -14,4 +14,5 @@ All changes to this repo are continuously integrated via GitHub Actions
 Container image is also automatically rebuilt on monthly schedule to reflect
 changes in underlying images (including security updates).
 
-The image itself has not been deployed to my homeprod (yet). `#TODO`
+The image itself is deployed to my home server from `v3` tag and updated from
+container registry on schedule.
